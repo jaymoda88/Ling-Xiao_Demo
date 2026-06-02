@@ -211,6 +211,8 @@ setup.events = [
 	{ passage:"ql_lifespan",   loc:"lingquan",  label:"⚜ 壽命難題",             cond:function(p){ return p.flags.qingKiss && p.rel.qingling>=45 && !p.flags.qlQuest; } },
 	{ passage:"dx_unseal",     loc:"shengnv",   label:"⚜ 冰心解封",             cond:function(p){ return p.flags.dxBreak && p.rel.dongxue>=45 && !p.flags.dxQuest; } },
 	{ passage:"yl_repay",      loc:"wangchuan", label:"⚜ 以魂報恩",             cond:function(p){ return p.flags.yinliTouch && p.rel.yinli>=55 && !p.flags.ylQuest; } },
+	// A4 反派支線 · 血蓮（單向迷戀悲劇，血魔尊隕落後）
+	{ passage:"xuelian_fate",  loc:"houshan",   label:"⚜ 血蓮的執念",           cond:function(p){ return p.flags.bloodlord && !p.flags.xuelian; } },
 ];
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
