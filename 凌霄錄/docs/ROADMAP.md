@@ -32,16 +32,16 @@
 
 ## C. UX / 介面
 - [ ] **C1 戰鬥強化顯示**（敵方立繪、狀態 buff/debuff、回合提示） — **M**
-- [ ] **C2 設定選單**（字體大小、文字速度、深色強度，SugarCube Settings API） — **S**
+- [x] **C2 設定選單**（字體大小、深色強度、介面動畫，SugarCube Settings API）
 - [ ] **C3 成就系統** — **S**
 - [ ] **C4 手機版面打磨 + 立繪 RWD 微調** — **S**
-- [ ] **C5 更精緻的標題/封面** — **S**
+- [x] **C5 更精緻的標題/封面**（裝飾分隔、版本徽章、印璽輝光）
 
 ## D. 平衡與品質
 - [x] **D1 數值平衡**（探索區域感知藥材；時辰/疲勞/修為曲線校正）
 - [x] **D2 Bug 巡檢**（修末境界突破崩潰、舊存檔遷移 $p.seen/rel.dongxue；沙盒/戰鬥/圖鑑/日常實測無誤）
-- [ ] **D3 死碼清理 + 重構**（孤立段落 suyuyao_daily/qingling_daily 等） — **S**
-- [ ] **D4 自動化 lint/連結檢查腳本**（`check.mjs` 納入流程） — **S**
+- [x] **D3 死碼清理**（移除孤立段落 suyuyao_daily/qingling_daily；$battle 改 JS 組裝）
+- [x] **D4 自動化健檢腳本** `check.mjs`（連結/macro 配對/陷阱；exit 1 可接 CI；納入 WORKFLOW）
 
 ## E. 倉庫 / 專案
 - [x] **E1 LICENSE(MIT) + repo 描述/topics + README 主視覺 banner**

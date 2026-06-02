@@ -94,20 +94,6 @@
 </div>
 <div class="choices"><<link "← 返回日常">><<goto $p.loc>><</link>></div>
 
-:: suyuyao_daily [game]
-<<set _lines to [
-	"你在迴廊上遠遠瞥見蘇師姐，她正埋首翻閱一本古籍，神情專注，沒有發現你。你繞了個小路，沒有打擾。",
-	"今天的訓練場上，有人提到師姐最近在研究一道新的劍陣。你想起藏書閣裡似乎有相關殘卷，猶豫了一下，還是默默記下了。",
-	"傍晚，你在宗門藥圃邊碰見蘇師姐。她採了幾株靈草，看了你一眼，沒有說話便走了。但她走過的地方，空氣裡留著一種淡淡的劍氣清冽。",
-	"夜裡你練劍至深，抬頭時發現高處的劍崖上立著一道白影。她沒有下來，你也沒有上去。兩柄劍，隔著夜色，各自鋒利。"
-]>>
-<div class="scene">
-<div class="scene-title">蘇師姐 · 日常一瞥</div>
-<p><<= _lines[setup.rnd(_lines.length)]>></p>
-<<rel "suyuyao" 1>>
-</div>
-<div class="choices"><<link "← 返回日常">><<goto $p.loc>><</link>></div>
-
 :: shrine_night [game]
 <div class="scene">
 <<portrait "suyuyao">>

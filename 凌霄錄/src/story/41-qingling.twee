@@ -91,19 +91,6 @@
 </div>
 <div class="choices"><<link "← 返回山寨">><<goto $p.loc>><</link>></div>
 
-:: qingling_daily [game]
-<<set _lines to [
-	"青玲兒拉著你去看南疆的螢蟲海，成千上萬的光點漫天浮動。她仰著臉，金色的眼睛比螢火還亮，忽然小聲說：「人族的壽命……好短啊。」隨即又像怕你聽見似的，扯開話題。",
-	"她今天又偷溜出去闖禍，被族中長老追著訓。看見你來，立刻竄到你身後，扯著你的衣袖探出半張臉：「救我！」尾巴卻誠實地纏住了你的手臂。",
-	"靈泉邊，她教你辨認南疆的靈藥，說得頭頭是道。陽光穿過她的狐耳，毛茸茸的邊緣鍍上一層金邊。你看得出神，她察覺後紅了臉：「看、看什麼看！」"
-]>>
-<div class="scene">
-<div class="scene-title">青玲兒 · 日常</div>
-<p><<= _lines[setup.rnd(_lines.length)]>></p>
-<<rel "qingling" 1>>
-</div>
-<div class="choices"><<link "← 返回山寨">><<goto $p.loc>><</link>></div>
-
 :: qingling_heat [game]
 <div class="scene">
 <<portrait "qingling">>

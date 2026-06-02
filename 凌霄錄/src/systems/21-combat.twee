@@ -4,11 +4,7 @@
 <<widget "startBattle">>
 	<<set _e to setup.enemies[_args[0]]>>
 	<<if $p.seen>><<set $p.seen.foe[_args[0]] to true>><</if>>
-	<<set $battle to {
-		foeId: _args[0], foeHp: _e.hp, foeMax: _e.hp,
-		win: _args[1], lose: _args[2],
-		started: false, msg: "", emsg: ""
-	}>>
+	<<set $battle to setup.newBattle(_args[0], _args[1], _args[2])>>
 	<<goto "Combat">>
 <</widget>>
 

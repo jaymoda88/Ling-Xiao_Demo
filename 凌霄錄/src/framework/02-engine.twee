@@ -292,6 +292,12 @@ setup.relText = function (who, v) {
 setup.rnd = function (n) { return Math.floor(Math.random() * n); };
 setup.has = function (p, id) { return (p.books || []).indexOf(id) !== -1; };
 
+/* 建立戰鬥狀態（在 JS 組裝，避免 twee 多行物件字面量陷阱） */
+setup.newBattle = function (foeId, winPassage, losePassage) {
+	const e = setup.enemies[foeId];
+	return { foeId: foeId, foeHp: e.hp, foeMax: e.hp, win: winPassage, lose: losePassage, started: false, msg: "", emsg: "" };
+};
+
 /* ── 全新玩家 ── */
 setup.newPlayer = function () {
 	const p = {
