@@ -193,6 +193,15 @@ setup.events = [
 	{ passage:"dongxue_frost",  loc:"bingyu",   label:"⚡ 暴走的寒冰",           cond:function(p){ return p.flags.metDongxue && p.rel.dongxue>=18 && !p.flags.dxFrost; } },
 	{ passage:"dongxue_door",   loc:"shengnv",  label:"⚡ 深夜叩響聖女居的人是她", cond:function(p){ return p.flags.dxFrost && p.rel.dongxue>=30 && !p.flags.dxDoor && setup.isNight(p); } },
 	{ passage:"qingqing_threat",loc:"binggate", label:"⚡ 清情大典的鐘聲",       cond:function(p){ return p.flags.dxDoor && p.rel.dongxue>=42 && !p.flags.dxBreak; } },
+	// 中段約會 / 感情深化（一次性，標籤 ♡ 與主線 ⚡ 區分）
+	{ passage:"sy_date_spar",   loc:"jianya",   label:"♡ 邀蘇師姐上劍崖切磋",   cond:function(p){ return p.flags.metSuyuyao && p.rel.suyuyao>=6 && !p.flags.syD1; } },
+	{ passage:"sy_date_herb",   loc:"houshan",  label:"♡ 與蘇師姐同採靈藥",     cond:function(p){ return p.flags.suyuyaoNoticed && p.rel.suyuyao>=26 && !p.flags.syD2; } },
+	{ passage:"ql_date_firefly",loc:"lingquan", label:"♡ 玲兒拉你去看螢蟲海",   cond:function(p){ return p.flags.metQing && p.rel.qingling>=6 && !p.flags.qlD1; } },
+	{ passage:"ql_date_huaxing",loc:"shanzhai", label:"♡ 化形大典的邀約",       cond:function(p){ return p.flags.qingKiss && p.rel.qingling>=24 && !p.flags.qlD2; } },
+	{ passage:"yl_date_flowers",loc:"wangchuan",label:"♡ 陪陰離收集山花",       cond:function(p){ return p.flags.yinliRebuild && !p.flags.ylD1; } },
+	{ passage:"yl_date_snow",   loc:"guimenguan",label:"♡ 雪中小狐狸的記憶",    cond:function(p){ return p.flags.yinliRebuild && p.rel.yinli>=45 && !p.flags.ylD2; } },
+	{ passage:"dx_date_tea",    loc:"hantan",   label:"♡ 寒潭邊的一壺溫茶",     cond:function(p){ return p.flags.metDongxue && p.rel.dongxue>=8 && !p.flags.dxD1; } },
+	{ passage:"dx_date_peak",   loc:"bingfeng", label:"♡ 與冬雪同看絕頂風雪",   cond:function(p){ return p.flags.dxFrost && p.rel.dongxue>=30 && !p.flags.dxD2; } },
 ];
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
