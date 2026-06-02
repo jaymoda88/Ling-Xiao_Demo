@@ -28,7 +28,14 @@
 node server.mjs     # 本機預覽 http://localhost:8137
 ```
 
-原始碼結構與擴充方式見 [`凌霄錄/README.md`](凌霄錄/README.md)；世界觀與設定見 [`凌霄錄/docs/`](凌霄錄/docs/)。
+## 文件
+
+- [專案資訊・資料模型・內容地圖](凌霄錄/docs/PROJECT.md)
+- [開發流程・擴充食譜・SugarCube 陷阱](凌霄錄/docs/WORKFLOW.md)
+- [開發 Roadmap / 待辦](凌霄錄/docs/ROADMAP.md)
+- [原始碼結構速覽](凌霄錄/README.md)
+- 世界觀與設定：[`凌霄錄/docs/`](凌霄錄/docs/)
+- 給 Claude Code 的工作指引：[`CLAUDE.md`](CLAUDE.md)
 
 ## 授權
 
