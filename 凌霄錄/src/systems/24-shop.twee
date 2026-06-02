@@ -1,0 +1,138 @@
+:: ShopScript [script]
+/* ════════ B5 商店 / 靈藥市場 ════════
+   以 $p.stones（靈石）為通貨。商品表為靜態資料，掛 setup.shop，不進存檔。
+   藥材 → $p.herbs[key]；丹方 → $p.recipes（一次性習得）；
+   秘藥/法寶 → $p.flags[flag]（消耗品計數）或一次性永久增益。
+   入口由 Manager 於對應地點加 <<link>> 進 :: Shop。 */
+setup.shop = {
+	/* ── 藥材：可堆疊，買入 $p.herbs[key]，名稱/說明取自 setup.herbs ── */
+	herbs: [
+		{ key: "lingcao",  price: 8 },
+		{ key: "huoxin",   price: 14 },
+		{ key: "hanyu",    price: 14 },
+		{ key: "yuelan",   price: 16 },
+		{ key: "xuelian",  price: 60 },
+		{ key: "yaodan",   price: 45 },
+	],
+	/* ── 丹方：一次性習得，買入 $p.recipes（之後可於丹房煉製） ── */
+	recipes: [
+		{ key: "huiyuan",  price: 40 },
+		{ key: "ningshen", price: 50 },
+		{ key: "pojing",   price: 140 },
+	],
+	/* ── 秘藥 / 法寶：消耗品存 $p.flags[flag] 計數；永久法寶 once:true 一次性 ── */
+	wares: [
+		{ flag: "hehuanlu",   name: "合歡露",   price: 80,
+		  desc: "雙修秘藥。服後靈氣相性臨時提升，情感感知亦隨之放大。" },
+		{ flag: "duanqingdan", name: "斷情丹",   price: 110,
+		  desc: "清除雙修後靈識殘留與情感依附；長期服用損及靈識。" },
+		{ flag: "juling_pei",  name: "聚靈玉珮",  price: 320, once: true, luck: 5,
+		  desc: "上古聚靈法寶，佩之氣運長存（氣運 +5，永久）。" },
+	],
+};
+/* 取得品項顯示名稱（藥材/丹方查表，秘藥用自帶 name） */
+setup.shopName = function (cat, key) {
+	if (cat === "herbs")   return (setup.herbs[key]   || {}).name || key;
+	if (cat === "recipes") return (setup.recipes[key] || {}).name || key;
+	return key;
+};
+/* 習得丹方（去重 push 進 $p.recipes） */
+setup.shopBuyRecipe = function (key) {
+	var p = State.variables.p;
+	if (p.recipes.indexOf(key) < 0) p.recipes.push(key);
+};
+
+:: ShopStylesheet [stylesheet]
+.shop-sec { color: var(--gold); font-size: 12px; letter-spacing: .25em;
+	margin: 18px 0 8px; opacity: .8; font-weight: 400; }
+.shop-sec:first-of-type { margin-top: 4px; }
+
+:: Shop [game]
+<div class="panel">
+<h3>🏮 坊市・靈藥行</h3>
+<p class="desc">凌霄峰下的修士坊市，以靈石易物。藥材、丹方、秘藥法寶皆可購得。<br>靈石 <b class="gold"><<= $p.stones>></b></p>
+
+<h4 class="shop-sec">— 藥材 —</h4>
+<<for _row range setup.shop.herbs>>
+	<<capture _row>>
+	<<set _have to $p.herbs[_row.key] || 0>>
+	<div class="book">
+		<div class="book-info">
+			<h4><<= setup.shopName("herbs", _row.key)>><span class="tag-school">持有 <<= _have>></span></h4>
+			<p><<= (setup.herbs[_row.key]||{}).desc>></p>
+		</div>
+		<div class="book-buy">
+			<<if $p.stones >= _row.price>>
+				<<link "購入 · <<= _row.price>> 靈石">>
+					<<set $p.stones -= _row.price>>
+					<<set $p.herbs[_row.key] to ($p.herbs[_row.key] || 0) + 1>>
+					<<run setup.toast("購入 " + setup.shopName("herbs", _row.key))>>
+					<<goto "Shop">>
+				<</link>>
+			<<else>>
+				<a class="disabled">購入 · <<= _row.price>> 靈石</a>
+			<</if>>
+		</div>
+	</div>
+	<</capture>>
+<</for>>
+
+<h4 class="shop-sec">— 丹方 —</h4>
+<<for _row range setup.shop.recipes>>
+	<<capture _row>>
+	<<set _owned to $p.recipes.indexOf(_row.key) >= 0>>
+	<div class="book <<if _owned>>owned<</if>>">
+		<div class="book-info">
+			<h4><<= setup.shopName("recipes", _row.key)>><span class="tag-school">丹方</span></h4>
+			<p><<= (setup.recipes[_row.key]||{}).desc>></p>
+		</div>
+		<div class="book-buy">
+			<<if _owned>>
+				<span class="owned-tag">✓ 已習得</span>
+			<<elseif $p.stones >= _row.price>>
+				<<link "習得 · <<= _row.price>> 靈石">>
+					<<set $p.stones -= _row.price>>
+					<<run setup.shopBuyRecipe(_row.key)>>
+					<<run setup.toast("習得丹方 " + setup.shopName("recipes", _row.key))>>
+					<<goto "Shop">>
+				<</link>>
+			<<else>>
+				<a class="disabled">習得 · <<= _row.price>> 靈石</a>
+			<</if>>
+		</div>
+	</div>
+	<</capture>>
+<</for>>
+
+<h4 class="shop-sec">— 秘藥・法寶 —</h4>
+<<for _row range setup.shop.wares>>
+	<<capture _row>>
+	<<set _cnt to $p.flags[_row.flag] || 0>>
+	<<set _maxed to _row.once && _cnt >= 1>>
+	<div class="book <<if _maxed>>owned<</if>>">
+		<div class="book-info">
+			<h4><<= _row.name>><span class="tag-school"><<if _row.once>>法寶<<else>>持有 <<= _cnt>><</if>></span></h4>
+			<p><<= _row.desc>></p>
+		</div>
+		<div class="book-buy">
+			<<if _maxed>>
+				<span class="owned-tag">✓ 已擁有</span>
+			<<elseif $p.stones >= _row.price>>
+				<<link "購入 · <<= _row.price>> 靈石">>
+					<<set $p.stones -= _row.price>>
+					<<set $p.flags[_row.flag] to ($p.flags[_row.flag] || 0) + 1>>
+					<<if _row.luck>><<set $p.luck += _row.luck>><</if>>
+					<<run setup.toast("購入 " + _row.name)>>
+					<<goto "Shop">>
+				<</link>>
+			<<else>>
+				<a class="disabled">購入 · <<= _row.price>> 靈石</a>
+			<</if>>
+		</div>
+	</div>
+	<</capture>>
+<</for>>
+</div>
+<div class="choices">
+	<<link "← 離開坊市">><<goto $p.loc>><</link>>
+</div>
