@@ -104,7 +104,8 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<!-- UUID://C6F63F5F-A00B-4902-A034-0CFA603925BB// --><tw-storydata name="凌霄錄" startnode="129" creator="Tweego" creator-version="2.1.1+81d1d71" ifid="C6F63F5F-A00B-4902-A034-0CFA603925BB" zoom="1" format="SugarCube" format-version="2.37.3" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;900&display=swap');
+	<!-- UUID://C6F63F5F-A00B-4902-A034-0CFA603925BB// --><tw-storydata name="凌霄錄" startnode="129" creator="Tweego" creator-version="2.1.1+81d1d71" ifid="C6F63F5F-A00B-4902-A034-0CFA603925BB" zoom="1" format="SugarCube" format-version="2.37.3" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* twine-user-stylesheet #1: "StoryStylesheet" */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;900&display=swap');
 
 :root {
 	--ink: #1a0f0a; --rice: #f5f0e8; --gold: #c9952a; --gold-light: #e8c97a;
@@ -323,7 +324,60 @@ body {
 .map-grid .m-icon { font-size:20px; margin-right:8px; }
 .map-grid .m-name { font-size:15px; }
 .map-grid .m-sub { display:block; font-size:11px; color:rgba(245,240,232,.4); margin-top:4px; }
-.map-region-tab { display:inline-block; font-size:12px; color:var(--jade-light); letter-spacing:.15em; margin:4px 0 2px; }</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "EngineScript" */
+.map-region-tab { display:inline-block; font-size:12px; color:var(--jade-light); letter-spacing:.15em; margin:4px 0 2px; }
+/* twine-user-stylesheet #2: "TitleStylesheet" */
+/* C5 標題畫面強化 —— 僅作用於標題畫面，置於 title 檔內，不動 06-styles */
+
+/* 飄升的金燼粒子（兩層不同速度製造層次） */
+.lx-embers { position:fixed; inset:0; z-index:1; pointer-events:none; overflow:hidden; }
+.lx-embers::before, .lx-embers::after {
+	content:''; position:absolute; left:0; right:0; top:0; height:210%;
+	background-image:
+		radial-gradient(2px 2px at 12% 96%, rgba(201,149,42,.55), transparent),
+		radial-gradient(1px 1px at 28% 88%, rgba(232,201,122,.5), transparent),
+		radial-gradient(2px 2px at 47% 99%, rgba(201,149,42,.45), transparent),
+		radial-gradient(1px 1px at 66% 90%, rgba(232,124,110,.4), transparent),
+		radial-gradient(2px 2px at 82% 95%, rgba(201,149,42,.5), transparent),
+		radial-gradient(1px 1px at 92% 84%, rgba(232,201,122,.45), transparent);
+	background-size:100% 50%;
+	animation: lx-ember 16s linear infinite;
+	opacity:.85;
+}
+.lx-embers::after { animation-duration:26s; animation-delay:-9s; opacity:.5; }
+@keyframes lx-ember { from{transform:translateY(0)} to{transform:translateY(-50%)} }
+
+/* 標題內容浮在粒子之上 */
+.title-wrap { position:relative; z-index:2; }
+
+/* 印璽光暈 */
+.seal-stack { position:relative; display:flex; align-items:center; justify-content:center; margin-bottom:28px; }
+.seal-stack .seal { margin-bottom:0; position:relative; z-index:1; }
+.seal-aura {
+	position:absolute; z-index:0; width:184px; height:184px; border-radius:50%;
+	background: radial-gradient(circle, rgba(201,149,42,.22) 0%, rgba(192,57,43,.08) 45%, transparent 70%);
+	animation: lx-aura 5s ease-in-out infinite; pointer-events:none;
+}
+@keyframes lx-aura { 0%,100%{transform:scale(1);opacity:.55} 50%{transform:scale(1.2);opacity:1} }
+
+/* 副標下的裝飾分隔 */
+.t-rule { display:flex; align-items:center; gap:14px; width:min(320px,70vw); margin:2px 0 14px; }
+.t-rule::before, .t-rule::after { content:''; flex:1; height:1px; background:linear-gradient(90deg,transparent,rgba(201,149,42,.5),transparent); }
+.t-rule span { color:var(--gold); font-size:13px; letter-spacing:.4em; opacity:.85; padding-left:.4em; white-space:nowrap; }
+
+.t-foot { margin-top:20px; font-size:11px; color:rgba(245,240,232,.28); letter-spacing:.12em; }
+
+/* 右下版本徽記 */
+.t-ver {
+	position:fixed; bottom:14px; right:16px; z-index:3;
+	font-size:11px; letter-spacing:.15em; color:rgba(201,149,42,.5);
+	border:1px solid rgba(201,149,42,.28); padding:3px 9px; border-radius:11px;
+	background:rgba(8,5,3,.5);
+}
+
+@media screen and (max-width:560px) {
+	.seal-aura { width:150px; height:150px; }
+	.t-ver { bottom:10px; right:10px; }
+}</style><script role="script" id="twine-user-script" type="text/twine-javascript">/* twine-user-script #1: "EngineScript" */
 /* ════════════════════════════════════════════════════════════
    凌霄錄 · 引擎核心 (static data + helpers)
    SugarCube 2 — 同 Degrees of Lewdity 引擎
@@ -2672,21 +2726,27 @@ setup.runDaily = function (p, locId) {
 &lt;div class=&quot;choices&quot;&gt;
 	&lt;&lt;link &quot;↻ 再走走&quot;&gt;&gt;&lt;&lt;pass 1&gt;&gt;&lt;&lt;goto &quot;daily&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;← 返回&quot;&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="129" name="Start" tags="" position="1100,1600" size="100,100">&lt;div class=&quot;title-wrap&quot;&gt;
-	&lt;div class=&quot;seal&quot;&gt;&lt;span&gt;仙&lt;/span&gt;&lt;/div&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="129" name="Start" tags="" position="1100,1600" size="100,100">&lt;div class=&quot;lx-embers&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+&lt;div class=&quot;title-wrap&quot;&gt;
+	&lt;div class=&quot;seal-stack&quot;&gt;
+		&lt;div class=&quot;seal-aura&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+		&lt;div class=&quot;seal&quot;&gt;&lt;span&gt;仙&lt;/span&gt;&lt;/div&gt;
+	&lt;/div&gt;
 	&lt;div class=&quot;t-sub&quot;&gt;轉生修仙 · 文字遊戲&lt;/div&gt;
 	&lt;h1 class=&quot;t-main&quot;&gt;凌霄錄&lt;/h1&gt;
-	&lt;div class=&quot;t-tag&quot;&gt;廢材覺醒，逆天改命 · 前三卷&lt;/div&gt;
+	&lt;div class=&quot;t-rule&quot;&gt;&lt;span&gt;逆天改命&lt;/span&gt;&lt;/div&gt;
+	&lt;div class=&quot;t-tag&quot;&gt;廢材覺醒 · 自滅門廢墟登臨仙途&lt;/div&gt;
 	&lt;div class=&quot;title-menu choices&quot;&gt;
 		&lt;&lt;link &quot;✦ 開始新遊戲&quot;&gt;&gt;&lt;&lt;newgame&gt;&gt;&lt;&lt;goto &quot;intro&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 		&lt;&lt;link &quot;繼續遊戲（讀取存檔）&quot;&gt;&gt;&lt;&lt;run UI.saves()&gt;&gt;&lt;&lt;/link&gt;&gt;
 		&lt;&lt;link &quot;關於本作&quot;&gt;&gt;&lt;&lt;goto &quot;About&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;/div&gt;
-	&lt;div style=&quot;margin-top:20px;font-size:11px;color:rgba(245,240,232,.28);letter-spacing:.12em;&quot;&gt;左側選單可隨時存檔 / 讀檔 / 設定&lt;/div&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="130" name="About" tags="" position="1225,1600" size="100,100">&lt;div class=&quot;scene&quot;&gt;
+	&lt;div class=&quot;t-foot&quot;&gt;左側選單可隨時存檔 / 讀檔 / 設定&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&quot;t-ver&quot; aria-hidden=&quot;true&quot;&gt;凌霄錄 · v0.4&lt;/div&gt;</tw-passagedata><tw-passagedata pid="130" name="About" tags="" position="1225,1600" size="100,100">&lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;關於&lt;/div&gt;
 &lt;p&gt;《凌霄錄》是一部轉生修仙文字遊戲，以 SugarCube 2 引擎打造（與《Degrees of Lewdity》同源）。&lt;/p&gt;
-&lt;p&gt;你將扮演自地球轉生的&lt;span class=&quot;em&quot;&gt;凌霄&lt;/span&gt;，自滅門廢墟一路登臨凌霄劍宗、踏入南疆萬妖山——在修煉、戰鬥、煉丹之間，與&lt;span class=&quot;em&quot;&gt;蘇羽瑤&lt;/span&gt;、&lt;span class=&quot;em&quot;&gt;青玲兒&lt;/span&gt;譜寫各自的緣分。&lt;/p&gt;
+&lt;p&gt;你將扮演自地球轉生的&lt;span class=&quot;em&quot;&gt;凌霄&lt;/span&gt;，自滅門廢墟一路登臨凌霄劍宗、踏入南疆萬妖山、深入幽冥禁地——在修煉、戰鬥、煉丹之間，與&lt;span class=&quot;em&quot;&gt;蘇羽瑤&lt;/span&gt;、&lt;span class=&quot;em&quot;&gt;青玲兒&lt;/span&gt;、&lt;span class=&quot;em&quot;&gt;陰離&lt;/span&gt;等紅顏譜寫各自的緣分。&lt;/p&gt;
 &lt;p class=&quot;narr&quot;&gt;所有角色均為成年人設定（18+）。親密情節以氛圍與留白呈現。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回&quot;&gt;&gt;&lt;&lt;goto &quot;Start&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="131" name="Map" tags="game" position="100,1725" size="100,100">&lt;&lt;set _reg to setup.regions[$p.region]&gt;&gt;
