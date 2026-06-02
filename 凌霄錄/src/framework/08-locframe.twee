@@ -31,7 +31,10 @@
 <</widget>>
 
 
-/% 底部前往他處 %/
+/% 底部：閒步（隨機日常）＋ 前往他處 %/
 <<widget "travelfoot">>
+	<<if setup.dailies[$p.loc]>>
+		<<link "🔆 四處走走<span class='lx-hint'>耗一時辰，留意周遭的人事物</span>">><<pass 1>><<goto "daily">><</link>>
+	<</if>>
 	<<link "🗺 前往他處">><<goto "Map">><</link>>
 <</widget>>

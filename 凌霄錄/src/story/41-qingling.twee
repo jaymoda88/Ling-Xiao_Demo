@@ -1,5 +1,6 @@
 :: qingling_first [game]
 <div class="scene">
+<<portrait "qingling">>
 <div class="scene-title">初遇 · 九尾狐族公主</div>
 <p>你第一次見到她，是在山寨的靈泉邊。小麥色肌膚的少女正赤足踩在水中，九條尾巴慵懶地舒展——察覺你來，尾巴「唰」地全部收起，她回頭，眼尾的淡金紋路在日光下流轉。</p>
 <p>她是九尾狐族公主 <span class="em">青玲兒</span>。狐族天生「情感嗅覺」，她下意識嗅了嗅——然後愣住了。</p>
@@ -30,6 +31,7 @@
 
 :: qingling_tail [game]
 <div class="scene">
+<<portrait "qingling">>
 <div class="scene-title">狐尾纏腕</div>
 <p>連日相處，青玲兒總愛黏著你，一會兒要你嚐她偷摘的靈果，一會兒拉你看她新學的幻術。這日她趴在你身旁打盹，迷迷糊糊間，一條毛茸茸的尾巴繞上了你的手腕，輕輕收緊。</p>
 <p>你正不知如何是好，她猛地驚醒，看清自己的尾巴在做什麼，「噌」地彈起來，臉紅到耳根：</p>
@@ -65,6 +67,7 @@
 
 :: qingling_kiss [game]
 <div class="scene">
+<<portrait "qingling">>
 <div class="scene-title">偷來的吻</div>
 <p>那夜你修煉至倦極，倚著窗欞睡去。朦朧間，一個溫熱的、帶著靈果香氣的軟物極輕地觸了一下你的唇，又飛快地離開。</p>
 <p>你睜開眼，正對上青玲兒近在咫尺、瞳孔豎成一線的臉。三秒的對視，空氣凝固——</p>
@@ -103,6 +106,7 @@
 
 :: qingling_heat [game]
 <div class="scene">
+<<portrait "qingling">>
 <div class="scene-title">重大事件 · 靈慾潮期危機</div>
 <p>三百年一遇的「靈慾潮期」毫無預兆地提前降臨。未及閉關的青玲兒躲進了秘境最深處的山洞，九尾炸開，妖族費洛蒙泛濫——那是足以牽動任何人類本能的洶湧潮汐。</p>
 <p>你尋進洞中，她蜷在最深處，金瞳渙散，渾身發顫，看見你卻露出驚恐：「別過來……我控制不住……你會……」</p>

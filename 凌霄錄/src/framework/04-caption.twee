@@ -27,10 +27,11 @@
 		<div><<= setup.gstatHtml("fatigue", $p.stats.fatigue)>></div>
 	</div>
 
-	<<if $p.rel.suyuyao > 0 or $p.rel.qingling > 0>>
+	<<if $p.rel.suyuyao > 0 or $p.rel.qingling > 0 or $p.rel.yinli > 0>>
 		<div class="cap-rel">
 			<<if $p.rel.suyuyao > 0>><div>❤ 蘇羽瑤 <b><<= $p.rel.suyuyao>></b> <span class="cap-rel-t"><<= setup.relText("suyuyao",$p.rel.suyuyao)>></span></div><</if>>
 			<<if $p.rel.qingling > 0>><div>❤ 青玲兒 <b><<= $p.rel.qingling>></b> <span class="cap-rel-t"><<= setup.relText("qingling",$p.rel.qingling)>></span></div><</if>>
+			<<if $p.rel.yinli > 0>><div>❤ 陰離 <b><<= $p.rel.yinli>></b> <span class="cap-rel-t"><<= setup.relText("yinli",$p.rel.yinli)>></span></div><</if>>
 		</div>
 	<</if>>
 

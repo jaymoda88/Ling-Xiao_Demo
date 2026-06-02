@@ -23,6 +23,12 @@
 	<<if $p.region === "nanjiang">>
 		<<link "↑ 返回凌霄劍宗<span class='lx-hint'>遠行（耗時較久）</span>">><<pass 3>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
 	<</if>>
+	<<if $p.region === "nanjiang" and $p.flags.qingHeat>>
+		<<link "🕯 潛入幽冥澤<span class='lx-hint'>遠行 · 推進第四卷</span>">><<goto "journey_youming">><</link>>
+	<</if>>
+	<<if $p.region === "youming">>
+		<<link "↑ 離開幽冥澤，返回南疆<span class='lx-hint'>遠行</span>">><<pass 3>><<enterLoc "shanzhai">><<goto "shanzhai">><</link>>
+	<</if>>
 	<<link "← 取消，留在原地">><<goto $p.loc>><</link>>
 </div>
 
@@ -41,3 +47,18 @@
 <</if>>
 <<enterLoc "shanzhai">>
 <div class="choices"><<link "踏入狐族山寨">><<goto "shanzhai">><</link>></div>
+
+:: journey_youming [game]
+<<pass 3>>
+<<if not $p.flags.wentYouming>>
+	<<set $p.flags.wentYouming to true>>
+	<div class="scene">
+	<div class="scene-title">潛入 · 幽冥澤</div>
+	<p>循著仙紋碎片殘留的氣息，以及幽冥鬼道近來異常的動向，你獨自南行更南，踏入了地底死氣瀰漫的<span class="em">幽冥澤</span>。</p>
+	<p>愈往深處，那股窺探你的冰冷神識便愈清晰——鬼道，早已注意到你了。而在那重重死氣之後，似乎有一個被囚禁的靈魂，正無聲地朝你呼救。</p>
+	</div>
+<<else>>
+	<div class="scene"><p class="narr">你再度踏入幽冥澤的死氣之中。</p></div>
+<</if>>
+<<enterLoc "guimenguan">>
+<div class="choices"><<link "深入幽冥澤">><<goto "guimenguan">><</link>></div>

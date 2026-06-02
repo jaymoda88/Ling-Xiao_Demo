@@ -1,0 +1,60 @@
+:: PortraitScript [script]
+/* ════════ 角色立繪 ════════
+   原創水墨風格化半身像（程式生成 SVG）。
+   若要換成真實立繪：把 setup.portraits[id].img 設為圖片路徑，
+   portraitSVG 會優先用 <img>（見 widget）。 */
+setup.portraits = {
+	lingxiao: { name: "凌霄",   title: "轉生 · 混沌靈根",     hair1:"#2c2742", hair2:"#0c0a18", skin:"#ecdcc6", accent:"#c9952a", glyph:"混", glyphColor:"#e8c97a" },
+	suyuyao:  { name: "蘇羽瑤", title: "凌霄劍宗天才師姐",     hair1:"#f3f7fb", hair2:"#aecadb", skin:"#f0e7dd", accent:"#9fcfe0", glyph:"劍", glyphColor:"#cfeaf5" },
+	qingling: { name: "青玲兒", title: "九尾狐族公主",         hair1:"#edd089", hair2:"#9c6a26", skin:"#eccca2", accent:"#f0b94a", glyph:"狐", glyphColor:"#f3d68a" },
+	yinli:    { name: "陰離",   title: "幽冥前女鬼使",         hair1:"#eef1f6", hair2:"#b6bfd6", skin:"#e9ecf2", accent:"#bcaee6", glyph:"離", glyphColor:"#d8cdf0" },
+};
+
+setup.portraitSVG = function (c, key) {
+	const k = key || "p";
+	return '' +
+'<svg viewBox="0 0 200 250" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+  '<defs>' +
+    '<linearGradient id="hair_' + k + '" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="' + c.hair1 + '"/><stop offset="1" stop-color="' + c.hair2 + '"/></linearGradient>' +
+    '<radialGradient id="glow_' + k + '" cx="0.5" cy="0.42" r="0.6"><stop offset="0" stop-color="' + c.accent + '" stop-opacity="0.45"/><stop offset="1" stop-color="' + c.accent + '" stop-opacity="0"/></radialGradient>' +
+  '</defs>' +
+  '<rect width="200" height="250" fill="#0d0805"/>' +
+  '<circle cx="100" cy="105" r="115" fill="url(#glow_' + k + ')"/>' +
+  '<text x="100" y="158" font-size="150" text-anchor="middle" fill="' + c.glyphColor + '" opacity="0.09" font-family="\'Noto Serif TC\',serif" font-weight="900">' + c.glyph + '</text>' +
+  // 髮（後）
+  '<path d="M52 250 Q36 118 100 64 Q164 118 148 250 Z" fill="url(#hair_' + k + ')"/>' +
+  // 肩 / 衣
+  '<path d="M42 250 Q58 172 100 172 Q142 172 158 250 Z" fill="' + c.accent + '" opacity="0.28"/>' +
+  '<path d="M42 250 Q58 172 100 172 Q142 172 158 250" fill="none" stroke="' + c.accent + '" stroke-opacity="0.5" stroke-width="1.5"/>' +
+  // 頸
+  '<rect x="90" y="148" width="20" height="32" fill="' + c.skin + '"/>' +
+  // 臉
+  '<ellipse cx="100" cy="120" rx="33" ry="41" fill="' + c.skin + '"/>' +
+  // 髮（前側）
+  '<path d="M67 90 Q68 150 78 178 L88 178 Q73 142 80 96 Z" fill="url(#hair_' + k + ')"/>' +
+  '<path d="M133 90 Q132 150 122 178 L112 178 Q127 142 120 96 Z" fill="url(#hair_' + k + ')"/>' +
+  // 髮（頂）
+  '<path d="M66 98 Q100 54 134 98 Q118 84 100 82 Q82 84 66 98 Z" fill="url(#hair_' + k + ')"/>' +
+  // 眼
+  '<ellipse cx="88" cy="122" rx="3.2" ry="5.2" fill="' + c.accent + '"/>' +
+  '<ellipse cx="112" cy="122" rx="3.2" ry="5.2" fill="' + c.accent + '"/>' +
+'</svg>';
+};
+
+:: PortraitWidgets [widget]
+/% <<portrait id>>：顯示某角色立繪卡（浮於場景一側） %/
+<<widget "portrait">>
+	<<set _pc to setup.portraits[_args[0]]>>
+	<<if _pc>>
+		<div class="portrait" @data-who="_args[0]">
+			<div class="portrait-art">
+				<<if _pc.img>>
+					<img @src="_pc.img" alt="">
+				<<else>>
+					<<= setup.portraitSVG(_pc, _args[0])>>
+				<</if>>
+			</div>
+			<div class="portrait-cap"><b><<= _pc.name>></b><span><<= _pc.title>></span></div>
+		</div>
+	<</if>>
+<</widget>>

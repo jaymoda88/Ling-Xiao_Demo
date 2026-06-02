@@ -171,6 +171,17 @@ body {
 .foe-bar-bg { height:8px; background:rgba(245,240,232,.08); border-radius:4px; overflow:hidden; margin-top:6px; }
 .foe-bar { height:100%; background:linear-gradient(90deg,#7a1f17,#e87c6e); transition:width .4s; }
 
+/* ── 角色立繪 ── */
+.portrait { float: right; width: 168px; margin: 0 0 12px 18px; border:1px solid rgba(201,149,42,.35); border-radius:6px; overflow:hidden; background:#0d0805; box-shadow:0 4px 20px rgba(0,0,0,.4); animation: lx-rise .5s ease; }
+.portrait-art { width:100%; aspect-ratio: 200/250; background:#0d0805; }
+.portrait-art svg, .portrait-art img { display:block; width:100%; height:100%; object-fit:cover; }
+.portrait-cap { padding:8px 10px; text-align:center; border-top:1px solid rgba(201,149,42,.25); background:rgba(201,149,42,.06); }
+.portrait-cap b { display:block; color:var(--gold-light); font-size:15px; letter-spacing:.08em; }
+.portrait-cap span { display:block; color:rgba(245,240,232,.5); font-size:11px; margin-top:2px; }
+@media screen and (max-width: 560px) {
+	.portrait { float:none; width:140px; margin:0 auto 14px; }
+}
+
 /* ── 地點 header ── */
 .loc-head { display:flex; align-items:baseline; gap:10px; margin-bottom:4px; }
 .loc-icon { font-size:22px; }

@@ -1,5 +1,6 @@
 :: suyuyao_first [game]
 <div class="scene">
+<<portrait "suyuyao">>
 <div class="scene-title">初見 · 蘇師姐</div>
 <p class="narr">凌霄劍宗，外門練劍廣場，入門後第三日。</p>
 <p>她就在廣場中央。一柄長劍，每一式都帶著細碎的靈氣震動，旁觀的弟子自動退出三丈以外，沒有人敢說話。</p>
@@ -46,6 +47,7 @@
 
 :: suyuyao_notice [game]
 <div class="scene">
+<<portrait "suyuyao">>
 <div class="scene-title">蘇師姐 · 她注意到了</div>
 <p class="narr">訓練場，走火入魔事故。</p>
 <p>一名低境界師弟在試煉中靈脈逆流，臉色泛青。其他弟子面面相覷——隨意插手別人走火入魔是大忌，弄不好兩個人一起出事。</p>
@@ -108,6 +110,7 @@
 
 :: shrine_night [game]
 <div class="scene">
+<<portrait "suyuyao">>
 <div class="scene-title">關鍵 · 祠堂之夜</div>
 <p class="narr">深夜，祠堂的燈還亮著。</p>
 <p>你繞過迴廊，遠遠便看見那道白影端正跪在蒲團上。今日試煉中，蘇師姐失手震傷了一名無辜師弟——對方無大礙，她卻已在此跪了三個時辰，背脊筆直，臉色沉如生鐵。</p>
@@ -188,6 +191,7 @@
 <<set _bonus to 200 + $p.realm*150>>
 <<gainCult _bonus>>
 <div class="scene">
+<<portrait "suyuyao">>
 <div class="scene-title">靈識觸碰 · 第一次雙修</div>
 <p>她在你身後跪坐，雙掌抵住你後背，靈氣緩緩輸入。</p>
 <p>你預料到靈脈會對外來靈氣有些抵觸——卻沒有預料到，她的劍氣，在你的混沌靈氣面前，<span class="em">輕輕地軟下來了。</span></p>
@@ -210,6 +214,7 @@
 <<set $p.flags.twinSword to true>>
 <<gainCult 300>>
 <div class="scene">
+<<portrait "suyuyao">>
 <div class="scene-title">同心劍訣</div>
 <p>大比之後，蘇羽瑤主動約你上劍崖。她說要與你共參一道失傳的「同心劍訣」——需兩人靈識長時間交疊，劍意共鳴到能短暫共享彼此視野的程度。</p>
 <p>夕陽沉入雲海，兩柄劍在崖上劃出交織的光弧。當靈識完全相和的那一刻，你「看」到了她眼中的世界：那個世界裡，有風，有劍，有雲海——還有，一個站在她身旁的你。</p>

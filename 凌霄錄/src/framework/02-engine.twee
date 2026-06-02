@@ -55,6 +55,9 @@ setup.enemies = {
 	beast:    { name: "受傷的上古妖獸",  hp: 220, atk: 30, def: 10, stones: 0,  intro: "妖獸渾身浴血，金瞳赤紅，受傷反而更加狂暴。", tameable: true },
 	foxrebel: { name: "狐族叛黨修士",   hp: 180, atk: 28, def: 8,  stones: 30, intro: "狐族叛黨足尖一點，挾著妖風撲來。" },
 	wildbeast:{ name: "瘴境妖狼",       hp: 90,  atk: 18, def: 4,  stones: 8,  intro: "一頭瘴氣纏身的妖狼從密林竄出。" },
+	ligui:    { name: "亂葬厲鬼",       hp: 130, atk: 26, def: 5,  stones: 12, intro: "一隻死於執念的厲鬼自屍堆中嘶嚎而起。" },
+	guidao:   { name: "幽冥鬼道修士",   hp: 200, atk: 32, def: 9,  stones: 24, intro: "鬼道修士御使陰風，攝魂之術森然襲來。" },
+	yinli:    { name: "幽冥女鬼使·陰離", hp: 260, atk: 36, def: 11, stones: 0,  intro: "半透明白髮的女子持刃而立，眼神空洞如被操縱的傀儡：「目標……凌霄。執行。」", spare: true },
 };
 
 /* ════════ 時間系統 ════════
@@ -128,6 +131,7 @@ setup.addStat = function (p, key, delta, cap) {
 setup.regions = {
 	lingxiao: { name: "凌霄峰", locs: ["dongfu","wuwuchang","cangjingge","danfang","citang","jianya","houshan"] },
 	nanjiang: { name: "南疆萬妖山", locs: ["shanzhai","lingquan","milin","yishitang","mijing"] },
+	youming:  { name: "幽冥澤", locs: ["guimenguan","huangquan","wangchuan","luanzang","youmingdian"] },
 };
 setup.locations = {
 	dongfu:     { name: "洞府",     region: "lingxiao", icon: "🏠", home: true,  desc: "你的清修洞府。一榻、一蒲團、一盞長明燈，靜謐宜修。" },
@@ -142,6 +146,11 @@ setup.locations = {
 	milin:      { name: "瘴境密林", region: "nanjiang", icon: "🌲", desc: "妖獸出沒的濃密叢林，危機與機緣並存。" },
 	yishitang:  { name: "議事堂",   region: "nanjiang", icon: "🏛", desc: "狐族議決族務之地，近來暗流洶湧。" },
 	mijing:     { name: "南疆秘境", region: "nanjiang", icon: "🌀", desc: "靈氣紊亂的上古秘境深處，傳說與危險之地。" },
+	guimenguan: { name: "鬼門關", region: "youming", icon: "⛩", home: true, desc: "幽冥澤的入口，死氣森森，唯此處尚算「安全」。" },
+	huangquan:  { name: "黃泉路", region: "youming", icon: "🛣", desc: "通往幽冥深處的長路，沿途鬼影幢幢。" },
+	wangchuan:  { name: "忘川",   region: "youming", icon: "🌊", desc: "忘川之水載著無數執念，靜得令人心折。" },
+	luanzang:   { name: "亂葬崗", region: "youming", icon: "⚰", desc: "屍骨累累、厲鬼橫行，卻也埋著上古遺物。" },
+	youmingdian:{ name: "幽冥殿", region: "youming", icon: "💀", desc: "冥尊法器所在的森冷大殿，幽冥鬼道的中樞。" },
 };
 
 /* ════════ 事件登錄表（沙盒中的引導主線） ════════
@@ -163,6 +172,14 @@ setup.events = [
 	{ passage:"foxpolitics_intro", loc:"yishitang", label:"⚡ 狐族內亂驟起",       cond:function(p){ return p.flags.metQing && !p.flags.foxPolitics; } },
 	{ passage:"qingling_kiss",     loc:"shanzhai",  label:"⚡ 夜半的窗欞",         cond:function(p){ return p.flags.qingTail && p.rel.qingling>=24 && !p.flags.qingKiss && setup.isNight(p); } },
 	{ passage:"qingling_heat",     loc:"mijing",    label:"⚡ 失控的靈慾潮期",     cond:function(p){ return p.flags.qingKiss && p.rel.qingling>=40 && !p.flags.qingHeat; } },
+	// 第四卷 · 幽冥禁地（陰離線）
+	{ passage:"yinli_ambush",   loc:"huangquan",  label:"⚡ 殺意森然的女鬼使",   cond:function(p){ return !p.flags.metYinli; } },
+	{ passage:"xianwen_shard",  loc:"luanzang",   label:"⚡ 亂葬崗下的仙紋微光", cond:function(p){ return p.flags.metYinli && !p.flags.xianwen; } },
+	{ passage:"yinli_unbind",   loc:"wangchuan",  label:"⚡ 她靈識深處的鎖鏈",   cond:function(p){ return p.flags.metYinli && p.rel.yinli>=12 && !p.flags.yinliUnbind; } },
+	{ passage:"yinli_rebuild",  loc:"wangchuan",  label:"⚡ 重新學習「她自己」",   cond:function(p){ return p.flags.yinliUnbind && !p.flags.yinliRebuild; } },
+	{ passage:"yinli_touch",    loc:"guimenguan", label:"⚡ 停在你手背上的指尖",   cond:function(p){ return p.flags.yinliRebuild && p.rel.yinli>=40 && !p.flags.yinliTouch; } },
+	{ passage:"jindan_great",   loc:"guimenguan", label:"⚡ 金丹凝聚的契機",       cond:function(p){ return p.realm>=2 && !p.flags.jindan; } },
+	{ passage:"mingzun_confront",loc:"youmingdian",label:"⚡ 冥尊法器的森冷低語",  cond:function(p){ return p.flags.yinliUnbind && p.flags.xianwen && !p.flags.mingzun; } },
 ];
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
@@ -230,6 +247,15 @@ setup.relText = function (who, v) {
 		if (v < 85)  return "標記期將至";
 		return "以心映心";
 	}
+	if (who === "yinli") {
+		if (v <= 0)  return "敵意（任務人格）";
+		if (v < 12)  return "動搖的殺意";
+		if (v < 24)  return "困惑的注視";
+		if (v < 40)  return "依賴漸生";
+		if (v < 60)  return "贖罪與牽掛";
+		if (v < 85)  return "以魂相報";
+		return "魂之所繫";
+	}
 	return "";
 };
 setup.rnd = function (n) { return Math.floor(Math.random() * n); };
@@ -248,7 +274,7 @@ setup.newPlayer = function () {
 		recipes: ["juqi"],
 		pills: {},
 		herbs: { lingcao: 3 },
-		rel: { suyuyao: 0, qingling: 0 },
+		rel: { suyuyao: 0, qingling: 0, yinli: 0 },
 		stats: { daoxin: 30, xinmo: 0, fame: 0, fatigue: 0 },
 		flags: {},
 		buffs: {},
