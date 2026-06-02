@@ -104,7 +104,7 @@ var LZString=function(){var r=String.fromCharCode,o="ABCDEFGHIJKLMNOPQRSTUVWXYZa
 		<div id="init-lacking"><p>Browser lacks capabilities required to play.</p><p>Upgrade or switch to another browser.</p></div>
 		<div id="init-loading"><div>Loading&hellip;</div></div>
 	</div>
-	<!-- UUID://C6F63F5F-A00B-4902-A034-0CFA603925BB// --><tw-storydata name="凌霄錄" startnode="127" creator="Tweego" creator-version="2.1.1+81d1d71" ifid="C6F63F5F-A00B-4902-A034-0CFA603925BB" zoom="1" format="SugarCube" format-version="2.37.3" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* twine-user-stylesheet #1: "StoryStylesheet" */
+	<!-- UUID://C6F63F5F-A00B-4902-A034-0CFA603925BB// --><tw-storydata name="凌霄錄" startnode="137" creator="Tweego" creator-version="2.1.1+81d1d71" ifid="C6F63F5F-A00B-4902-A034-0CFA603925BB" zoom="1" format="SugarCube" format-version="2.37.3" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css">/* twine-user-stylesheet #1: "StoryStylesheet" */
 @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;900&display=swap');
 
 :root {
@@ -459,6 +459,8 @@ setup.enemies = {
 	guidao:   { name: "幽冥鬼道修士",   hp: 200, atk: 32, def: 9,  stones: 24, intro: "鬼道修士御使陰風，攝魂之術森然襲來。" },
 	yinli:    { name: "幽冥女鬼使·陰離", hp: 260, atk: 36, def: 11, stones: 0,  intro: "半透明白髮的女子持刃而立，眼神空洞如被操縱的傀儡：「目標……凌霄。執行。」", spare: true },
 	binglao:  { name: "冰心宗執法長老", hp: 240, atk: 35, def: 12, stones: 0,  intro: "執法長老一身冬藍道袍，周身寒霜凝結：「清情大典乃宗門根本，閒雜人等，退下。」" },
+	moqian:   { name: "血煞魔宗先鋒", hp: 220, atk: 36, def: 10, stones: 30, intro: "血煞魔修踏著屍山獰笑而來，渾身浴血、殺氣騰騰。" },
+	bloodlord:{ name: "血魔尊",       hp: 560, atk: 50, def: 16, stones: 0,  intro: "血魔尊立於血色雲海之巔，六千年殺戮之氣壓得天地變色：「凌霄……你那混沌之體，本尊收下了。」" },
 };
 
 /* ════════ 時間系統 ════════
@@ -602,6 +604,8 @@ setup.events = [
 	{ passage:"yl_date_snow",   loc:"guimenguan",label:"♡ 雪中小狐狸的記憶",    cond:function(p){ return p.flags.yinliRebuild && p.rel.yinli>=45 && !p.flags.ylD2; } },
 	{ passage:"dx_date_tea",    loc:"hantan",   label:"♡ 寒潭邊的一壺溫茶",     cond:function(p){ return p.flags.metDongxue && p.rel.dongxue>=8 && !p.flags.dxD1; } },
 	{ passage:"dx_date_peak",   loc:"bingfeng", label:"♡ 與冬雪同看絕頂風雪",   cond:function(p){ return p.flags.dxFrost && p.rel.dongxue>=30 && !p.flags.dxD2; } },
+	// 第五卷 · 魔道入侵（金丹大成或挫敗冥尊後，於凌霄劍宗觸發）
+	{ passage:"invasion_call",  loc:"wuwuchang",label:"🔥 魔道入侵！宗門告急",   cond:function(p){ return (p.flags.jindan || p.flags.mingzun) && !p.flags.vol5started; } },
 ];
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
@@ -690,6 +694,24 @@ setup.relText = function (who, v) {
 	return "";
 };
 setup.rnd = function (n) { return Math.floor(Math.random() * n); };
+
+/* 好感最高的女主（前世道侶揭曉用） */
+setup.topLove = function (p) {
+	const names = { suyuyao: "蘇羽瑤", qingling: "青玲兒", dongxue: "裴冬雪", yinli: "陰離" };
+	let best = null, bv = -1;
+	["suyuyao", "qingling", "dongxue", "yinli"].forEach(function (k) {
+		const v = (p.rel && p.rel[k]) || 0;
+		if (v > bv) { bv = v; best = k; }
+	});
+	return { id: best, name: names[best] || "", val: bv, has: bv > 0 };
+};
+/* 已締緣的女主清單（道侶大典用） */
+setup.lovers = function (p) {
+	const names = { suyuyao: "蘇羽瑤", qingling: "青玲兒", dongxue: "裴冬雪", yinli: "陰離" };
+	return ["suyuyao", "qingling", "dongxue", "yinli"]
+		.filter(function (k) { return ((p.rel && p.rel[k]) || 0) >= 40; })
+		.map(function (k) { return names[k]; });
+};
 setup.has = function (p, id) { return (p.books || []).indexOf(id) !== -1; };
 
 /* 建立戰鬥狀態（在 JS 組裝，避免 twee 多行物件字面量陷阱） */
@@ -2458,7 +2480,123 @@ setup.runDaily = function (p, locId) {
 &lt;&lt;gainCult 50&gt;&gt;&lt;&lt;stat &quot;daoxin&quot; 2&gt;&gt;
 &lt;&lt;rel &quot;dongxue&quot; 9&gt;&gt;
 &lt;/div&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;「以後的雪，我陪你一起看。」&quot;&gt;&gt;&lt;&lt;rel &quot;dongxue&quot; 3&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;為她擋住風雪&quot;&gt;&gt;&lt;&lt;rel &quot;dongxue&quot; 2&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="117" name="cultivate" tags="game" position="850,1475" size="100,100">&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;「以後的雪，我陪你一起看。」&quot;&gt;&gt;&lt;&lt;rel &quot;dongxue&quot; 3&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;&lt;link &quot;為她擋住風雪&quot;&gt;&gt;&lt;&lt;rel &quot;dongxue&quot; 2&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="117" name="invasion_call" tags="game" position="850,1475" size="100,100">&lt;&lt;set $p.flags.vol5started to true&gt;&gt;
+&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;scene-title&quot;&gt;第五卷 · 魔道入侵&lt;/div&gt;
+&lt;p&gt;傳訊玉符同時炸開——血煞魔宗聯合幽冥殘黨，傾巢而出，兵臨正道。九洲烽火，凌霄劍宗首當其衝。&lt;/p&gt;
+&lt;p class=&quot;em&quot;&gt;「血魔尊親自領軍，正道盟岌岌可危。凌霄師弟，宗門需要你。」&lt;/p&gt;
+&lt;p class=&quot;narr&quot;&gt;六千年的殺戮之氣自天際壓來。你握緊拳——這一戰，是你從廢墟一路走到此刻，所要守護的一切。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;
+	&lt;&lt;link &quot;回援凌霄劍宗&quot;&gt;&gt;&lt;&lt;goto &quot;invasion_gather&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="118" name="invasion_gather" tags="game" position="975,1475" size="100,100">&lt;&lt;set _girls to []&gt;&gt;
+&lt;&lt;if $p.flags.metSuyuyao&gt;&gt;&lt;&lt;set _girls.push(&quot;蘇羽瑤&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $p.flags.metQing&gt;&gt;&lt;&lt;set _girls.push(&quot;青玲兒&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $p.flags.metDongxue&gt;&gt;&lt;&lt;set _girls.push(&quot;裴冬雪&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;if $p.flags.metYinli&gt;&gt;&lt;&lt;set _girls.push(&quot;陰離&quot;)&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;scene-title&quot;&gt;群像 · 集結&lt;/div&gt;
+&lt;&lt;if _girls.length &gt;= 2&gt;&gt;
+	&lt;p&gt;劍宗大殿之上，難得齊聚——&lt;span class=&quot;em&quot;&gt;&lt;&lt;= _girls.join(&quot;、&quot;)&gt;&gt;&lt;/span&gt; 竟為了同一個人，站到了一起。&lt;/p&gt;
+	&lt;p class=&quot;narr&quot;&gt;空氣裡有種微妙的張力。蘇羽瑤劍眉微挑，青玲兒尾巴炸毛，裴冬雪面無表情地記錄著什麼，陰離冷冷掃視全場——四道目光在你身上交會，又各自別開。&lt;/p&gt;
+	&lt;p&gt;最終還是青玲兒打破沉默：「哼，現在不是吃醋的時候！」眾人一滯，旋即心照不宣——大敵當前，先並肩再說。&lt;/p&gt;
+&lt;&lt;elseif _girls.length === 1&gt;&gt;
+	&lt;p&gt;&lt;span class=&quot;em&quot;&gt;&lt;&lt;= _girls[0]&gt;&gt;&lt;/span&gt; 第一時間趕到你身邊，不必多言，只一個眼神便已並肩。&lt;/p&gt;
+&lt;&lt;else&gt;&gt;
+	&lt;p&gt;你獨自立於劍宗大殿，但身後是三萬同門。這一戰，不孤單。&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;p class=&quot;sys&quot;&gt;【眾志成城。魔道先鋒已破山門而入。】&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;
+	&lt;&lt;link &quot;迎上魔道先鋒&quot;&gt;&gt;&lt;&lt;startBattle &quot;moqian&quot; &quot;invasion_defend_win&quot; &quot;invasion_lose&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+	&lt;&lt;link &quot;📚 先穩固狀態&quot;&gt;&gt;&lt;&lt;set $return to &quot;invasion_gather&quot;&gt;&gt;&lt;&lt;goto &quot;cultivate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="119" name="invasion_defend_win" tags="game" position="1100,1475" size="100,100">&lt;&lt;gainCult 250&gt;&gt;&lt;&lt;stat &quot;fame&quot; 20&gt;&gt;
+&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;scene-title&quot;&gt;守城&lt;/div&gt;
+&lt;p&gt;你與並肩之人聯手，將魔道先鋒一一擊潰，守住了山門第一道防線。血色雲海卻仍在天際翻湧、步步逼近——真正的對手，還在後頭。&lt;/p&gt;
+&lt;p class=&quot;sys&quot;&gt;【擊退先鋒 — 修為 +250、聲望大漲】&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;迎向血色雲海&quot;&gt;&gt;&lt;&lt;goto &quot;bloodlord_intro&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="120" name="invasion_lose" tags="game" position="1225,1475" size="100,100">&lt;&lt;if $battle.fled&gt;&gt;
+	&lt;div class=&quot;scene&quot;&gt;&lt;p class=&quot;narr&quot;&gt;你暫退整頓陣腳。魔道攻勢未歇，須儘快回援。&lt;/p&gt;&lt;/div&gt;
+&lt;&lt;else&gt;&gt;
+	&lt;&lt;set $p.hp to Math.max(1, Math.floor($p.maxHp*0.45))&gt;&gt;
+	&lt;div class=&quot;scene&quot;&gt;&lt;p class=&quot;dmg&quot;&gt;魔修兇悍，你負傷退守。同門以性命為你爭取喘息——不能讓他們白費。&lt;/p&gt;&lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;div class=&quot;choices&quot;&gt;
+	&lt;&lt;link &quot;⟳ 調息再戰&quot;&gt;&gt;&lt;&lt;set $return to &quot;invasion_gather&quot;&gt;&gt;&lt;&lt;goto &quot;cultivate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+	&lt;&lt;link &quot;← 重整旗鼓&quot;&gt;&gt;&lt;&lt;goto &quot;invasion_gather&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="121" name="bloodlord_intro" tags="game" position="100,1600" size="100,100">&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;scene-title&quot;&gt;高潮 · 血魔尊&lt;/div&gt;
+&lt;p&gt;血色雲海之巔，血魔尊踏空而立。六千年散仙之威如山嶽傾覆，所過之處草木盡枯。&lt;/p&gt;
+&lt;p class=&quot;em&quot;&gt;「混沌之體……萬年難遇的容器。凌霄，把你的身軀獻給本尊，本尊許你魂飛魄散得痛快些。」&lt;/p&gt;
+&lt;p class=&quot;narr&quot;&gt;你深吸一口氣。身後，是宗門、是同門、是那幾道為你而戰的身影。退無可退。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;
+	&lt;&lt;link &quot;⚔ 與血魔尊決死一戰&lt;span class=&#39;lx-hint&#39;&gt;最終 BOSS · 建議備妥回元丹&lt;/span&gt;&quot;&gt;&gt;&lt;&lt;startBattle &quot;bloodlord&quot; &quot;bloodlord_win&quot; &quot;bloodlord_lose&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+	&lt;&lt;link &quot;📚 決戰前準備&quot;&gt;&gt;&lt;&lt;set $return to &quot;bloodlord_intro&quot;&gt;&gt;&lt;&lt;goto &quot;cultivate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="122" name="bloodlord_lose" tags="game" position="225,1600" size="100,100">&lt;&lt;if $battle.fled&gt;&gt;
+	&lt;div class=&quot;scene&quot;&gt;&lt;p class=&quot;narr&quot;&gt;血魔尊太強，你被逼退。但你已看清他的路數——再來一次。&lt;/p&gt;&lt;/div&gt;
+&lt;&lt;else&gt;&gt;
+	&lt;&lt;set $p.hp to Math.max(1, Math.floor($p.maxHp*0.4))&gt;&gt;
+	&lt;&lt;stat &quot;xinmo&quot; 8&gt;&gt;
+	&lt;div class=&quot;scene&quot;&gt;&lt;p class=&quot;dmg&quot;&gt;血魔尊一掌震得你口吐鮮血。就在意識模糊之際，幾道熟悉的身影擋在你身前，為你拚出一線生機。&lt;/p&gt;&lt;p class=&quot;narr&quot;&gt;你不能倒下。為了她們，更為了你自己。&lt;/p&gt;&lt;/div&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;div class=&quot;choices&quot;&gt;
+	&lt;&lt;link &quot;⟳ 療傷再戰&quot;&gt;&gt;&lt;&lt;set $return to &quot;bloodlord_intro&quot;&gt;&gt;&lt;&lt;goto &quot;cultivate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+	&lt;&lt;link &quot;← 重整&quot;&gt;&gt;&lt;&lt;goto &quot;bloodlord_intro&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="123" name="bloodlord_win" tags="game" position="350,1600" size="100,100">&lt;&lt;set $p.flags.bloodlord to true&gt;&gt;
+&lt;&lt;set $p.stones += 100&gt;&gt;&lt;&lt;set $p.coins += 5&gt;&gt;
+&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;scene-title&quot;&gt;血魔尊隕落&lt;/div&gt;
+&lt;p&gt;決戰至最險處，你的混沌靈氣與並肩之人的力量交織成一道前所未見的洪流——蘇羽瑤的劍意、青玲兒的妖法、裴冬雪的寒道、陰離的禁術，凡你曾以真心換來的，此刻盡數匯於你一身。&lt;/p&gt;
+&lt;p&gt;血魔尊難以置信地看著貫穿他的那道混沌之光：「不可能……一個廢材……」六千年的殺戮之軀，在這一擊下崩散成血色流螢。&lt;/p&gt;
+&lt;p class=&quot;sys&quot;&gt;【血魔尊隕落 · 九洲魔劫平定 — 靈石 ×100、書幣 ×5】&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;就在此刻——丹田劇震&quot;&gt;&gt;&lt;&lt;goto &quot;yuanying_break&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="124" name="yuanying_break" tags="game" position="475,1600" size="100,100">&lt;&lt;if $p.realm &lt; 3&gt;&gt;&lt;&lt;set $p.realm to 3, $p.layer to 1&gt;&gt;&lt;&lt;recompute&gt;&gt;&lt;&lt;set $p.hp to $p.maxHp, $p.mp to $p.maxMp&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;set $p.flags.yuanying to true&gt;&gt;
+&lt;&lt;stat &quot;daoxin&quot; 5&gt;&gt;
+&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;scene-title&quot;&gt;元嬰成形&lt;/div&gt;
+&lt;p&gt;斬殺血魔尊的剎那，積累已久的修為終於衝破桎梏。金丹碎裂、元嬰成形——一個與你眉眼一致的小小法身在丹田中睜開了眼。神識脫體，一念之間可感千里。&lt;/p&gt;
+&lt;p&gt;你踏入了 &lt;span class=&quot;em&quot;&gt;&lt;&lt;= setup.realmName($p)&gt;&gt;&lt;/span&gt;。而就在元嬰睜眼的這一刻，你元神最深處那道塵封萬年的&lt;span class=&quot;em&quot;&gt;烙印&lt;/span&gt;，毫無預兆地，亮了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;循著烙印的悸動望去……&quot;&gt;&gt;&lt;&lt;goto &quot;qianshi_reveal&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="125" name="qianshi_reveal" tags="game" position="600,1600" size="100,100">&lt;&lt;set _top to setup.topLove($p)&gt;&gt;
+&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;scene-title&quot;&gt;前世道侶揭曉&lt;/div&gt;
+&lt;p&gt;萬年前的記憶碎片隨仙紋與元嬰之力傾瀉而下：仙魔大戰，一位女仙與你締結靈魂烙印的道侶之約，兩人同時隕落，烙印殘存於你元神最深處，跨越萬年。&lt;/p&gt;
+&lt;&lt;if _top.has&gt;&gt;
+	&lt;p&gt;而此刻，那道烙印正朝著一個方向溫熱地共鳴——&lt;span class=&quot;em&quot;&gt;&lt;&lt;= _top.name&gt;&gt;&lt;/span&gt;。&lt;/p&gt;
+	&lt;p&gt;她顯然也感應到了什麼，怔怔望著你，眼中翻湧著連她自己都無法解釋的、彷彿隔了一世的熟悉。&lt;/p&gt;
+	&lt;p class=&quot;narr&quot;&gt;「原來……」你輕聲，「我們不是第一次相遇。」&lt;&lt;= _top.name&gt;&gt;沒有說話，只是極輕地、極輕地，握住了你的手——這一次，跨越了萬年。&lt;/p&gt;
+&lt;&lt;else&gt;&gt;
+	&lt;p&gt;那道烙印溫熱地搏動著，朝向一個你尚未真正走近的方向。前世的道侶，今世仍在某處等你尋回——這份緣，還沒有結局。&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;塵埃落定之後&quot;&gt;&gt;&lt;&lt;goto &quot;vol5_ending&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="126" name="vol5_ending" tags="game" position="725,1600" size="100,100">&lt;&lt;set _lovers to setup.lovers($p)&gt;&gt;
+&lt;div class=&quot;scene end-card&quot;&gt;
+&lt;div class=&quot;big&quot;&gt;✦ 第五卷 · 完 ✦&lt;/div&gt;
+&lt;p&gt;魔劫已平，元嬰已成。你自地球轉生的一縷孤魂，以「廢材」之身覺醒混沌靈根，一路走到了九洲之巔。&lt;/p&gt;
+&lt;div class=&quot;sep&quot;&gt;&lt;span&gt;道侶大典&lt;/span&gt;&lt;/div&gt;
+&lt;&lt;if _lovers.length&gt;&gt;
+	&lt;p&gt;劍宗為你舉行了一場前所未有的道侶大典。觀禮席上，&lt;span class=&quot;heart&quot;&gt;&lt;&lt;= _lovers.join(&quot;、&quot;)&gt;&gt;&lt;/span&gt; 各自以各自的方式，與你交換了一縷封存的元神氣息。&lt;/p&gt;
+	&lt;p class=&quot;narr&quot;&gt;這條路你不再獨行。&lt;/p&gt;
+&lt;&lt;else&gt;&gt;
+	&lt;p&gt;你婉謝了眾人的道賀，獨立於凌霄峰巔。情緣之事，你還有的是時間慢慢來。&lt;/p&gt;
+&lt;&lt;/if&gt;&gt;
+&lt;div class=&quot;sep&quot;&gt;&lt;span&gt;此身所至&lt;/span&gt;&lt;/div&gt;
+&lt;p&gt;
+當前境界：&lt;span class=&quot;gold&quot;&gt;&lt;&lt;= setup.realmName($p)&gt;&gt;&lt;/span&gt;&lt;br&gt;
+蘇羽瑤 &lt;span class=&quot;heart&quot;&gt;&lt;&lt;= $p.rel.suyuyao&gt;&gt;&lt;/span&gt;　青玲兒 &lt;span class=&quot;heart&quot;&gt;&lt;&lt;= $p.rel.qingling&gt;&gt;&lt;/span&gt;　裴冬雪 &lt;span class=&quot;heart&quot;&gt;&lt;&lt;= $p.rel.dongxue&gt;&gt;&lt;/span&gt;　陰離 &lt;span class=&quot;heart&quot;&gt;&lt;&lt;= $p.rel.yinli&gt;&gt;&lt;/span&gt;
+&lt;/p&gt;
+&lt;div class=&quot;sep&quot;&gt;&lt;span&gt;尾聲&lt;/span&gt;&lt;/div&gt;
+&lt;p class=&quot;narr&quot;&gt;仙紋碎片仍缺，中央神墟的封印之後，是萬年前那場仙魔大戰的全部真相，與通往仙界的門戶。&lt;br&gt;但那，是下一段旅程了。&lt;/p&gt;
+&lt;p class=&quot;sys&quot;&gt;本 demo 主線至此完結。你仍可自由修煉、突破、推進四位女主的情緣。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&quot;choices&quot;&gt;
+	&lt;&lt;link &quot;⟳ 繼續修行&quot;&gt;&gt;&lt;&lt;goto &quot;cultivate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+	&lt;&lt;link &quot;← 返回原地&quot;&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;
+	&lt;&lt;link &quot;返回主選單&quot;&gt;&gt;&lt;&lt;goto &quot;Start&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="127" name="cultivate" tags="game" position="850,1600" size="100,100">&lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;打坐修煉&lt;/div&gt;
 &lt;p class=&quot;narr&quot;&gt;你盤膝而坐，引天地靈氣入體。&lt;&lt;if setup.has($p,&quot;tuna&quot;)&gt;&gt;《吐納引氣訣》運轉之下，靈氣如溪流匯入丹田。&lt;&lt;/if&gt;&gt;&lt;/p&gt;
 &lt;/div&gt;
@@ -2502,7 +2640,7 @@ setup.runDaily = function (p, locId) {
 	&lt;&lt;/if&gt;&gt;
 	&lt;&lt;link &quot;📚 進入萬界藏書閣&quot;&gt;&gt;&lt;&lt;goto &quot;library&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;← 返回前路&quot;&gt;&gt;&lt;&lt;goto $return&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="118" name="breakthrough" tags="game" position="975,1475" size="100,100">&lt;&lt;set _need to setup.cultNeed($p)&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="128" name="breakthrough" tags="game" position="975,1600" size="100,100">&lt;&lt;set _need to setup.cultNeed($p)&gt;&gt;
 &lt;&lt;if $p.cult &lt; _need&gt;&gt;
 	&lt;&lt;goto &quot;cultivate&quot;&gt;&gt;
 &lt;&lt;else&gt;&gt;
@@ -2556,7 +2694,7 @@ setup.runDaily = function (p, locId) {
 	&lt;&lt;link &quot;⟳ 繼續修煉&quot;&gt;&gt;&lt;&lt;goto &quot;cultivate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;← 返回前路&quot;&gt;&gt;&lt;&lt;goto $return&gt;&gt;&lt;&lt;/link&gt;&gt;
 &lt;/div&gt;
-&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="119" name="library" tags="game" position="1100,1475" size="100,100">&lt;div class=&quot;panel&quot;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="129" name="library" tags="game" position="1100,1600" size="100,100">&lt;div class=&quot;panel&quot;&gt;
 &lt;h3&gt;📚 萬界藏書閣&lt;/h3&gt;
 &lt;p class=&quot;desc&quot;&gt;封存於凌氏玉佩中的上古空間法寶。書幣可解鎖典籍，每逢突破或機緣可得。&lt;br&gt;書幣 &lt;b class=&quot;gold&quot;&gt;&lt;&lt;= $p.coins&gt;&gt;&lt;/b&gt;　靈石 &lt;b class=&quot;gold&quot;&gt;&lt;&lt;= $p.stones&gt;&gt;&lt;/b&gt;&lt;/p&gt;
 &lt;&lt;for _id range Object.keys(setup.books)&gt;&gt;
@@ -2592,7 +2730,7 @@ setup.runDaily = function (p, locId) {
 &lt;/div&gt;
 &lt;div class=&quot;choices&quot;&gt;
 	&lt;&lt;link &quot;← 離開藏書閣&quot;&gt;&gt;&lt;&lt;goto $return&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="120" name="explore" tags="game" position="1225,1475" size="100,100">&lt;&lt;pass 2&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="130" name="explore" tags="game" position="1225,1600" size="100,100">&lt;&lt;pass 2&gt;&gt;
 &lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;採集探索&lt;/div&gt;
 &lt;&lt;set _luckRoll to Math.random() &lt; (0.4 + $p.luck/300)&gt;&gt;
@@ -2615,7 +2753,7 @@ setup.runDaily = function (p, locId) {
 &lt;div class=&quot;choices&quot;&gt;
 	&lt;&lt;link &quot;↻ 再探一次&lt;span class=&#39;lx-hint&#39;&gt;耗時，可能空手而回&lt;/span&gt;&quot;&gt;&gt;&lt;&lt;goto &quot;explore&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;← 返回前路&quot;&gt;&gt;&lt;&lt;goto $return&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="121" name="CombatWidgets" tags="widget" position="100,1600" size="100,100">/% 開戰：_args = foeId, 勝利段落, 失敗段落 %/
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="131" name="CombatWidgets" tags="widget" position="100,1725" size="100,100">/% 開戰：_args = foeId, 勝利段落, 失敗段落 %/
 &lt;&lt;widget &quot;startBattle&quot;&gt;&gt;
 	&lt;&lt;set _e to setup.enemies[_args[0]]&gt;&gt;
 	&lt;&lt;if $p.seen&gt;&gt;&lt;&lt;set $p.seen.foe[_args[0]] to true&gt;&gt;&lt;&lt;/if&gt;&gt;
@@ -2653,7 +2791,7 @@ setup.runDaily = function (p, locId) {
 	&lt;&lt;else&gt;&gt;
 		&lt;&lt;goto &quot;Combat&quot;&gt;&gt;
 	&lt;&lt;/if&gt;&gt;
-&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="122" name="Combat" tags="game" position="225,1600" size="100,100">&lt;&lt;set _e to setup.enemies[$battle.foeId]&gt;&gt;
+&lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="132" name="Combat" tags="game" position="225,1725" size="100,100">&lt;&lt;set _e to setup.enemies[$battle.foeId]&gt;&gt;
 &lt;div class=&quot;combat-foe&quot;&gt;
 	&lt;div style=&quot;display:flex;justify-content:space-between;align-items:baseline;&quot;&gt;
 		&lt;span class=&quot;em&quot;&gt;&lt;&lt;= _e.name&gt;&gt;&lt;/span&gt;
@@ -2720,7 +2858,7 @@ setup.runDaily = function (p, locId) {
 			&lt;&lt;enemyStrike&gt;&gt;
 		&lt;&lt;/if&gt;&gt;
 	&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="123" name="alchemy" tags="game" position="350,1600" size="100,100">&lt;div class=&quot;panel&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="133" name="alchemy" tags="game" position="350,1725" size="100,100">&lt;div class=&quot;panel&quot;&gt;
 &lt;h3&gt;🔥 丹房 · 九轉玄火爐&lt;/h3&gt;
 &lt;p class=&quot;desc&quot;&gt;以現代化學邏輯掌控火候。選擇丹方後，於理想火候時機定火。&lt;br&gt;靈石 &lt;b class=&quot;gold&quot;&gt;&lt;&lt;= $p.stones&gt;&gt;&lt;/b&gt;&lt;/p&gt;
 &lt;&lt;set _ownedAny to false&gt;&gt;
@@ -2753,26 +2891,26 @@ setup.runDaily = function (p, locId) {
 &lt;/div&gt;
 &lt;div class=&quot;choices&quot;&gt;
 	&lt;&lt;link &quot;← 離開丹房&quot;&gt;&gt;&lt;&lt;goto $return&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="124" name="cooking" tags="game" position="475,1600" size="100,100">&lt;&lt;pass 1&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="134" name="cooking" tags="game" position="475,1725" size="100,100">&lt;&lt;pass 1&gt;&gt;
 &lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;煉丹 · &lt;&lt;= setup.recipes[$p.cooking].name&gt;&gt;&lt;/div&gt;
 &lt;p class=&quot;narr&quot;&gt;藥材入爐，靈火升騰。凝神，掌控火候——&lt;/p&gt;
 &lt;&lt;heatgame $p.cooking&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="125" name="alchemyResult" tags="game" position="600,1600" size="100,100">&lt;div class=&quot;scene&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="135" name="alchemyResult" tags="game" position="600,1725" size="100,100">&lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;出爐&lt;/div&gt;
 &lt;p class=&quot;&lt;&lt;= $alchemyResult.cls&gt;&gt;&quot;&gt;&lt;&lt;= $alchemyResult.msg&gt;&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&quot;choices&quot;&gt;
 	&lt;&lt;link &quot;↻ 再煉一爐&quot;&gt;&gt;&lt;&lt;goto &quot;alchemy&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;← 離開丹房&quot;&gt;&gt;&lt;&lt;goto $return&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="126" name="daily" tags="game" position="725,1600" size="100,100">&lt;div class=&quot;scene&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="136" name="daily" tags="game" position="725,1725" size="100,100">&lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;閒步&lt;/div&gt;
 &lt;&lt;= setup.runDaily($p, $p.loc)&gt;&gt;
 &lt;/div&gt;
 &lt;div class=&quot;choices&quot;&gt;
 	&lt;&lt;link &quot;↻ 再走走&quot;&gt;&gt;&lt;&lt;pass 1&gt;&gt;&lt;&lt;goto &quot;daily&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;← 返回&quot;&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="127" name="Start" tags="" position="850,1600" size="100,100">&lt;div class=&quot;lx-embers&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="137" name="Start" tags="" position="850,1725" size="100,100">&lt;div class=&quot;lx-embers&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
 &lt;div class=&quot;title-wrap&quot;&gt;
 	&lt;div class=&quot;seal-stack&quot;&gt;
 		&lt;div class=&quot;seal-aura&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
@@ -2789,13 +2927,13 @@ setup.runDaily = function (p, locId) {
 	&lt;/div&gt;
 	&lt;div class=&quot;t-foot&quot;&gt;左側選單可隨時存檔 / 讀檔 / 設定&lt;/div&gt;
 &lt;/div&gt;
-&lt;div class=&quot;t-ver&quot; aria-hidden=&quot;true&quot;&gt;凌霄錄 · v0.5&lt;/div&gt;</tw-passagedata><tw-passagedata pid="128" name="About" tags="" position="975,1600" size="100,100">&lt;div class=&quot;scene&quot;&gt;
+&lt;div class=&quot;t-ver&quot; aria-hidden=&quot;true&quot;&gt;凌霄錄 · v0.5&lt;/div&gt;</tw-passagedata><tw-passagedata pid="138" name="About" tags="" position="975,1725" size="100,100">&lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;關於&lt;/div&gt;
 &lt;p&gt;《凌霄錄》是一部轉生修仙文字遊戲，以 SugarCube 2 引擎打造（與《Degrees of Lewdity》同源）。&lt;/p&gt;
 &lt;p&gt;你將扮演自地球轉生的&lt;span class=&quot;em&quot;&gt;凌霄&lt;/span&gt;，自滅門廢墟一路登臨凌霄劍宗、踏入南疆萬妖山、深入幽冥禁地——在修煉、戰鬥、煉丹之間，與&lt;span class=&quot;em&quot;&gt;蘇羽瑤&lt;/span&gt;、&lt;span class=&quot;em&quot;&gt;青玲兒&lt;/span&gt;、&lt;span class=&quot;em&quot;&gt;陰離&lt;/span&gt;等紅顏譜寫各自的緣分。&lt;/p&gt;
 &lt;p class=&quot;narr&quot;&gt;所有角色均為成年人設定（18+）。親密情節以氛圍與留白呈現。&lt;/p&gt;
 &lt;/div&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回&quot;&gt;&gt;&lt;&lt;goto &quot;Start&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="129" name="Map" tags="game" position="1100,1600" size="100,100">&lt;&lt;set _reg to setup.regions[$p.region]&gt;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回&quot;&gt;&gt;&lt;&lt;goto &quot;Start&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="139" name="Map" tags="game" position="1100,1725" size="100,100">&lt;&lt;set _reg to setup.regions[$p.region]&gt;&gt;
 &lt;div class=&quot;scene&quot;&gt;
 &lt;div class=&quot;scene-title&quot;&gt;🗺 &lt;&lt;= _reg.name&gt;&gt; · 移動&lt;/div&gt;
 &lt;p class=&quot;narr&quot;&gt;擇一處前往（每次移動約耗一個時辰）。&lt;/p&gt;
@@ -2830,7 +2968,7 @@ setup.runDaily = function (p, locId) {
 		&lt;&lt;link &quot;↑ 離開幽冥澤，返回南疆&lt;span class=&#39;lx-hint&#39;&gt;遠行&lt;/span&gt;&quot;&gt;&gt;&lt;&lt;pass 3&gt;&gt;&lt;&lt;enterLoc &quot;shanzhai&quot;&gt;&gt;&lt;&lt;goto &quot;shanzhai&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;/if&gt;&gt;
 	&lt;&lt;link &quot;← 取消，留在原地&quot;&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="130" name="journey_south" tags="game" position="1225,1600" size="100,100">&lt;&lt;pass 3&gt;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="140" name="journey_south" tags="game" position="1225,1725" size="100,100">&lt;&lt;pass 3&gt;&gt;
 &lt;&lt;if not $p.flags.wentSouth&gt;&gt;
 	&lt;&lt;set $p.flags.wentSouth to true&gt;&gt;
 	&lt;div class=&quot;scene&quot;&gt;
@@ -2843,7 +2981,7 @@ setup.runDaily = function (p, locId) {
 	&lt;div class=&quot;scene&quot;&gt;&lt;p class=&quot;narr&quot;&gt;你再度跋涉南下，回到了熟悉的狐族山寨。&lt;/p&gt;&lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;enterLoc &quot;shanzhai&quot;&gt;&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;踏入狐族山寨&quot;&gt;&gt;&lt;&lt;goto &quot;shanzhai&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="131" name="journey_youming" tags="game" position="100,1725" size="100,100">&lt;&lt;pass 3&gt;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;踏入狐族山寨&quot;&gt;&gt;&lt;&lt;goto &quot;shanzhai&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="141" name="journey_youming" tags="game" position="100,1850" size="100,100">&lt;&lt;pass 3&gt;&gt;
 &lt;&lt;if not $p.flags.wentYouming&gt;&gt;
 	&lt;&lt;set $p.flags.wentYouming to true&gt;&gt;
 	&lt;div class=&quot;scene&quot;&gt;
@@ -2855,7 +2993,7 @@ setup.runDaily = function (p, locId) {
 	&lt;div class=&quot;scene&quot;&gt;&lt;p class=&quot;narr&quot;&gt;你再度踏入幽冥澤的死氣之中。&lt;/p&gt;&lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;enterLoc &quot;guimenguan&quot;&gt;&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;深入幽冥澤&quot;&gt;&gt;&lt;&lt;goto &quot;guimenguan&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="132" name="journey_bingling" tags="game" position="225,1725" size="100,100">&lt;&lt;pass 3&gt;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;深入幽冥澤&quot;&gt;&gt;&lt;&lt;goto &quot;guimenguan&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="142" name="journey_bingling" tags="game" position="225,1850" size="100,100">&lt;&lt;pass 3&gt;&gt;
 &lt;&lt;if not $p.flags.wentBingling&gt;&gt;
 	&lt;&lt;set $p.flags.wentBingling to true&gt;&gt;
 	&lt;div class=&quot;scene&quot;&gt;
@@ -2867,7 +3005,7 @@ setup.runDaily = function (p, locId) {
 	&lt;div class=&quot;scene&quot;&gt;&lt;p class=&quot;narr&quot;&gt;你再度踏雪北行，回到了清冷的冰嶺。&lt;/p&gt;&lt;/div&gt;
 &lt;&lt;/if&gt;&gt;
 &lt;&lt;enterLoc &quot;binggate&quot;&gt;&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;踏入冰心宗&quot;&gt;&gt;&lt;&lt;goto &quot;binggate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="133" name="Codex" tags="game" position="350,1725" size="100,100">&lt;div class=&quot;panel&quot;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;踏入冰心宗&quot;&gt;&gt;&lt;&lt;goto &quot;binggate&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="143" name="Codex" tags="game" position="350,1850" size="100,100">&lt;div class=&quot;panel&quot;&gt;
 &lt;h3&gt;📜 圖鑑&lt;/h3&gt;
 &lt;p class=&quot;desc&quot;&gt;記錄旅途中所見的人、所習的功法、所歷的地與所戰的敵。&lt;/p&gt;
 &lt;/div&gt;
@@ -2877,7 +3015,7 @@ setup.runDaily = function (p, locId) {
 	&lt;&lt;link &quot;🗺 地誌&quot;&gt;&gt;&lt;&lt;goto &quot;CodexLocs&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;⚔ 妖魔譜&quot;&gt;&gt;&lt;&lt;goto &quot;CodexFoes&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;
 	&lt;&lt;link &quot;← 返回&quot;&gt;&gt;&lt;&lt;goto $p.loc&gt;&gt;&lt;&lt;/link&gt;&gt;
-&lt;/div&gt;</tw-passagedata><tw-passagedata pid="134" name="CodexChars" tags="game" position="475,1725" size="100,100">&lt;div class=&quot;panel&quot;&gt;
+&lt;/div&gt;</tw-passagedata><tw-passagedata pid="144" name="CodexChars" tags="game" position="475,1850" size="100,100">&lt;div class=&quot;panel&quot;&gt;
 &lt;h3&gt;👤 人物誌&lt;/h3&gt;
 &lt;&lt;for _i, _id range setup.portraitOrder&gt;&gt;
 	&lt;&lt;set _c to setup.portraits[_id]&gt;&gt;
@@ -2896,7 +3034,7 @@ setup.runDaily = function (p, locId) {
 	&lt;&lt;/if&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 &lt;/div&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回圖鑑&quot;&gt;&gt;&lt;&lt;goto &quot;Codex&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="135" name="CodexBooks" tags="game" position="600,1725" size="100,100">&lt;div class=&quot;panel&quot;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回圖鑑&quot;&gt;&gt;&lt;&lt;goto &quot;Codex&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="145" name="CodexBooks" tags="game" position="600,1850" size="100,100">&lt;div class=&quot;panel&quot;&gt;
 &lt;h3&gt;📖 功法錄&lt;/h3&gt;
 &lt;&lt;for _id range Object.keys(setup.books)&gt;&gt;
 	&lt;&lt;set _b to setup.books[_id]&gt;&gt;
@@ -2910,7 +3048,7 @@ setup.runDaily = function (p, locId) {
 	&lt;/div&gt;
 &lt;&lt;/for&gt;&gt;
 &lt;/div&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回圖鑑&quot;&gt;&gt;&lt;&lt;goto &quot;Codex&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="136" name="CodexLocs" tags="game" position="725,1725" size="100,100">&lt;div class=&quot;panel&quot;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回圖鑑&quot;&gt;&gt;&lt;&lt;goto &quot;Codex&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="146" name="CodexLocs" tags="game" position="725,1850" size="100,100">&lt;div class=&quot;panel&quot;&gt;
 &lt;h3&gt;🗺 地誌&lt;/h3&gt;
 &lt;&lt;for _rid range Object.keys(setup.regions)&gt;&gt;
 	&lt;&lt;set _reg to setup.regions[_rid]&gt;&gt;
@@ -2927,7 +3065,7 @@ setup.runDaily = function (p, locId) {
 	&lt;&lt;/if&gt;&gt;
 &lt;&lt;/for&gt;&gt;
 &lt;/div&gt;
-&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回圖鑑&quot;&gt;&gt;&lt;&lt;goto &quot;Codex&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="137" name="CodexFoes" tags="game" position="850,1725" size="100,100">&lt;div class=&quot;panel&quot;&gt;
+&lt;div class=&quot;choices&quot;&gt;&lt;&lt;link &quot;← 返回圖鑑&quot;&gt;&gt;&lt;&lt;goto &quot;Codex&quot;&gt;&gt;&lt;&lt;/link&gt;&gt;&lt;/div&gt;</tw-passagedata><tw-passagedata pid="147" name="CodexFoes" tags="game" position="850,1850" size="100,100">&lt;div class=&quot;panel&quot;&gt;
 &lt;h3&gt;⚔ 妖魔譜&lt;/h3&gt;
 &lt;&lt;set _anyFoe to false&gt;&gt;
 &lt;&lt;for _id range Object.keys(setup.enemies)&gt;&gt;

@@ -59,6 +59,8 @@ setup.enemies = {
 	guidao:   { name: "幽冥鬼道修士",   hp: 200, atk: 32, def: 9,  stones: 24, intro: "鬼道修士御使陰風，攝魂之術森然襲來。" },
 	yinli:    { name: "幽冥女鬼使·陰離", hp: 260, atk: 36, def: 11, stones: 0,  intro: "半透明白髮的女子持刃而立，眼神空洞如被操縱的傀儡：「目標……凌霄。執行。」", spare: true },
 	binglao:  { name: "冰心宗執法長老", hp: 240, atk: 35, def: 12, stones: 0,  intro: "執法長老一身冬藍道袍，周身寒霜凝結：「清情大典乃宗門根本，閒雜人等，退下。」" },
+	moqian:   { name: "血煞魔宗先鋒", hp: 220, atk: 36, def: 10, stones: 30, intro: "血煞魔修踏著屍山獰笑而來，渾身浴血、殺氣騰騰。" },
+	bloodlord:{ name: "血魔尊",       hp: 560, atk: 50, def: 16, stones: 0,  intro: "血魔尊立於血色雲海之巔，六千年殺戮之氣壓得天地變色：「凌霄……你那混沌之體，本尊收下了。」" },
 };
 
 /* ════════ 時間系統 ════════
@@ -202,6 +204,8 @@ setup.events = [
 	{ passage:"yl_date_snow",   loc:"guimenguan",label:"♡ 雪中小狐狸的記憶",    cond:function(p){ return p.flags.yinliRebuild && p.rel.yinli>=45 && !p.flags.ylD2; } },
 	{ passage:"dx_date_tea",    loc:"hantan",   label:"♡ 寒潭邊的一壺溫茶",     cond:function(p){ return p.flags.metDongxue && p.rel.dongxue>=8 && !p.flags.dxD1; } },
 	{ passage:"dx_date_peak",   loc:"bingfeng", label:"♡ 與冬雪同看絕頂風雪",   cond:function(p){ return p.flags.dxFrost && p.rel.dongxue>=30 && !p.flags.dxD2; } },
+	// 第五卷 · 魔道入侵（金丹大成或挫敗冥尊後，於凌霄劍宗觸發）
+	{ passage:"invasion_call",  loc:"wuwuchang",label:"🔥 魔道入侵！宗門告急",   cond:function(p){ return (p.flags.jindan || p.flags.mingzun) && !p.flags.vol5started; } },
 ];
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
@@ -290,6 +294,24 @@ setup.relText = function (who, v) {
 	return "";
 };
 setup.rnd = function (n) { return Math.floor(Math.random() * n); };
+
+/* 好感最高的女主（前世道侶揭曉用） */
+setup.topLove = function (p) {
+	const names = { suyuyao: "蘇羽瑤", qingling: "青玲兒", dongxue: "裴冬雪", yinli: "陰離" };
+	let best = null, bv = -1;
+	["suyuyao", "qingling", "dongxue", "yinli"].forEach(function (k) {
+		const v = (p.rel && p.rel[k]) || 0;
+		if (v > bv) { bv = v; best = k; }
+	});
+	return { id: best, name: names[best] || "", val: bv, has: bv > 0 };
+};
+/* 已締緣的女主清單（道侶大典用） */
+setup.lovers = function (p) {
+	const names = { suyuyao: "蘇羽瑤", qingling: "青玲兒", dongxue: "裴冬雪", yinli: "陰離" };
+	return ["suyuyao", "qingling", "dongxue", "yinli"]
+		.filter(function (k) { return ((p.rel && p.rel[k]) || 0) >= 40; })
+		.map(function (k) { return names[k]; });
+};
 setup.has = function (p, id) { return (p.books || []).indexOf(id) !== -1; };
 
 /* 建立戰鬥狀態（在 JS 組裝，避免 twee 多行物件字面量陷阱） */
