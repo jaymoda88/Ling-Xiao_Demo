@@ -21,3 +21,6 @@ tools/storyformats/paperthin-1/
 tools/storyformats/snowman-1/
 tools/storyformats/snowman-2/
 tools/storyformats/sugarcube-1/
+
+# 編譯產物不入庫（多 agent 平行時唯一會衝突的檔）；改由 Release/本機 build 取得
+凌霄錄/build/

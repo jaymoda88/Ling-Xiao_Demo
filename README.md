@@ -9,7 +9,8 @@
 
 ## 立即遊玩
 
-下載後直接用瀏覽器開啟 [`凌霄錄/build/凌霄錄.html`](凌霄錄/build/凌霄錄.html)（單一檔案，內含引擎與存檔）。
+到 [**Releases**](https://github.com/jaymoda88/Ling-Xiao_Demo/releases) 下載最新的 `凌霄錄.html`，用瀏覽器開啟即可（單一檔案，內含引擎與存檔）。
+> 編譯產物不入版控（避免多人協作時衝突）；開發者可 clone 後執行 `./build.sh` 自行編譯。
 
 ## 特色
 

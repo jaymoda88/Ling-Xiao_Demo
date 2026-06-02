@@ -28,7 +28,9 @@ node server.mjs     # 預覽 http://localhost:8137
 5. `<<for>>` 內含迴圈變數的 `<<link>>` 要用 `<<capture>>…<</capture>>`。
 
 ## 改完流程
-`./build.sh` → 預覽驗證 → 連結檢查（WORKFLOW.md §3）→ `git add -A && git commit && git push`
+`./build.sh` → 預覽驗證 → `node check.mjs`（須全綠）→ `git add -A && git commit && git push`
 commit 署名：`Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>`
+- 編譯產物 `凌霄錄/build/` **不入版控**（已 gitignore）；可玩 HTML 由 Release 發佈。
+- 多 Agent 協作見 [`凌霄錄/docs/COLLAB.md`](凌霄錄/docs/COLLAB.md)：一人一 branch、只動自己的檔、PR 前 `node check.mjs`、Manager 整合。
 
 GitHub：https://github.com/jaymoda88/Ling-Xiao_Demo
