@@ -1070,7 +1070,12 @@ setup.runDaily = function (p, locId) {
 &lt;&lt;widget &quot;toast&quot;&gt;&gt;
 	&lt;&lt;run setup.toast(_args[0])&gt;&gt;
 &lt;&lt;/widget&gt;&gt;</tw-passagedata><tw-passagedata pid="5" name="PassageReady" tags="" position="600,100" size="100,100">/% 進入任一段落時：把背景星空容器補上一次 %/
-&lt;&lt;run if(!document.getElementById(&quot;lx-stars&quot;)){var s=document.createElement(&quot;div&quot;);s.id=&quot;lx-stars&quot;;document.body.insertBefore(s,document.body.firstChild);}&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="LocWidgets" tags="widget" position="725,100" size="100,100">/% 進入地點：同步 loc / region / 顯示名 %/
+&lt;&lt;run if(!document.getElementById(&quot;lx-stars&quot;)){var s=document.createElement(&quot;div&quot;);s.id=&quot;lx-stars&quot;;document.body.insertBefore(s,document.body.firstChild);}&gt;&gt;
+/% 舊存檔遷移：補上後加的欄位，避免新功能崩潰 %/
+&lt;&lt;if $p and $p.maxHp&gt;&gt;
+	&lt;&lt;if not $p.seen&gt;&gt;&lt;&lt;set $p.seen to { loc:{}, foe:{} }&gt;&gt;&lt;&lt;/if&gt;&gt;
+	&lt;&lt;if $p.rel and $p.rel.dongxue is undefined&gt;&gt;&lt;&lt;set $p.rel.dongxue to 0&gt;&gt;&lt;&lt;/if&gt;&gt;
+&lt;&lt;/if&gt;&gt;</tw-passagedata><tw-passagedata pid="6" name="LocWidgets" tags="widget" position="725,100" size="100,100">/% 進入地點：同步 loc / region / 顯示名 %/
 &lt;&lt;widget &quot;enterLoc&quot;&gt;&gt;
 	&lt;&lt;set _id to _args[0]&gt;&gt;
 	&lt;&lt;set $p.loc to _id&gt;&gt;
@@ -2415,7 +2420,7 @@ setup.runDaily = function (p, locId) {
 		&lt;&lt;recompute&gt;&gt;
 		&lt;&lt;run setup.toast(&quot;✦ 突破成功！&quot; + setup.realmName($p))&gt;&gt;
 		&lt;p&gt;靈力在經脈中奔流，舊有桎梏應聲碎裂。你突破至 &lt;span class=&quot;em&quot;&gt;&lt;&lt;= setup.realmName($p)&gt;&gt;&lt;/span&gt;，氣血與攻伐之力俱增。&lt;/p&gt;
-	&lt;&lt;else&gt;&gt;
+	&lt;&lt;elseif setup.realms[$p.realm + 1]&gt;&gt;
 		&lt;&lt;set $p.realm++, $p.layer to 1&gt;&gt;
 		&lt;&lt;set $p.coins += 2&gt;&gt;
 		&lt;&lt;recompute&gt;&gt;
@@ -2423,6 +2428,10 @@ setup.runDaily = function (p, locId) {
 		&lt;p class=&quot;sys&quot;&gt;天地靈氣轟然湧入丹田——&lt;/p&gt;
 		&lt;p&gt;你正式踏入了 &lt;span class=&quot;em&quot;&gt;&lt;&lt;= setup.realms[$p.realm].name&gt;&gt;&lt;/span&gt;。神識較先前清明數倍，舉手投足間靈力流轉自如。&lt;/p&gt;
 		&lt;p class=&quot;sys&quot;&gt;【境界躍遷 · 獲得書幣 ×2】&lt;/p&gt;
+	&lt;&lt;else&gt;&gt;
+		&lt;&lt;set $p.cult to setup.cultNeed($p)&gt;&gt;
+		&lt;&lt;run setup.toast(&quot;已臻當前境界之巔&quot;)&gt;&gt;
+		&lt;p&gt;你的修為已臻 &lt;span class=&quot;em&quot;&gt;&lt;&lt;= setup.realmName($p)&gt;&gt;&lt;/span&gt; 之巔。更上一層的渡劫飛升之路，需仙緣機遇方能叩開——那是後話了。&lt;/p&gt;
 	&lt;&lt;/if&gt;&gt;
 &lt;&lt;else&gt;&gt;
 	&lt;&lt;stat &quot;xinmo&quot; 12&gt;&gt;

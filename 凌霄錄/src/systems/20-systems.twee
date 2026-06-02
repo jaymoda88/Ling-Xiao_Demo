@@ -68,7 +68,7 @@
 		<<recompute>>
 		<<run setup.toast("✦ 突破成功！" + setup.realmName($p))>>
 		<p>靈力在經脈中奔流，舊有桎梏應聲碎裂。你突破至 <span class="em"><<= setup.realmName($p)>></span>，氣血與攻伐之力俱增。</p>
-	<<else>>
+	<<elseif setup.realms[$p.realm + 1]>>
 		<<set $p.realm++, $p.layer to 1>>
 		<<set $p.coins += 2>>
 		<<recompute>>
@@ -76,6 +76,10 @@
 		<p class="sys">天地靈氣轟然湧入丹田——</p>
 		<p>你正式踏入了 <span class="em"><<= setup.realms[$p.realm].name>></span>。神識較先前清明數倍，舉手投足間靈力流轉自如。</p>
 		<p class="sys">【境界躍遷 · 獲得書幣 ×2】</p>
+	<<else>>
+		<<set $p.cult to setup.cultNeed($p)>>
+		<<run setup.toast("已臻當前境界之巔")>>
+		<p>你的修為已臻 <span class="em"><<= setup.realmName($p)>></span> 之巔。更上一層的渡劫飛升之路，需仙緣機遇方能叩開——那是後話了。</p>
 	<</if>>
 <<else>>
 	<<stat "xinmo" 12>>

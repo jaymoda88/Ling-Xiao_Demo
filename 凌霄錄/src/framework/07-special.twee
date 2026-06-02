@@ -1,3 +1,8 @@
 :: PassageReady
 /% 進入任一段落時：把背景星空容器補上一次 %/
 <<run if(!document.getElementById("lx-stars")){var s=document.createElement("div");s.id="lx-stars";document.body.insertBefore(s,document.body.firstChild);}>>
+/% 舊存檔遷移：補上後加的欄位，避免新功能崩潰 %/
+<<if $p and $p.maxHp>>
+	<<if not $p.seen>><<set $p.seen to { loc:{}, foe:{} }>><</if>>
+	<<if $p.rel and $p.rel.dongxue is undefined>><<set $p.rel.dongxue to 0>><</if>>
+<</if>>
