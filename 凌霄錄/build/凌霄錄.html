@@ -132,28 +132,17 @@ body {
 }
 @keyframes lx-tw { 0%{opacity:.55} 100%{opacity:1} }
 
-/* ── 版面：把 UI 狀態欄移到右側（DoL/CoT 風格） ── */
-#story { position: relative; z-index: 2; margin-left: 0 !important; }
+/* ── 版面：UI 狀態欄在左側（SugarCube 預設位置），僅調整配色 ── */
+#story { position: relative; z-index: 2; }
 #passages { max-width: 720px; margin: 0 auto; padding: 10px 8px 90px; }
 .passage { font-size: 15px; line-height: 1; animation: lx-rise .4s ease; }
 @keyframes lx-rise { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:none} }
 
-#ui-bar {
-	left: auto !important; right: 0;
-	background: rgba(8,5,3,.95); border-left: 1px solid rgba(201,149,42,.3); border-right: none;
-	backdrop-filter: blur(6px);
-}
-#ui-bar.stowed { transform: translateX(101%); }
-/* 開合鈕移到右側欄的左緣 */
-#ui-bar-toggle { right: 100%; left: auto; border-left: 1px solid rgba(201,149,42,.3); border-right: none; }
-#ui-bar-toggle:not(.stowed)::before { content: "\e81f"; }
+#ui-bar { background: rgba(8,5,3,.95); border-right: 1px solid rgba(201,149,42,.3); backdrop-filter: blur(6px); }
 #ui-bar-tray button { color: var(--gold-light); }
 #ui-bar a:hover, #ui-bar button:hover { background: rgba(201,149,42,.2); }
 #story-title, .menu-story-title { color: var(--gold) !important; font-family:'Noto Serif TC',serif; }
 #story-caption { margin-top: 0; }
-@media screen and (min-width: 768px) {
-	#ui-bar:not(.stowed) ~ #story { margin-right: 19em; }
-}
 
 /* ── 共用：條狀進度 ── */
 .bars, .cap-bars { display:flex; flex-direction:column; gap:6px; }
