@@ -1,3 +1,5 @@
+<p align="center"><img src="凌霄錄/docs/banner.svg" alt="凌霄錄 Ling-Xiao Demo" width="100%"></p>
+
 # 凌霄錄 · Ling-Xiao Demo
 
 轉生修仙文字遊戲 — 以 **SugarCube 2.37.3**（與 *Degrees of Lewdity* 同款引擎）打造的獨立網頁遊戲，
