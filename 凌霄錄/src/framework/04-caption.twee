@@ -1,0 +1,43 @@
+:: StoryCaption
+<<if $p and $p.maxHp>>
+<<set _need to setup.cultNeed($p)>>
+<div class="cap">
+	<div class="cap-head">
+		<span class="cap-name">$p.name</span>
+		<span class="cap-realm"><<= setup.realmName($p)>></span>
+	</div>
+	<div class="cap-time"><<= setup.timeName($p)>></div>
+	<div class="cap-loc">📍 <<= $p.placeName>></div>
+
+	<div class="cap-bars">
+		<div class="bar-row"><span class="bar-lbl">氣血</span><div class="bar-bg"><div class="bar-fill bf-hp" style="width:<<= Math.round(100*$p.hp/$p.maxHp)>>%"></div></div><span class="bar-num">$p.hp/$p.maxHp</span></div>
+		<div class="bar-row"><span class="bar-lbl">靈力</span><div class="bar-bg"><div class="bar-fill bf-mp" style="width:<<= Math.round(100*$p.mp/$p.maxMp)>>%"></div></div><span class="bar-num">$p.mp/$p.maxMp</span></div>
+		<div class="bar-row"><span class="bar-lbl">修為</span><div class="bar-bg"><div class="bar-fill bf-cul" style="width:<<= Math.min(100,Math.round(100*$p.cult/_need))>>%"></div></div><span class="bar-num">$p.cult/_need</span></div>
+	</div>
+
+	<div class="cap-res">
+		<span>攻 <b>$p.atk</b></span><span>防 <b>$p.def</b></span><span>氣運 <b>$p.luck</b></span>
+		<span>靈石 <b>$p.stones</b></span><span>書幣 <b>$p.coins</b></span>
+	</div>
+
+	<div class="cap-stats">
+		<div><<= setup.gstatHtml("daoxin", $p.stats.daoxin)>></div>
+		<div><<= setup.gstatHtml("xinmo", $p.stats.xinmo)>></div>
+		<div><<= setup.gstatHtml("fame", $p.stats.fame)>></div>
+		<div><<= setup.gstatHtml("fatigue", $p.stats.fatigue)>></div>
+	</div>
+
+	<<if $p.rel.suyuyao > 0 or $p.rel.qingling > 0>>
+		<div class="cap-rel">
+			<<if $p.rel.suyuyao > 0>><div>❤ 蘇羽瑤 <b><<= $p.rel.suyuyao>></b> <span class="cap-rel-t"><<= setup.relText("suyuyao",$p.rel.suyuyao)>></span></div><</if>>
+			<<if $p.rel.qingling > 0>><div>❤ 青玲兒 <b><<= $p.rel.qingling>></b> <span class="cap-rel-t"><<= setup.relText("qingling",$p.rel.qingling)>></span></div><</if>>
+		</div>
+	<</if>>
+
+	<<if $p.sandbox and passage() !== "Combat">>
+		<div class="cap-nav"><<link "🗺 前往他處">><<goto "Map">><</link>></div>
+	<</if>>
+
+	<div class="cap-keys">快捷鍵　<b>1–9</b> 選項　<b>空白</b> 確認　<b>M</b> 地圖　<b>R</b> 歇息　<b>Esc</b> 返回</div>
+</div>
+<</if>>

@@ -1,0 +1,23 @@
+# macOS
+.DS_Store
+._*
+
+# 舊的獨立原型（非本專案）
+/xianxia_compendium.html
+/xianxia_romance_compendium.html
+/凌霄錄_遊戲.html
+
+# 編輯器 / 本機
+.vscode/
+*.log
+
+# Tweego 只保留 sugarcube-2 story format
+tools/licenses/
+tools/storyformats/chapbook-1/
+tools/storyformats/harlowe-1/
+tools/storyformats/harlowe-2/
+tools/storyformats/harlowe-3/
+tools/storyformats/paperthin-1/
+tools/storyformats/snowman-1/
+tools/storyformats/snowman-2/
+tools/storyformats/sugarcube-1/

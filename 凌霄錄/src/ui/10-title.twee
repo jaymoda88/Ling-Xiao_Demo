@@ -1,0 +1,22 @@
+:: Start
+<div class="title-wrap">
+	<div class="seal"><span>仙</span></div>
+	<div class="t-sub">轉生修仙 · 文字遊戲</div>
+	<h1 class="t-main">凌霄錄</h1>
+	<div class="t-tag">廢材覺醒，逆天改命 · 前三卷</div>
+	<div class="title-menu choices">
+		<<link "✦ 開始新遊戲">><<newgame>><<goto "intro">><</link>>
+		<<link "繼續遊戲（讀取存檔）">><<run UI.saves()>><</link>>
+		<<link "關於本作">><<goto "About">><</link>>
+	</div>
+	<div style="margin-top:20px;font-size:11px;color:rgba(245,240,232,.28);letter-spacing:.12em;">左側選單可隨時存檔 / 讀檔 / 設定</div>
+</div>
+
+:: About
+<div class="scene">
+<div class="scene-title">關於</div>
+<p>《凌霄錄》是一部轉生修仙文字遊戲，以 SugarCube 2 引擎打造（與《Degrees of Lewdity》同源）。</p>
+<p>你將扮演自地球轉生的<span class="em">凌霄</span>，自滅門廢墟一路登臨凌霄劍宗、踏入南疆萬妖山——在修煉、戰鬥、煉丹之間，與<span class="em">蘇羽瑤</span>、<span class="em">青玲兒</span>譜寫各自的緣分。</p>
+<p class="narr">所有角色均為成年人設定（18+）。親密情節以氛圍與留白呈現。</p>
+</div>
+<div class="choices"><<link "← 返回">><<goto "Start">><</link>></div>

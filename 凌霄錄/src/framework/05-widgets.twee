@@ -1,0 +1,45 @@
+:: Widgets [widget]
+
+/% 新遊戲 %/
+<<widget "newgame">>
+	<<set $p to setup.newPlayer()>>
+<</widget>>
+
+/% 重算屬性 %/
+<<widget "recompute">>
+	<<run setup.recompute($p)>>
+<</widget>>
+
+/% 修為增益（功法加成 + 疲勞懲罰） %/
+<<widget "gainCult">>
+	<<set _amt to _args[0] * ($p.cultMul || 1)>>
+	<<if $p.stats.fatigue >= 75>><<set _amt to _amt * 0.55>><</if>>
+	<<set _amt to Math.round(_amt)>>
+	<<set $p.cult += _amt>>
+	<<set _t to "修為 +" + _amt + ($p.stats.fatigue >= 75 ? "（力竭·減半）" : "")>>
+	<<toast _t>>
+<</widget>>
+
+/% 回復 %/
+<<widget "heal">>
+	<<set $p.hp to Math.min($p.maxHp, $p.hp + (_args[0]||0))>>
+	<<set $p.mp to Math.min($p.maxMp, $p.mp + (_args[1]||0))>>
+<</widget>>
+
+/% 好感度（增減 + 顯示一行） %/
+<<widget "rel">>
+	<<set _who to _args[0]>>
+	<<set $p.rel[_who] += _args[1]>>
+	<<set _nm to (_who === "suyuyao") ? "蘇羽瑤" : "青玲兒">>
+	@@.heart;[ _nm 緣分 +<<= _args[1]>> ]@@
+<</widget>>
+
+/% 數值增減 %/
+<<widget "stat">>
+	<<run setup.addStat($p, _args[0], _args[1])>>
+<</widget>>
+
+/% Toast 浮動提示 %/
+<<widget "toast">>
+	<<run setup.toast(_args[0])>>
+<</widget>>

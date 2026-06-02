@@ -1,0 +1,114 @@
+:: CombatWidgets [widget]
+
+/% 開戰：_args = foeId, 勝利段落, 失敗段落 %/
+<<widget "startBattle">>
+	<<set _e to setup.enemies[_args[0]]>>
+	<<set $battle to {
+		foeId: _args[0], foeHp: _e.hp, foeMax: _e.hp,
+		win: _args[1], lose: _args[2],
+		started: false, msg: "", emsg: ""
+	}>>
+	<<goto "Combat">>
+<</widget>>
+
+/% 對敵造成傷害並結算敵方反擊 %/
+<<widget "hitFoe">>
+	<<set $battle.foeHp -= _args[0]>>
+	<<set $battle.msg to _args[1]>>
+	<<if $battle.foeHp <= 0>>
+		<<set $battle.foeHp to 0>>
+		<<set $battle.emsg to "">>
+		<<goto $battle.win>>
+	<<else>>
+		<<enemyStrike>>
+	<</if>>
+<</widget>>
+
+/% 敵方反擊 %/
+<<widget "enemyStrike">>
+	<<set _e to setup.enemies[$battle.foeId]>>
+	<<set _edmg to Math.max(1, _e.atk + setup.rnd(6) - setup.rnd(4) - $p.def)>>
+	<<set _shield to "">>
+	<<if ($p.hp - _edmg) <= 0 and Math.random() < (0.14 + $p.luck/700)>>
+		<<set _edmg to 0>>
+		<<set _shield to "<span class='sys'>【氣運護盾】天意庇護，此擊被金光化解！</span> ">>
+	<</if>>
+	<<set $p.hp to $p.hp - _edmg>>
+	<<set $battle.emsg to _shield + _e.name + " 反擊，你受到 <span class='dmg'>" + _edmg + "</span> 點傷害。">>
+	<<if $p.hp <= 0>>
+		<<set $p.hp to 0>>
+		<<goto $battle.lose>>
+	<<else>>
+		<<goto "Combat">>
+	<</if>>
+<</widget>>
+
+:: Combat [game]
+<<set _e to setup.enemies[$battle.foeId]>>
+<div class="combat-foe">
+	<div style="display:flex;justify-content:space-between;align-items:baseline;">
+		<span class="em"><<= _e.name>></span>
+		<span class="lx-hint" style="margin:0;">氣血 <<= $battle.foeHp>>/<<= $battle.foeMax>>　攻擊 <<= _e.atk>></span>
+	</div>
+	<div class="foe-bar-bg"><div class="foe-bar" style="width:<<= Math.round(100*$battle.foeHp/$battle.foeMax)>>%"></div></div>
+</div>
+<div class="scene">
+<<if not $battle.started>>
+	<p class="narr"><<= _e.intro>></p>
+	<<set $battle.started to true>>
+<</if>>
+<<if $battle.msg>><p><<= $battle.msg>></p><</if>>
+<<if $battle.emsg>><p><<= $battle.emsg>></p><</if>>
+</div>
+<div class="choices">
+	<<link "⚔ 全力攻擊<span class='lx-hint'>以功法攻伐之力出手</span>">>
+		<<set _dmg to $p.atk + setup.rnd(8) - setup.rnd(4) - _e.def>>
+		<<set _flavor to "">>
+		<<if Math.random() < $p.crit>><<set _dmg to Math.round(_dmg*1.7)>><<set _flavor to "<span class='em'>暴擊！</span> ">><</if>>
+		<<if $p.combo > 0 and Math.random() < $p.combo>><<set _dmg to Math.round(_dmg*1.5)>><<set _flavor to _flavor + "<span class='em'>劍訣連擊！</span> ">><</if>>
+		<<set _dmg to Math.max(1, _dmg)>>
+		<<set _msg to _flavor + "你出手，造成 <span class='em'>" + _dmg + "</span> 點傷害。">>
+		<<hitFoe _dmg _msg>>
+	<</link>>
+	<<if setup.has($p,"storm")>>
+		<<link "⚡ 五雷天罡決<span class='lx-hint'>耗 12 靈力的強力一擊</span>">>
+			<<if $p.mp < 12>>
+				<<set $battle.msg to "<span class='sys'>靈力不足，無法施展五雷天罡決。</span>">>
+				<<goto "Combat">>
+			<<else>>
+				<<set $p.mp -= 12>>
+				<<set _dmg to Math.max(1, Math.round(($p.atk + 22 + setup.rnd(15) - _e.def) * 1.3))>>
+				<<set _msg to "<span class='sys'>五雷天罡決</span>轟下，造成 <span class='em'>" + _dmg + "</span> 點傷害！">>
+				<<hitFoe _dmg _msg>>
+			<</if>>
+		<</link>>
+	<</if>>
+	<<if ($p.pills.huiyuan||0) > 0>>
+		<<link "丹 服用回元丹<span class='lx-hint'>回復氣血靈力（剩 <<= $p.pills.huiyuan>> 顆）</span>">>
+			<<set $p.pills.huiyuan-->>
+			<<heal 60 30>>
+			<<set $battle.msg to "你服下回元丹，氣血靈力回復。">>
+			<<enemyStrike>>
+		<</link>>
+	<</if>>
+	<<if setup.enemies[$battle.foeId].tameable and setup.has($p,"beast")>>
+		<<link "🐾 施展萬獸馴心訣<span class='lx-hint'>嘗試安撫而非擊殺</span>">>
+			<<if $battle.foeHp < $battle.foeMax*0.5>>
+				<<set $battle.tamed to true>>
+				<<goto $battle.win>>
+			<<else>>
+				<<set $battle.msg to "<span class='sys'>妖獸傷勢未重，戒心仍盛，馴心訣未能奏效。</span>">>
+				<<enemyStrike>>
+			<</if>>
+		<</link>>
+	<</if>>
+	<<link "🏃 嘗試脫離<span class='lx-hint'>氣運越高越易成功</span>">>
+		<<if Math.random() < (0.32 + $p.luck/400)>>
+			<<set $battle.fled to true>>
+			<<goto $battle.lose>>
+		<<else>>
+			<<set $battle.msg to "你未能脫身，反被纏住！">>
+			<<enemyStrike>>
+		<</if>>
+	<</link>>
+</div>
