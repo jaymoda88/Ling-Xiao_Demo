@@ -12,23 +12,17 @@ node server.mjs     # 本機預覽 http://localhost:8137
 1. 編輯 `src/**/*.twee`
 2. `./build.sh`
 3. 重整瀏覽器預覽 → 驗證
-4. 連結檢查（見 §3）
+4. 自動健檢 `node check.mjs`（見 §3）
 5. `git add -A && git commit -m "…" && git push`
 
 ## 3. 測試檢查清單
-**連結完整性**（每次大改後跑）：
+**自動健檢**（每次大改後跑，根目錄）：
 ```bash
-cd 凌霄錄/src && node -e '
-const fs=require("fs");
-function walk(d){return fs.readdirSync(d,{withFileTypes:true}).flatMap(e=>e.isDirectory()?walk(d+"/"+e.name):(e.name.endsWith(".twee")?[d+"/"+e.name]:[]));}
-let t=walk(".").map(f=>fs.readFileSync(f,"utf8")).join("\n");
-const P=new Set(),T=new Set();let m;
-for(const r=/^::\s*([^\[\n]+?)\s*(\[[^\]]*\])?\s*$/gm;m=r.exec(t);)P.add(m[1].trim());
-for(const r=/<<goto\s+"([^"]+)"/g;m=r.exec(t);)T.add(m[1]);
-for(const r=/<<startBattle\s+"[^"]+"\s+"([^"]+)"\s+"([^"]+)"/g;m=r.exec(t);){T.add(m[1]);T.add(m[2]);}
-for(const r=/passage:"([^"]+)"/g;m=r.exec(t);)T.add(m[1]);
-console.log("missing:",[...T].filter(x=>!P.has(x)).join(", ")||"none");'
+node check.mjs          # 連結缺漏 / macro 配對 / 已知陷阱；有 error 時 exit 1
+node check.mjs --quiet  # 只印 error/warn 與總結（適合接 pre-push / CI）
 ```
+涵蓋：`<<goto>>`/`[[..]]`/`<<startBattle>>`/`passage:`/`<<link a b>>`/`<<include>>` 指向不存在段落（error）、`<<if>>`/`<<for>>`/`<<switch>>`/`<<capture>>` 等 container macro 未配對（error）、`Config.saves.maxSlots`（error）、多行物件 `<<set>>` 與孤立段落（warn）。動態目標（`<<goto $p.loc>>`）無法靜態驗證會略過。
+
 **手動驗證重點**：新事件能在正確地點/條件浮現、結尾回到 `$p.loc`、好感/旗標只計一次、立繪正常、無 `.macro-error` 紅框。
 
 ## 4. 擴充食譜（Cookbook）
