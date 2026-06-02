@@ -206,6 +206,11 @@ setup.events = [
 	{ passage:"dx_date_peak",   loc:"bingfeng", label:"♡ 與冬雪同看絕頂風雪",   cond:function(p){ return p.flags.dxFrost && p.rel.dongxue>=30 && !p.flags.dxD2; } },
 	// 第五卷 · 魔道入侵（金丹大成或挫敗冥尊後，於凌霄劍宗觸發）
 	{ passage:"invasion_call",  loc:"wuwuchang",label:"🔥 魔道入侵！宗門告急",   cond:function(p){ return (p.flags.jindan || p.flags.mingzun) && !p.flags.vol5started; } },
+	// A3 拓展支線（各女主後期深化，緣分高時觸發）
+	{ passage:"sy_sword_tomb", loc:"jianya",   label:"⚜ 蘇羽瑤的祖傳劍冢",     cond:function(p){ return p.flags.shrineNight && p.rel.suyuyao>=40 && !p.flags.syQuest; } },
+	{ passage:"ql_lifespan",   loc:"lingquan",  label:"⚜ 壽命難題",             cond:function(p){ return p.flags.qingKiss && p.rel.qingling>=45 && !p.flags.qlQuest; } },
+	{ passage:"dx_unseal",     loc:"shengnv",   label:"⚜ 冰心解封",             cond:function(p){ return p.flags.dxBreak && p.rel.dongxue>=45 && !p.flags.dxQuest; } },
+	{ passage:"yl_repay",      loc:"wangchuan", label:"⚜ 以魂報恩",             cond:function(p){ return p.flags.yinliTouch && p.rel.yinli>=55 && !p.flags.ylQuest; } },
 ];
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
