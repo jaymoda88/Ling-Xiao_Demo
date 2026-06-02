@@ -7,6 +7,7 @@
 	<<set $p.region to setup.locations[_id].region>>
 	<<set $p.placeName to setup.locations[_id].name>>
 	<<set $return to _id>>
+	<<if $p.seen>><<set $p.seen.loc[_id] to true>><</if>>
 <</widget>>
 
 /% 地點抬頭（圖示 + 名稱 + 區域 + 情境描述） %/

@@ -64,6 +64,14 @@ body {
 .cap-rel b { color:var(--rose); }
 .cap-rel-t { color:rgba(245,240,232,.4); }
 .cap-nav { margin-top:8px; }
+/* 圖鑑 */
+.codex-char { display:flex; gap:14px; align-items:flex-start; border:1px solid rgba(201,149,42,.2); border-radius:4px; padding:12px; margin-bottom:12px; }
+.codex-char.locked { opacity:.5; }
+.codex-portrait { width:72px; flex-shrink:0; border-radius:4px; overflow:hidden; border:1px solid rgba(201,149,42,.3); }
+.codex-portrait svg { display:block; width:100%; aspect-ratio:200/250; }
+.codex-info h4 { color:var(--gold-light); font-size:15px; margin-bottom:4px; }
+.codex-info p { font-size:13px !important; line-height:1.7 !important; color:rgba(245,240,232,.7) !important; margin:4px 0 0 !important; }
+.codex-info p.heart { color:var(--rose) !important; }
 .cap-nav a { display:block; text-align:center; background:rgba(201,149,42,.1); border:1px solid rgba(201,149,42,.4); color:var(--gold-light)!important; padding:8px; border-radius:3px; text-decoration:none; font-size:13px; }
 .cap-nav a:hover { background:rgba(201,149,42,.25); }
 .cap-keys { margin-top:12px; padding-top:9px; border-top:1px solid rgba(201,149,42,.12); font-size:10px; color:rgba(245,240,232,.35); line-height:1.8; }

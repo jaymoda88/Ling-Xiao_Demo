@@ -3,6 +3,7 @@
 /% 開戰：_args = foeId, 勝利段落, 失敗段落 %/
 <<widget "startBattle">>
 	<<set _e to setup.enemies[_args[0]]>>
+	<<if $p.seen>><<set $p.seen.foe[_args[0]] to true>><</if>>
 	<<set $battle to {
 		foeId: _args[0], foeHp: _e.hp, foeMax: _e.hp,
 		win: _args[1], lose: _args[2],

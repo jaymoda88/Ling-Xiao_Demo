@@ -38,6 +38,7 @@
 
 	<<if $p.sandbox and passage() !== "Combat">>
 		<div class="cap-nav"><<link "🗺 前往他處">><<goto "Map">><</link>></div>
+		<div class="cap-nav"><<link "📜 圖鑑">><<goto "Codex">><</link>></div>
 	<</if>>
 
 	<div class="cap-keys">快捷鍵　<b>1–9</b> 選項　<b>空白</b> 確認　<b>M</b> 地圖　<b>R</b> 歇息　<b>Esc</b> 返回</div>

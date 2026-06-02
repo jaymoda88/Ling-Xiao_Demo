@@ -309,6 +309,7 @@ setup.newPlayer = function () {
 		stats: { daoxin: 30, xinmo: 0, fame: 0, fatigue: 0 },
 		flags: {},
 		buffs: {},
+		seen: { loc: {}, foe: {} },  // 圖鑑探索紀錄
 		time: { day: 1, tick: 4 },   // 第1日 辰時
 		loc: "dongfu",
 		region: "lingxiao",
