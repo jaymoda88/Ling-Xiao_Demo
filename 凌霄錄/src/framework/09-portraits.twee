@@ -8,6 +8,7 @@ setup.portraits = {
 	suyuyao:  { name: "蘇羽瑤", title: "凌霄劍宗天才師姐",     hair1:"#f3f7fb", hair2:"#aecadb", skin:"#f0e7dd", accent:"#9fcfe0", glyph:"劍", glyphColor:"#cfeaf5" },
 	qingling: { name: "青玲兒", title: "九尾狐族公主",         hair1:"#edd089", hair2:"#9c6a26", skin:"#eccca2", accent:"#f0b94a", glyph:"狐", glyphColor:"#f3d68a" },
 	yinli:    { name: "陰離",   title: "幽冥前女鬼使",         hair1:"#eef1f6", hair2:"#b6bfd6", skin:"#e9ecf2", accent:"#bcaee6", glyph:"離", glyphColor:"#d8cdf0" },
+	dongxue:  { name: "裴冬雪", title: "冰心宗聖女",           hair1:"#dcf0f6", hair2:"#5d93a8", skin:"#eef6f8", accent:"#8fdbe8", glyph:"雪", glyphColor:"#cfeef7" },
 };
 
 setup.portraitSVG = function (c, key) {

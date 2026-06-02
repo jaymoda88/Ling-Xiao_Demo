@@ -147,6 +147,9 @@
 	<<set _gainStone to 4 + setup.rnd(8) + $p.realm*3>>
 	<<set $p.stones += _gainStone>>
 	<<set _herbKeys to ["lingcao","lingcao","huoxin","hanyu","yuelan"]>>
+	<<if $p.region === "bingling">><<set _herbKeys to ["hanyu","hanyu","xuelian","yuelan"]>>
+	<<elseif $p.region === "youming">><<set _herbKeys to ["hanyu","yuelan","lingcao"]>>
+	<<elseif $p.region === "nanjiang">><<set _herbKeys to ["lingcao","huoxin","huoxin","yuelan"]>><</if>>
 	<<set _h to _herbKeys[setup.rnd(_herbKeys.length)]>>
 	<<set $p.herbs[_h] to ($p.herbs[_h]||0) + 1>>
 	<p>你依前世的細緻心思在山野間搜尋<<if _eye>>，《天眼判靈》令靈材無所遁形<</if>>。</p>

@@ -19,6 +19,10 @@
 <div class="choices">
 	<<if $p.region === "lingxiao" and $p.flags.tournament>>
 		<<link "↓ 南下萬妖山<span class='lx-hint'>遠行 · 推進第三卷</span>">><<goto "journey_south">><</link>>
+		<<link "❄ 北上冰嶺<span class='lx-hint'>遠行 · 冰心宗（裴冬雪）</span>">><<goto "journey_bingling">><</link>>
+	<</if>>
+	<<if $p.region === "bingling">>
+		<<link "↓ 返回凌霄劍宗<span class='lx-hint'>遠行</span>">><<pass 3>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
 	<</if>>
 	<<if $p.region === "nanjiang">>
 		<<link "↑ 返回凌霄劍宗<span class='lx-hint'>遠行（耗時較久）</span>">><<pass 3>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
@@ -62,3 +66,18 @@
 <</if>>
 <<enterLoc "guimenguan">>
 <div class="choices"><<link "深入幽冥澤">><<goto "guimenguan">><</link>></div>
+
+:: journey_bingling [game]
+<<pass 3>>
+<<if not $p.flags.wentBingling>>
+	<<set $p.flags.wentBingling to true>>
+	<div class="scene">
+	<div class="scene-title">北上 · 冰嶺</div>
+	<p>你受宗門之託，北上苦寒的冰嶺，與正道盟友冰心宗交涉一樁靈material互市之事。愈往北，天地愈是清寒，呼出的氣息瞬間凝成白霜。</p>
+	<p>冰心宗山門終年覆雪，弟子皆神情淡漠、心如止水——這裡的人，似乎連喜怒都被凍住了。</p>
+	</div>
+<<else>>
+	<div class="scene"><p class="narr">你再度踏雪北行，回到了清冷的冰嶺。</p></div>
+<</if>>
+<<enterLoc "binggate">>
+<div class="choices"><<link "踏入冰心宗">><<goto "binggate">><</link>></div>

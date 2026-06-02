@@ -58,6 +58,7 @@ setup.enemies = {
 	ligui:    { name: "亂葬厲鬼",       hp: 130, atk: 26, def: 5,  stones: 12, intro: "一隻死於執念的厲鬼自屍堆中嘶嚎而起。" },
 	guidao:   { name: "幽冥鬼道修士",   hp: 200, atk: 32, def: 9,  stones: 24, intro: "鬼道修士御使陰風，攝魂之術森然襲來。" },
 	yinli:    { name: "幽冥女鬼使·陰離", hp: 260, atk: 36, def: 11, stones: 0,  intro: "半透明白髮的女子持刃而立，眼神空洞如被操縱的傀儡：「目標……凌霄。執行。」", spare: true },
+	binglao:  { name: "冰心宗執法長老", hp: 240, atk: 35, def: 12, stones: 0,  intro: "執法長老一身冬藍道袍，周身寒霜凝結：「清情大典乃宗門根本，閒雜人等，退下。」" },
 };
 
 /* ════════ 時間系統 ════════
@@ -132,6 +133,7 @@ setup.regions = {
 	lingxiao: { name: "凌霄峰", locs: ["dongfu","wuwuchang","cangjingge","danfang","citang","jianya","houshan"] },
 	nanjiang: { name: "南疆萬妖山", locs: ["shanzhai","lingquan","milin","yishitang","mijing"] },
 	youming:  { name: "幽冥澤", locs: ["guimenguan","huangquan","wangchuan","luanzang","youmingdian"] },
+	bingling: { name: "冰嶺", locs: ["binggate","hantan","shengnv","bingyu","bingfeng"] },
 };
 setup.locations = {
 	dongfu:     { name: "洞府",     region: "lingxiao", icon: "🏠", home: true,  desc: "你的清修洞府。一榻、一蒲團、一盞長明燈，靜謐宜修。" },
@@ -151,6 +153,11 @@ setup.locations = {
 	wangchuan:  { name: "忘川",   region: "youming", icon: "🌊", desc: "忘川之水載著無數執念，靜得令人心折。" },
 	luanzang:   { name: "亂葬崗", region: "youming", icon: "⚰", desc: "屍骨累累、厲鬼橫行，卻也埋著上古遺物。" },
 	youmingdian:{ name: "幽冥殿", region: "youming", icon: "💀", desc: "冥尊法器所在的森冷大殿，幽冥鬼道的中樞。" },
+	binggate:   { name: "冰心宗山門", region: "bingling", icon: "❄", home: true, desc: "北荒冰嶺之巔，冰心宗山門終年覆雪，清冷孤高。" },
+	hantan:     { name: "寒潭",   region: "bingling", icon: "🧊", desc: "千年不化的寒潭，潭底沉著冰屬靈材，水氣寒冽刺骨。" },
+	shengnv:    { name: "聖女居", region: "bingling", icon: "🏔", desc: "冰心宗聖女的清修之所，素淨如雪，几案上攤著一本寫滿異常數據的日誌。" },
+	bingyu:     { name: "寒玉洞", region: "bingling", icon: "💎", desc: "蘊藏寒玉與雪蓮的冰洞，亦是聖女壓制體內寒冰的閉關之地。" },
+	bingfeng:   { name: "冰嶺絕頂", region: "bingling", icon: "🗻", desc: "冰嶺最高處，風雪呼嘯，天地一色，最宜觀道。" },
 };
 
 /* ════════ 事件登錄表（沙盒中的引導主線） ════════
@@ -180,6 +187,12 @@ setup.events = [
 	{ passage:"yinli_touch",    loc:"guimenguan", label:"⚡ 停在你手背上的指尖",   cond:function(p){ return p.flags.yinliRebuild && p.rel.yinli>=40 && !p.flags.yinliTouch; } },
 	{ passage:"jindan_great",   loc:"guimenguan", label:"⚡ 金丹凝聚的契機",       cond:function(p){ return p.realm>=2 && !p.flags.jindan; } },
 	{ passage:"mingzun_confront",loc:"youmingdian",label:"⚡ 冥尊法器的森冷低語",  cond:function(p){ return p.flags.yinliUnbind && p.flags.xianwen && !p.flags.mingzun; } },
+	// 裴冬雪 · 冰心宗（並行線，大比後可北上）
+	{ passage:"dongxue_first",  loc:"hantan",   label:"⚡ 寒潭邊如冰雕的聖女",   cond:function(p){ return !p.flags.metDongxue; } },
+	{ passage:"dongxue_record", loc:"shengnv",  label:"⚡ 寫滿異常數據的日誌",   cond:function(p){ return p.flags.metDongxue && p.rel.dongxue>=8 && !p.flags.dxRecord; } },
+	{ passage:"dongxue_frost",  loc:"bingyu",   label:"⚡ 暴走的寒冰",           cond:function(p){ return p.flags.metDongxue && p.rel.dongxue>=18 && !p.flags.dxFrost; } },
+	{ passage:"dongxue_door",   loc:"shengnv",  label:"⚡ 深夜叩響聖女居的人是她", cond:function(p){ return p.flags.dxFrost && p.rel.dongxue>=30 && !p.flags.dxDoor && setup.isNight(p); } },
+	{ passage:"qingqing_threat",loc:"binggate", label:"⚡ 清情大典的鐘聲",       cond:function(p){ return p.flags.dxDoor && p.rel.dongxue>=42 && !p.flags.dxBreak; } },
 ];
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
@@ -256,6 +269,15 @@ setup.relText = function (who, v) {
 		if (v < 85)  return "以魂相報";
 		return "魂之所繫";
 	}
+	if (who === "dongxue") {
+		if (v <= 0)  return "無感（絕情冰體）";
+		if (v < 8)   return "觀測對象";
+		if (v < 18)  return "異常數據";
+		if (v < 30)  return "持續時間延長";
+		if (v < 45)  return "第十七次接觸";
+		if (v < 70)  return "解凍中";
+		return "情非寒道之敵";
+	}
 	return "";
 };
 setup.rnd = function (n) { return Math.floor(Math.random() * n); };
@@ -274,7 +296,7 @@ setup.newPlayer = function () {
 		recipes: ["juqi"],
 		pills: {},
 		herbs: { lingcao: 3 },
-		rel: { suyuyao: 0, qingling: 0, yinli: 0 },
+		rel: { suyuyao: 0, qingling: 0, yinli: 0, dongxue: 0 },
 		stats: { daoxin: 30, xinmo: 0, fame: 0, fatigue: 0 },
 		flags: {},
 		buffs: {},
