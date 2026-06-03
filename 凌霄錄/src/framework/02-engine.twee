@@ -61,12 +61,13 @@ setup.enemies = {
 	binglao:  { name: "冰心宗執法長老", hp: 240, atk: 35, def: 12, stones: 0,  intro: "執法長老一身冬藍道袍，周身寒霜凝結：「清情大典乃宗門根本，閒雜人等，退下。」" },
 	moqian:   { name: "血煞魔宗先鋒", hp: 220, atk: 36, def: 10, stones: 30, intro: "血煞魔修踏著屍山獰笑而來，渾身浴血、殺氣騰騰。" },
 	bloodlord:{ name: "血魔尊",       hp: 560, atk: 50, def: 16, stones: 0,  intro: "血魔尊立於血色雲海之巔，六千年殺戮之氣壓得天地變色：「凌霄……你那混沌之體，本尊收下了。」" },
+	xianmoremnant:{ name: "仙魔殘念", hp: 720, atk: 58, def: 20, stones: 0, intro: "封印崩裂處，凝聚著萬年前仙魔大戰雙方的殘餘執念——它既非仙，也非魔，只認得『擋路者，殺』。" },
 };
 
 /* ════════ 五行相剋 ════════
    敵人屬性 → setup.enemyElem。混沌靈根覺醒後，攻擊自動以相剋之力壓制五行(含冰)之敵；
    妖/鬼/魔等非五行屬性不受相剋（含 BOSS 血魔尊，不被輕易剋制）。 */
-setup.enemyElem = { scout:"金", scout2:"金", qinxiang:"金", beast:"妖", foxrebel:"妖", wildbeast:"妖", ligui:"鬼", guidao:"鬼", yinli:"鬼", binglao:"冰", moqian:"火", bloodlord:"魔" };
+setup.enemyElem = { scout:"金", scout2:"金", qinxiang:"金", beast:"妖", foxrebel:"妖", wildbeast:"妖", ligui:"鬼", guidao:"鬼", yinli:"鬼", binglao:"冰", moqian:"火", bloodlord:"魔", xianmoremnant:"魔" };
 setup.elemColor = { "金":"#e8c97a","木":"#6fae5a","水":"#5aa9d6","火":"#e0564a","土":"#c0925a","冰":"#8fdbe8","雷":"#b99cf0","妖":"#f0b94a","鬼":"#b9a9e0","魔":"#c0392b" };
 setup.elemCounterable = { "金":1,"木":1,"水":1,"火":1,"土":1,"冰":1 };
 setup.chaosCounter = function (p, foeId) {
@@ -154,6 +155,7 @@ setup.regions = {
 	nanjiang: { name: "南疆萬妖山", locs: ["shanzhai","lingquan","milin","yishitang","mijing"] },
 	youming:  { name: "幽冥澤", locs: ["guimenguan","huangquan","wangchuan","luanzang","youmingdian"] },
 	bingling: { name: "冰嶺", locs: ["binggate","hantan","shengnv","bingyu","bingfeng"] },
+	shenxu:   { name: "中央神墟", locs: ["shenxu_gate","zhanchang","fengyin","xianmen"] },
 };
 setup.locations = {
 	dongfu:     { name: "洞府",     region: "lingxiao", icon: "🏠", home: true,  desc: "你的清修洞府。一榻、一蒲團、一盞長明燈，靜謐宜修。" },
@@ -178,6 +180,10 @@ setup.locations = {
 	shengnv:    { name: "聖女居", region: "bingling", icon: "🏔", desc: "冰心宗聖女的清修之所，素淨如雪，几案上攤著一本寫滿異常數據的日誌。" },
 	bingyu:     { name: "寒玉洞", region: "bingling", icon: "💎", desc: "蘊藏寒玉與雪蓮的冰洞，亦是聖女壓制體內寒冰的閉關之地。" },
 	bingfeng:   { name: "冰嶺絕頂", region: "bingling", icon: "🗻", desc: "冰嶺最高處，風雪呼嘯，天地一色，最宜觀道。" },
+	shenxu_gate:{ name: "神墟之門", region: "shenxu", icon: "🌌", home: true, desc: "中央神墟外圍，仙魔大戰的餘威仍鎮在空間裂隙之間，連時間都彷彿凝滯。" },
+	zhanchang:  { name: "大戰遺址", region: "shenxu", icon: "⚔", desc: "萬年前仙魔大戰的戰場，殘兵斷戟與破碎仙紋散落其間，怨念與道則交織。" },
+	fengyin:    { name: "封印之地", region: "shenxu", icon: "🔒", desc: "層層上古封印，鎮著大戰的真相，也鎮著通往仙界的門戶。" },
+	xianmen:    { name: "仙門",     region: "shenxu", icon: "🌠", desc: "傳說中飛升仙界的門戶，仙光自門縫透出，叩問每一個走到此處的人。" },
 };
 
 /* ════════ 事件登錄表（沙盒中的引導主線） ════════
@@ -224,6 +230,12 @@ setup.events = [
 	{ passage:"dx_date_peak",   loc:"bingfeng", label:"♡ 與冬雪同看絕頂風雪",   cond:function(p){ return p.flags.dxFrost && p.rel.dongxue>=30 && !p.flags.dxD2; } },
 	// 第五卷 · 魔道入侵（金丹大成或挫敗冥尊後，於凌霄劍宗觸發）
 	{ passage:"invasion_call",  loc:"wuwuchang",label:"🔥 魔道入侵！宗門告急",   cond:function(p){ return (p.flags.jindan || p.flags.mingzun) && !p.flags.vol5started; } },
+	// 第六卷 · 飛升謎題（血魔尊隕落後，中央神墟）
+	{ passage:"shenxu_enter",   loc:"shenxu_gate",label:"🌌 中央神墟的封印",     cond:function(p){ return p.flags.bloodlord && !p.flags.vol6started; } },
+	{ passage:"xianwen_gather", loc:"zhanchang",  label:"⚡ 散落的仙紋碎片",       cond:function(p){ return p.flags.vol6started && !p.flags.xianwenFull; } },
+	{ passage:"truth_reveal",   loc:"fengyin",    label:"⚡ 封印中的萬年真相",     cond:function(p){ return p.flags.xianwenFull && !p.flags.truthDone; } },
+	{ passage:"seal_break",     loc:"fengyin",    label:"⚡ 破開最後的封印",       cond:function(p){ return p.flags.truthDone && !p.flags.sealBroken; } },
+	{ passage:"ascension_choice",loc:"xianmen",   label:"🌠 飛升抉擇",             cond:function(p){ return p.flags.sealBroken && !p.flags.ascended; } },
 	// A3 拓展支線（各女主後期深化，緣分高時觸發）
 	{ passage:"sy_sword_tomb", loc:"jianya",   label:"⚜ 蘇羽瑤的祖傳劍冢",     cond:function(p){ return p.flags.shrineNight && p.rel.suyuyao>=40 && !p.flags.syQuest; } },
 	{ passage:"ql_lifespan",   loc:"lingquan",  label:"⚜ 壽命難題",             cond:function(p){ return p.flags.qingKiss && p.rel.qingling>=45 && !p.flags.qlQuest; } },
@@ -259,6 +271,7 @@ setup.recompute = function (p) {
 		atk += bb.atk || 0; def += bb.def || 0; cultMul += bb.cultMul || 0;
 		p.exploreBonus = bb.exploreBonus || 0;
 	} else { p.exploreBonus = 0; }
+	if (p.ngCultMul) cultMul += p.ngCultMul;   // 多周目傳承修煉加成
 	const tier = p.realm * 40 + p.layer * 4;
 	p.atk = atk + tier; p.def = def + Math.floor(tier / 4);
 	p.maxHp = maxHp + tier * 3; p.maxMp = maxMp + tier;
@@ -368,6 +381,7 @@ setup.newPlayer = function () {
 		stats: { daoxin: 30, xinmo: 0, fame: 0, fatigue: 0 },
 		flags: {},
 		buffs: {},
+		ngplus: 0, ngCultMul: 0,     // 多周目傳承（NewGamePlus 套用）
 		seen: { loc: {}, foe: {} },  // 圖鑑探索紀錄
 		time: { day: 1, tick: 4 },   // 第1日 辰時
 		loc: "dongfu",

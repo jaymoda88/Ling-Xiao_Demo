@@ -8,6 +8,7 @@
 	</div>
 	<div class="cap-time"><<= setup.timeName($p)>></div>
 	<div class="cap-loc">📍 <<= $p.placeName>></div>
+	<<if $p.ngplus>><div class="cap-ng">✦ 傳承 · 第 <<= $p.ngplus>> 周目</div><</if>>
 
 	<div class="cap-bars">
 		<div class="bar-row"><span class="bar-lbl">氣血</span><div class="bar-bg"><div class="bar-fill bf-hp" style="width:<<= Math.round(100*$p.hp/$p.maxHp)>>%"></div></div><span class="bar-num">$p.hp/$p.maxHp</span></div>

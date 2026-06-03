@@ -33,6 +33,12 @@
 	<<if $p.region === "youming">>
 		<<link "↑ 離開幽冥澤，返回南疆<span class='lx-hint'>遠行</span>">><<pass 3>><<enterLoc "shanzhai">><<goto "shanzhai">><</link>>
 	<</if>>
+	<<if $p.region === "lingxiao" and $p.flags.bloodlord>>
+		<<link "🌌 問道中央神墟<span class='lx-hint'>遠行 · 第六卷 飛升謎題</span>">><<goto "journey_shenxu">><</link>>
+	<</if>>
+	<<if $p.region === "shenxu">>
+		<<link "↩ 離開神墟，返回凌霄劍宗<span class='lx-hint'>遠行</span>">><<pass 3>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
+	<</if>>
 	<<link "← 取消，留在原地">><<goto $p.loc>><</link>>
 </div>
 
@@ -73,7 +79,7 @@
 	<<set $p.flags.wentBingling to true>>
 	<div class="scene">
 	<div class="scene-title">北上 · 冰嶺</div>
-	<p>你受宗門之託，北上苦寒的冰嶺，與正道盟友冰心宗交涉一樁靈material互市之事。愈往北，天地愈是清寒，呼出的氣息瞬間凝成白霜。</p>
+	<p>你受宗門之託，北上苦寒的冰嶺，與正道盟友冰心宗交涉一樁靈材互市之事。愈往北，天地愈是清寒，呼出的氣息瞬間凝成白霜。</p>
 	<p>冰心宗山門終年覆雪，弟子皆神情淡漠、心如止水——這裡的人，似乎連喜怒都被凍住了。</p>
 	</div>
 <<else>>
@@ -81,3 +87,18 @@
 <</if>>
 <<enterLoc "binggate">>
 <div class="choices"><<link "踏入冰心宗">><<goto "binggate">><</link>></div>
+
+:: journey_shenxu [game]
+<<pass 3>>
+<<if not $p.flags.wentShenxu>>
+	<<set $p.flags.wentShenxu to true>>
+	<div class="scene">
+	<div class="scene-title">問道 · 中央神墟</div>
+	<p>血魔尊隕落、仙紋在手，元神深處的烙印日夜搏動，指引你前往九洲心臟——封印重重的<span class="em">中央神墟</span>，萬年前那場撕裂天地的仙魔大戰遺址。</p>
+	<p>愈近神墟，空間愈是扭曲，殘存的仙威與魔氣彼此絞殺至今。你知道：通往仙界的門戶，與你前世的全部真相，都封在這裡。</p>
+	</div>
+<<else>>
+	<div class="scene"><p class="narr">你再度踏入中央神墟，空間裂隙在身畔無聲開闔。</p></div>
+<</if>>
+<<enterLoc "shenxu_gate">>
+<div class="choices"><<link "踏入神墟">><<goto "shenxu_gate">><</link>></div>

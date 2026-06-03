@@ -56,7 +56,8 @@ body {
 .cap-name { font-size:18px; color:var(--gold-light); font-weight:600; letter-spacing:.08em; }
 .cap-realm { font-size:12px; color:var(--jade-light); }
 .cap-time { font-size:12px; color:var(--gold); letter-spacing:.06em; }
-.cap-loc { font-size:12px; color:rgba(245,240,232,.7); margin:3px 0 10px; }
+.cap-loc { font-size:12px; color:rgba(245,240,232,.7); margin:3px 0 4px; }
+.cap-ng { font-size:11px; color:var(--gold-light); letter-spacing:.08em; margin:0 0 10px; text-shadow:0 0 8px rgba(201,149,42,.4); }
 .cap-res { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; font-size:11px; color:rgba(245,240,232,.55); }
 .cap-res b { color:var(--gold-light); }
 .cap-stats { display:flex; flex-direction:column; gap:4px; margin:10px 0; border-top:1px solid rgba(201,149,42,.12); border-bottom:1px solid rgba(201,149,42,.12); padding:9px 0; }
