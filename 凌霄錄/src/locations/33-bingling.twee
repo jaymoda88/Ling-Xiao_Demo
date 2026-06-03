@@ -59,7 +59,7 @@
 	<<link "🗻 風雪中觀道<span class='lx-hint'>耗二時辰，修為與道心俱增</span>">>
 		<<pass 2>>
 		<<set _g to 38 + setup.rnd(22) + $p.realm*18>>
-		<<gainCult _g>>
+		<<train _g>>
 		<<stat "daoxin" 2>>
 		<<goto "bingfeng">>
 	<</link>>

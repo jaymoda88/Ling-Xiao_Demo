@@ -43,7 +43,7 @@
 	<<link "🗻 於仙門前觀道<span class='lx-hint'>耗二時辰，修為與道心俱增</span>">>
 		<<pass 2>>
 		<<set _g to 60 + setup.rnd(30) + $p.realm*20>>
-		<<gainCult _g>>
+		<<train _g>>
 		<<stat "daoxin" 2>>
 		<<goto "xianmen">>
 	<</link>>

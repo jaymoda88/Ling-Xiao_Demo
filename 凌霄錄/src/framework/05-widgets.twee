@@ -39,6 +39,22 @@
 	<<run setup.addStat($p, _args[0], _args[1])>>
 <</widget>>
 
+/% 主動修煉：每日遞減（防無限刷）＋ 累積心魔（需打坐定心/凝神丹清，睡眠不清）。
+   事件型修為仍用 <<gainCult>>（不受此限）。 %/
+<<widget "train">>
+	<<if $p.cultDay !== $p.time.day>><<set $p.cultDay to $p.time.day>><<set $p.cultCount to 0>><</if>>
+	<<set _n to _args[0]>>
+	<<set $p.cultCount++>>
+	<<if $p.cultCount > 3>>
+		<<set _n to Math.round(_n * 0.5)>>
+		<<stat "xinmo" 3>>
+		<<run setup.toast("心緒浮躁，修煉漸入瓶頸（過度·心魔+3）")>>
+	<<else>>
+		<<stat "xinmo" 1>>
+	<</if>>
+	<<gainCult _n>>
+<</widget>>
+
 /% Toast 浮動提示 %/
 <<widget "toast">>
 	<<run setup.toast(_args[0])>>

@@ -9,7 +9,7 @@
 	<<link "⟳ 潛心修煉兩時辰<span class='lx-hint'>累積修為、回復靈力（增疲勞）</span>">>
 		<<pass 2>>
 		<<set _g to 28 + setup.rnd(24) + $p.realm * 22>>
-		<<gainCult _g>>
+		<<train _g>>
 		<<heal 6 $p.maxMp>>
 		<<goto "cultivate">>
 	<</link>>

@@ -22,7 +22,7 @@
 	<<link "⚔ 操演劍術<span class='lx-hint'>耗二時辰，累積修為、道心微增</span>">>
 		<<pass 2>>
 		<<set _g to 22 + setup.rnd(18) + $p.realm*16>>
-		<<gainCult _g>>
+		<<train _g>>
 		<<stat "daoxin" 1>>
 		<<goto "wuwuchang">>
 	<</link>>
@@ -97,7 +97,7 @@
 	<<link "🗻 臨崖悟劍<span class='lx-hint'>耗二時辰，修為與道心俱增</span>">>
 		<<pass 2>>
 		<<set _g to 36 + setup.rnd(20) + $p.realm*18>>
-		<<gainCult _g>>
+		<<train _g>>
 		<<stat "daoxin" 2>>
 		<<goto "jianya">>
 	<</link>>

@@ -57,9 +57,10 @@ setup.foeSigil = function (e) {
 	<<set _e to setup.enemies[$battle.foeId]>>
 	<<set _edmg to Math.max(1, _e.atk + setup.rnd(6) - setup.rnd(4) - $p.def)>>
 	<<set _shield to "">>
-	<<if ($p.hp - _edmg) <= 0 and Math.random() < (0.14 + $p.luck/700)>>
+	<<if ($p.hp - _edmg) <= 0 and not $battle.shieldUsed and Math.random() < (0.16 + $p.luck/700)>>
 		<<set _edmg to 0>>
-		<<set _shield to "<span class='sys'>【氣運護盾】天意庇護，此擊被金光化解！</span> ">>
+		<<set $battle.shieldUsed to true>>
+		<<set _shield to "<span class='sys'>【氣運護盾】天意庇護，此擊被金光化解！（每戰僅此一次）</span> ">>
 	<</if>>
 	<<set $p.hp to $p.hp - _edmg>>
 	<<set $battle.emsg to _shield + _e.name + " 反擊，你受到 <span class='dmg'>" + _edmg + "</span> 點傷害。">>
