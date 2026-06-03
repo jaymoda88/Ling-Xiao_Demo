@@ -83,7 +83,7 @@ setup.foeSigil = function (e) {
 	<div class="foe-card"><div class="foe-art"><<= setup.foeSigil(_e)>></div></div>
 	<div class="foe-meta">
 		<div class="foe-row">
-			<span class="foe-name em"><<= _e.name>></span>
+			<span class="foe-name em"><<= _e.name>><<if setup.enemyElem[$battle.foeId]>> <span class="foe-elem" style="color:<<= setup.elemColor[setup.enemyElem[$battle.foeId]]>>">〔<<= setup.enemyElem[$battle.foeId]>>〕</span><</if>></span>
 			<span class="foe-atk">攻擊 <<= _e.atk>></span>
 		</div>
 		<div class="foe-hp-label">氣血 <<= $battle.foeHp>> / <<= $battle.foeMax>></div>
@@ -116,6 +116,8 @@ setup.foeSigil = function (e) {
 		<<if Math.random() < $p.crit>><<set _dmg to Math.round(_dmg*1.7)>><<set _flavor to "<span class='em'>暴擊！</span> ">><</if>>
 		<<if $p.combo > 0 and Math.random() < $p.combo>><<set _dmg to Math.round(_dmg*1.5)>><<set _flavor to _flavor + "<span class='em'>劍訣連擊！</span> ">><</if>>
 		<<set _dmg to Math.max(1, _dmg)>>
+		<<set _cc to setup.chaosCounter($p, $battle.foeId)>>
+		<<if _cc.mult > 1>><<set _dmg to Math.round(_dmg * _cc.mult)>><<set _flavor to _flavor + _cc.label>><</if>>
 		<<set _msg to _flavor + "你出手，造成 <span class='em'>" + _dmg + "</span> 點傷害。">>
 		<<hitFoe _dmg _msg>>
 	<</link>>
@@ -127,8 +129,9 @@ setup.foeSigil = function (e) {
 				<<goto "Combat">>
 			<<else>>
 				<<set $p.mp -= 12>>
-				<<set _dmg to Math.max(1, Math.round(($p.atk + 22 + setup.rnd(15) - _e.def) * 1.3))>>
-				<<set _msg to "<span class='sys'>五雷天罡決</span>轟下，造成 <span class='em'>" + _dmg + "</span> 點傷害！">>
+				<<set _tv to setup.thunderVs($battle.foeId)>>
+				<<set _dmg to Math.max(1, Math.round(($p.atk + 22 + setup.rnd(15) - _e.def) * 1.3 * _tv))>>
+				<<set _msg to (_tv > 1 ? "<span class='sys'>✦ 雷剋金水！</span> " : "") + "<span class='sys'>五雷天罡決</span>轟下，造成 <span class='em'>" + _dmg + "</span> 點傷害！">>
 				<<hitFoe _dmg _msg>>
 			<</if>>
 		<</link>>

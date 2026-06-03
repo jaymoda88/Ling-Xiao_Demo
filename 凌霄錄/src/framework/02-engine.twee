@@ -63,6 +63,24 @@ setup.enemies = {
 	bloodlord:{ name: "血魔尊",       hp: 560, atk: 50, def: 16, stones: 0,  intro: "血魔尊立於血色雲海之巔，六千年殺戮之氣壓得天地變色：「凌霄……你那混沌之體，本尊收下了。」" },
 };
 
+/* ════════ 五行相剋 ════════
+   敵人屬性 → setup.enemyElem。混沌靈根覺醒後，攻擊自動以相剋之力壓制五行(含冰)之敵；
+   妖/鬼/魔等非五行屬性不受相剋（含 BOSS 血魔尊，不被輕易剋制）。 */
+setup.enemyElem = { scout:"金", scout2:"金", qinxiang:"金", beast:"妖", foxrebel:"妖", wildbeast:"妖", ligui:"鬼", guidao:"鬼", yinli:"鬼", binglao:"冰", moqian:"火", bloodlord:"魔" };
+setup.elemColor = { "金":"#e8c97a","木":"#6fae5a","水":"#5aa9d6","火":"#e0564a","土":"#c0925a","冰":"#8fdbe8","雷":"#b99cf0","妖":"#f0b94a","鬼":"#b9a9e0","魔":"#c0392b" };
+setup.elemCounterable = { "金":1,"木":1,"水":1,"火":1,"土":1,"冰":1 };
+setup.chaosCounter = function (p, foeId) {
+	const e = setup.enemyElem[foeId];
+	if (p.flags.chaosAwaken && e && setup.elemCounterable[e]) {
+		return { mult: 1.35, label: "<span class='sys'>✦ 混沌相剋（剋" + e + "）！</span> " };
+	}
+	return { mult: 1, label: "" };
+};
+setup.thunderVs = function (foeId) {
+	const e = setup.enemyElem[foeId];
+	return (e === "金" || e === "水") ? 1.35 : 1;
+};
+
 /* ════════ 時間系統 ════════
    $p.time = { day, tick }；tick 0..11 = 子丑寅卯辰巳午未申酉戌亥 */
 setup.tickNames = ["子","丑","寅","卯","辰","巳","午","未","申","酉","戌","亥"];
