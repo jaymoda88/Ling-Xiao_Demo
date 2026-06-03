@@ -235,6 +235,12 @@ setup.recompute = function (p) {
 		if (e.cultMul) cultMul += e.cultMul; if (e.luck) luck += e.luck;
 		if (e.crit) crit += e.crit; if (e.combo) combo = Math.max(combo, e.combo);
 	});
+	/* 出戰靈獸加成（luck 因 p.luck 為狀態值，於 equip/unequip widget 以差值處理） */
+	if (p.beastEquipped && setup.beasts && setup.beasts[p.beastEquipped]) {
+		const bb = setup.beasts[p.beastEquipped].bonus || {};
+		atk += bb.atk || 0; def += bb.def || 0; cultMul += bb.cultMul || 0;
+		p.exploreBonus = bb.exploreBonus || 0;
+	} else { p.exploreBonus = 0; }
 	const tier = p.realm * 40 + p.layer * 4;
 	p.atk = atk + tier; p.def = def + Math.floor(tier / 4);
 	p.maxHp = maxHp + tier * 3; p.maxMp = maxMp + tier;

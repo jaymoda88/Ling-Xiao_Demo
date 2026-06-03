@@ -76,9 +76,8 @@
 		<<set $p.coins += 2>>
 		<<recompute>>
 		<<run setup.toast("✦ 境界突破！" + setup.realms[$p.realm].name)>>
-		<p class="sys">天地靈氣轟然湧入丹田——</p>
-		<p>你正式踏入了 <span class="em"><<= setup.realms[$p.realm].name>></span>。神識較先前清明數倍，舉手投足間靈力流轉自如。</p>
-		<p class="sys">【境界躍遷 · 獲得書幣 ×2】</p>
+		/% 大境界躍遷 → 心魔試煉天劫（B3）；結束後回到所在地 %/
+		<<goto "Tribulation">>
 	<<else>>
 		<<set $p.cult to setup.cultNeed($p)>>
 		<<run setup.toast("已臻當前境界之巔")>>
@@ -148,7 +147,7 @@
 <<pass 2>>
 <div class="scene">
 <div class="scene-title">採集探索</div>
-<<set _luckRoll to Math.random() < (0.4 + $p.luck/300)>>
+<<set _luckRoll to Math.random() < (0.4 + $p.luck/300 + ($p.exploreBonus||0))>>
 <<set _eye to setup.has($p,"eye")>>
 <<if _luckRoll or _eye>>
 	<<set _gainStone to 4 + setup.rnd(8) + $p.realm*3>>
@@ -161,6 +160,11 @@
 	<<set $p.herbs[_h] to ($p.herbs[_h]||0) + 1>>
 	<p>你依前世的細緻心思在山野間搜尋<<if _eye>>，《天眼判靈》令靈材無所遁形<</if>>。</p>
 	<p class="sys">【獲得 靈石 ×<<= _gainStone>>、<<= setup.herbs[_h].name>> ×1】</p>
+	<<set _rb to ($p.region==="lingxiao") ? "lingyuan" : ($p.region==="nanjiang") ? "chiyanque" : ($p.region==="bingling") ? "xuanbingjiao" : "">>
+	<<if _rb and Math.random() < 0.12 and (not $p.beasts or $p.beasts.indexOf(_rb) < 0)>>
+		<<gainBeast _rb>>
+		<p class="sys">【意外結緣：一頭 <<= setup.beasts[_rb].name>> 與你親近，被你收為夥伴！可於御獸閣出戰。】</p>
+	<</if>>
 <<else>>
 	<p class="narr">你尋覓良久，此處靈材早已被人採盡，只餘塵埃。</p>
 <</if>>

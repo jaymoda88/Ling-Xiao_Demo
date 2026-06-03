@@ -53,6 +53,9 @@ setup.beastBonusText = function (id) {
 /% 出戰一隻靈獸：存 $p.beastEquipped 並 recompute（待 Manager 接 bonus 後生效） %/
 <<widget "equipBeast">>
 	<<set _id to _args[0]>>
+	<<set _newL to (setup.beasts[_id] && setup.beasts[_id].bonus.luck) || 0>>
+	<<set $p.luck += _newL - ($p.beastLuckApplied || 0)>>
+	<<set $p.beastLuckApplied to _newL>>
 	<<set $p.beastEquipped to _id>>
 	<<recompute>>
 	<<set _b to setup.beasts[_id]>>
@@ -62,6 +65,8 @@ setup.beastBonusText = function (id) {
 
 /% 收回靈獸 %/
 <<widget "unequipBeast">>
+	<<set $p.luck -= ($p.beastLuckApplied || 0)>>
+	<<set $p.beastLuckApplied to 0>>
 	<<set $p.beastEquipped to "">>
 	<<recompute>>
 	<<toast "已收回出戰靈獸">>
