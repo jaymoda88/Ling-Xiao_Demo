@@ -17,6 +17,7 @@
 	<</if>>
 	<<run setup.addStat($p, "fatigue", -100)>>
 	<<set $p.hp to $p.maxHp, $p.mp to $p.maxMp>>
+	<<set $p.flags.dualToday to false>>
 	<<run setup.toast("一夜安眠，神清氣爽")>>
 <</widget>>
 

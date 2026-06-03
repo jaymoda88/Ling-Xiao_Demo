@@ -41,6 +41,9 @@
 			<<goto "cultivate">>
 		<</link>>
 	<</if>>
+	<<if setup.dualAvailable($p)>>
+		<<link "☯ 雙修<span class='lx-hint'>與道侶靈脈交匯，大幅增進修為（每日一次）</span>">><<goto "DualCult">><</link>>
+	<</if>>
 	<<link "📚 進入萬界藏書閣">><<goto "library">><</link>>
 	<<link "← 返回前路">><<goto $return>><</link>>
 </div>
