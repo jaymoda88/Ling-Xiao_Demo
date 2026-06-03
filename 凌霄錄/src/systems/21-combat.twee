@@ -1,3 +1,32 @@
+:: CombatFoeArt [script]
+/* C1 戰鬥視覺：敵方「印璽卡」SVG（自製簡易，純視覺，不新增任何機制）。
+   依敵名關鍵字選配色，取名首字為大字符；單一戰鬥畫面僅一張卡，固定 gradient id 即可。 */
+setup.foeSigil = function (e) {
+	var name = (e && e.name) || "";
+	var ch = name.charAt(0) || "敵";
+	var t;
+	if (/血|魔/.test(name))                t = { a: "#c0392b", g: "#f0897e", bg: "#1a0707" };
+	else if (/鬼|厲|幽|魂|冥/.test(name))   t = { a: "#7d5bbe", g: "#c4b6ec", bg: "#0d0a1a" };
+	else if (/妖|獸|狼|狐/.test(name))      t = { a: "#bb8a2c", g: "#f2cc70", bg: "#150f06" };
+	else if (/冰|寒/.test(name))            t = { a: "#4a90b8", g: "#a6d6ec", bg: "#06121c" };
+	else                                    t = { a: "#c0392b", g: "#e8736a", bg: "#160a09" };
+	return '' +
+'<svg viewBox="0 0 200 200" width="100%" height="100%" preserveAspectRatio="xMidYMid meet" aria-hidden="true">' +
+  '<defs>' +
+    '<radialGradient id="foeglow" cx="0.5" cy="0.46" r="0.62">' +
+      '<stop offset="0" stop-color="' + t.a + '" stop-opacity="0.5"/>' +
+      '<stop offset="1" stop-color="' + t.a + '" stop-opacity="0"/>' +
+    '</radialGradient>' +
+  '</defs>' +
+  '<rect width="200" height="200" rx="8" fill="' + t.bg + '"/>' +
+  '<circle cx="100" cy="94" r="98" fill="url(#foeglow)"/>' +
+  '<circle cx="100" cy="100" r="72" fill="none" stroke="' + t.a + '" stroke-opacity="0.35" stroke-width="1.5"/>' +
+  '<path d="M30 44 L74 30 M170 156 L126 170" stroke="' + t.a + '" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round"/>' +
+  '<text x="100" y="138" font-size="116" text-anchor="middle" fill="' + t.g + '" fill-opacity="0.92" font-family="\'Noto Serif TC\',serif" font-weight="900">' + ch + '</text>' +
+'</svg>';
+};
+
+
 :: CombatWidgets [widget]
 
 /% 開戰：_args = foeId, 勝利段落, 失敗段落 %/
@@ -8,8 +37,10 @@
 	<<goto "Combat">>
 <</widget>>
 
-/% 對敵造成傷害並結算敵方反擊 %/
+/% 對敵造成傷害並結算敵方反擊（記錄前一刻氣血與本次傷害，供氣血條動畫／傷害浮字使用） %/
 <<widget "hitFoe">>
+	<<set $battle.foePrevHp to $battle.foeHp>>
+	<<set $battle.lastDmg to _args[0]>>
 	<<set $battle.foeHp -= _args[0]>>
 	<<set $battle.msg to _args[1]>>
 	<<if $battle.foeHp <= 0>>
@@ -42,12 +73,26 @@
 
 :: Combat [game]
 <<set _e to setup.enemies[$battle.foeId]>>
-<div class="combat-foe">
-	<div style="display:flex;justify-content:space-between;align-items:baseline;">
-		<span class="em"><<= _e.name>></span>
-		<span class="lx-hint" style="margin:0;">氣血 <<= $battle.foeHp>>/<<= $battle.foeMax>>　攻擊 <<= _e.atk>></span>
+<<set _cur to Math.max(0, Math.round(100 * $battle.foeHp / $battle.foeMax))>>
+<<set _prev to ($battle.foePrevHp != null) ? Math.max(0, Math.round(100 * $battle.foePrevHp / $battle.foeMax)) : _cur>>
+<<set _foelow to ($battle.foeHp / $battle.foeMax) < 0.3>>
+<<set _ld to $battle.lastDmg || 0>>
+<<set _ppct to Math.max(0, Math.round(100 * $p.hp / $p.maxHp))>>
+<<set _plow to ($p.hp / $p.maxHp) < 0.3>>
+<div class="combat-foe <<if _foelow>>foe-low<</if>>">
+	<div class="foe-card"><div class="foe-art"><<= setup.foeSigil(_e)>></div></div>
+	<div class="foe-meta">
+		<div class="foe-row">
+			<span class="foe-name em"><<= _e.name>></span>
+			<span class="foe-atk">攻擊 <<= _e.atk>></span>
+		</div>
+		<div class="foe-hp-label">氣血 <<= $battle.foeHp>> / <<= $battle.foeMax>></div>
+		<div class="foe-bar-bg">
+			<div class="foe-bar-ghost" style="width:<<= _cur>>%; --from:<<= _prev>>%;"></div>
+			<div class="foe-bar" style="width:<<= _cur>>%; --from:<<= _prev>>%;"></div>
+		</div>
 	</div>
-	<div class="foe-bar-bg"><div class="foe-bar" style="width:<<= Math.round(100*$battle.foeHp/$battle.foeMax)>>%"></div></div>
+	<<if _ld > 0>><div class="dmg-float">-<<= _ld>></div><</if>>
 </div>
 <div class="scene">
 <<if not $battle.started>>
@@ -57,6 +102,13 @@
 <<if $battle.msg>><p><<= $battle.msg>></p><</if>>
 <<if $battle.emsg>><p><<= $battle.emsg>></p><</if>>
 </div>
+<div class="combat-me <<if _plow>>danger<</if>>">
+	<span class="me-label">道體 氣血</span>
+	<div class="me-bar-bg"><div class="me-bar" style="width:<<= _ppct>>%;"></div></div>
+	<span class="me-val"><<= $p.hp>> / <<= $p.maxHp>></span>
+	<<if _plow>><span class="me-warn">⚠ 氣血垂危</span><</if>>
+</div>
+<div class="turn-banner"><span>⟡ 你的回合 ⟡</span></div>
 <div class="choices">
 	<<link "⚔ 全力攻擊<span class='lx-hint'>以功法攻伐之力出手</span>">>
 		<<set _dmg to $p.atk + setup.rnd(8) - setup.rnd(4) - _e.def>>
@@ -70,6 +122,7 @@
 	<<if setup.has($p,"storm")>>
 		<<link "⚡ 五雷天罡決<span class='lx-hint'>耗 12 靈力的強力一擊</span>">>
 			<<if $p.mp < 12>>
+				<<set $battle.lastDmg to 0>><<set $battle.foePrevHp to $battle.foeHp>>
 				<<set $battle.msg to "<span class='sys'>靈力不足，無法施展五雷天罡決。</span>">>
 				<<goto "Combat">>
 			<<else>>
@@ -82,6 +135,7 @@
 	<</if>>
 	<<if ($p.pills.huiyuan||0) > 0>>
 		<<link "丹 服用回元丹<span class='lx-hint'>回復氣血靈力（剩 <<= $p.pills.huiyuan>> 顆）</span>">>
+			<<set $battle.lastDmg to 0>><<set $battle.foePrevHp to $battle.foeHp>>
 			<<set $p.pills.huiyuan-->>
 			<<heal 60 30>>
 			<<set $battle.msg to "你服下回元丹，氣血靈力回復。">>
@@ -94,6 +148,7 @@
 				<<set $battle.tamed to true>>
 				<<goto $battle.win>>
 			<<else>>
+				<<set $battle.lastDmg to 0>><<set $battle.foePrevHp to $battle.foeHp>>
 				<<set $battle.msg to "<span class='sys'>妖獸傷勢未重，戒心仍盛，馴心訣未能奏效。</span>">>
 				<<enemyStrike>>
 			<</if>>
@@ -104,6 +159,7 @@
 			<<set $battle.fled to true>>
 			<<goto $battle.lose>>
 		<<else>>
+			<<set $battle.lastDmg to 0>><<set $battle.foePrevHp to $battle.foeHp>>
 			<<set $battle.msg to "你未能脫身，反被纏住！">>
 			<<enemyStrike>>
 		<</if>>
