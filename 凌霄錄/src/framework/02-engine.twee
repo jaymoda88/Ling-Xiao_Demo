@@ -417,6 +417,7 @@ setup.recompute = function (p) {
 		const ab = setup.artifacts[p.artiEquipped].bonus || {};
 		atk += ab.atk || 0; def += ab.def || 0; maxHp += ab.maxHp || 0; cultMul += ab.cultMul || 0; crit += ab.crit || 0;
 	}
+	if (p.dongfuLv && p.dongfuLv > 1) cultMul += (p.dongfuLv - 1) * 0.05;   // 洞府升級·聚靈陣法增益修煉
 	if (p.ngCultMul) cultMul += p.ngCultMul;   // 多周目傳承修煉加成
 	const tier = p.realm * 40 + p.layer * 4;
 	p.atk = atk + tier; p.def = def + Math.floor(tier / 4);
@@ -572,7 +573,7 @@ setup.newPlayer = function () {
 /* ════════ 存檔遷移（版本化） ════════
    後加欄位的統一補全處，取代散落的 PassageReady 臨時補丁。
    版本不符才執行；新欄位請加進 defaults 並 ++SAVE_VER。 */
-setup.SAVE_VER = 4;
+setup.SAVE_VER = 5;
 setup.migrate = function (p) {
 	if (!p || !p.maxHp) return;
 	if (p.ver === setup.SAVE_VER) return;
@@ -595,6 +596,11 @@ setup.migrate = function (p) {
 	if (!p.talismans) p.talismans = {};
 	if (!p.tips) p.tips = {};
 	if (!p.faction) p.faction = { zhengdao: 0, yaozu: 0, youming: 0, mozong: 0 };
+	if (typeof p.dongfuLv !== "number") p.dongfuLv = 1;
+	if (!p.field) p.field = { crop: null, plantDay: 0 };
+	if (typeof p.mineDay !== "number") p.mineDay = p.time ? p.time.day : 1;
+	if (typeof p.sectMerit !== "number") p.sectMerit = 0;
+	if (typeof p.sectRank !== "number") p.sectRank = 0;
 	if (!p.time) p.time = { day: 1, tick: 4 };
 	const defs = { ngplus: 0, ngCultMul: 0, cultCount: 0, cultDay: 0, dualCD: 0, pulseDay: 0,
 		merchTradeDay: -1, artiLuckApplied: 0, beastLuckApplied: 0, exploreBonus: 0, coins: 0, stones: 0 };

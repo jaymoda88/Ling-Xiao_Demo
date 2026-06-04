@@ -9,6 +9,7 @@
 	<<link "🛏 歇息一晚<span class='lx-hint'>睡至次日辰時，疲勞全消、回滿氣血靈力</span>">><<sleep>><<goto "dongfu">><</link>>
 	<<link "🧘 打坐定心<span class='lx-hint'>耗一時辰，心魔−12、道心+3</span>">><<calmheart>><<goto "dongfu">><</link>>
 	<<link "📚 開啟萬界藏書閣<span class='lx-hint'>解鎖功法、煉製丹藥</span>">><<goto "library">><</link>>
+	<<link "🏡 打理洞府<span class='lx-hint'>升級・靈石礦・靈田（放置產出）</span>">><<goto "Estate">><</link>>
 	<<travelfoot>>
 </div>
 
@@ -26,6 +27,9 @@
 		<<stat "daoxin" 1>>
 		<<goto "wuwuchang">>
 	<</link>>
+	<<if $p.flags.enteredSect>>
+		<<link "📜 宗門任務堂<span class='lx-hint'>接委託換貢獻、晉升、兌換資源</span>">><<goto "SectHall">><</link>>
+	<</if>>
 	<<travelfoot>>
 </div>
 
