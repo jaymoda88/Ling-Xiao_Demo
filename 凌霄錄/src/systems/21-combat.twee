@@ -123,6 +123,7 @@ setup.meStatusHtml = function (b) {
 
 /% 對敵造成傷害並結算（記錄前一刻氣血與本次傷害供動畫；附帶屬性狀態） %/
 <<widget "hitFoe">>
+	<<run setup.audio.playSfx("hit")>>
 	<<set $battle.foePrevHp to $battle.foeHp>>
 	<<set $battle.lastDmg to _args[0]>>
 	<<set $battle.foeHp -= _args[0]>>

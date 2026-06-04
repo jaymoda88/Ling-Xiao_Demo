@@ -69,6 +69,7 @@
 	<<if $p.layer < _r.layers>>
 		<<set $p.layer++>>
 		<<recompute>>
+		<<run setup.audio.playSfx("break")>>
 		<<run setup.toast("✦ 突破成功！" + setup.realmName($p))>>
 		<p>靈力在經脈中奔流，舊有桎梏應聲碎裂。你突破至 <span class="em"><<= setup.realmName($p)>></span>，氣血與攻伐之力俱增。</p>
 	<<elseif setup.realms[$p.realm + 1]>>
