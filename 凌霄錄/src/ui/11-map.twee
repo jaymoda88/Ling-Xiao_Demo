@@ -1,15 +1,19 @@
 :: Map [game]
 <<set _reg to setup.regions[$p.region]>>
+<<set _disc to _reg.locs.filter(function(x){ return $p.seen and $p.seen.loc[x]; }).length>>
 <div class="scene">
-<div class="scene-title">🗺 <<= _reg.name>> · 移動</div>
-<p class="narr">擇一處前往（每次移動約耗一個時辰）。</p>
+<div class="scene-title">🗺 <<= _reg.name>> · 輿圖</div>
+<p class="narr">擇一處前往（每次移動約耗一時辰<<if setup.canFly($p)>>，已可御劍<</if>）。已探索 <span class="em"><<= _disc>></span> / <<= _reg.locs.length>> 處。</p>
 </div>
 <div class="map-grid">
 <<for _i, _id range _reg.locs>>
 	<<capture _id>>
 	<<set _L to setup.locations[_id]>>
+	<<set _fog to not ($p.seen and $p.seen.loc[_id])>>
 	<<if _id === $p.loc>>
 		<a class="here"><span class="m-icon"><<= _L.icon>></span><span class="m-name"><<= _L.name>></span><span class="m-sub">你在此處</span></a>
+	<<elseif _fog>>
+		<<link `'<span class="m-icon m-fog">❓</span><span class="m-name m-fog">未探之地</span><span class="m-sub">前往一探究竟…</span>'`>><<travelTo _id>><</link>>
 	<<else>>
 		<<link `'<span class="m-icon">'+_L.icon+'</span><span class="m-name">'+_L.name+'</span><span class="m-sub">'+_L.desc.slice(0,18)+'…</span>'`>><<travelTo _id>><</link>>
 	<</if>>

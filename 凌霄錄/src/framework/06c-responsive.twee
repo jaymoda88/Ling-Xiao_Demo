@@ -77,4 +77,15 @@
 	.cap-res { gap: 6px 8px; }
 	.cap-stats { padding: 8px 0; }
 	.cap-keys { display: none; }  /* 手機無實體鍵盤，隱藏快捷鍵說明 */
+
+	/* ---- 戰鬥深化元件：五行出招列加大可點，狀態徽章緊湊 ---- */
+	.elem-row { gap: 6px; padding: 8px 9px; }
+	.elem-row a.link-internal, .elem-pick { padding: 5px 12px; font-size: 16px; }  /* ≥44px 觸控友善 */
+	.elem-hint { font-size: 10.5px; }
+	.cstat { font-size: 10px; padding: 1px 6px; }
+	.lx-tip { font-size: 12px; padding: 8px 10px; }
+	/* 面板內 .book 卡片在窄屏堆疊，按鈕不擠壓 */
+	.book { flex-wrap: wrap; }
+	.book .book-buy { margin-top: 6px; }
+	.frep-row, .jr-row { font-size: 12.5px; }
 }
