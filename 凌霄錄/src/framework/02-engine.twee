@@ -49,19 +49,19 @@ setup.recipes = {
 
 /* ── 敵人 ── */
 setup.enemies = {
-	scout:    { name: "玄冥王府散修",   hp: 55,  atk: 12, def: 1,  stones: 12, intro: "那散修獰笑著拔刀撲來。" },
-	scout2:   { name: "玄冥王府散修",   hp: 60,  atk: 14, def: 2,  stones: 10, intro: "被發現了，只能一戰！" },
-	qinxiang: { name: "天驕弟子·秦驤",  hp: 140, atk: 22, def: 6,  stones: 0,  intro: "秦驤一身華貴錦袍，劍尖斜指，眼底滿是輕蔑：「廢物，也配站上比武臺？」" },
-	beast:    { name: "受傷的上古妖獸",  hp: 220, atk: 30, def: 10, stones: 0,  intro: "妖獸渾身浴血，金瞳赤紅，受傷反而更加狂暴。", tameable: true },
-	foxrebel: { name: "狐族叛黨修士",   hp: 180, atk: 28, def: 8,  stones: 30, intro: "狐族叛黨足尖一點，挾著妖風撲來。" },
-	wildbeast:{ name: "瘴境妖狼",       hp: 90,  atk: 18, def: 4,  stones: 8,  intro: "一頭瘴氣纏身的妖狼從密林竄出。" },
-	ligui:    { name: "亂葬厲鬼",       hp: 130, atk: 26, def: 5,  stones: 12, intro: "一隻死於執念的厲鬼自屍堆中嘶嚎而起。" },
-	guidao:   { name: "幽冥鬼道修士",   hp: 200, atk: 32, def: 9,  stones: 24, intro: "鬼道修士御使陰風，攝魂之術森然襲來。" },
-	yinli:    { name: "幽冥女鬼使·陰離", hp: 260, atk: 36, def: 11, stones: 0,  intro: "半透明白髮的女子持刃而立，眼神空洞如被操縱的傀儡：「目標……凌霄。執行。」", spare: true },
-	binglao:  { name: "冰心宗執法長老", hp: 240, atk: 35, def: 12, stones: 0,  intro: "執法長老一身冬藍道袍，周身寒霜凝結：「清情大典乃宗門根本，閒雜人等，退下。」" },
-	moqian:   { name: "血煞魔宗先鋒", hp: 220, atk: 36, def: 10, stones: 30, intro: "血煞魔修踏著屍山獰笑而來，渾身浴血、殺氣騰騰。" },
-	bloodlord:{ name: "血魔尊",       hp: 560, atk: 50, def: 16, stones: 0,  intro: "血魔尊立於血色雲海之巔，六千年殺戮之氣壓得天地變色：「凌霄……你那混沌之體，本尊收下了。」" },
-	xianmoremnant:{ name: "仙魔殘念", hp: 720, atk: 58, def: 20, stones: 0, intro: "封印崩裂處，凝聚著萬年前仙魔大戰雙方的殘餘執念——它既非仙，也非魔，只認得『擋路者，殺』。" },
+	scout:    { name: "玄冥王府散修",   hp: 70,   atk: 12, def: 1,  stones: 12, intro: "那散修獰笑著拔刀撲來。" },
+	scout2:   { name: "玄冥王府散修",   hp: 78,   atk: 14, def: 2,  stones: 10, intro: "被發現了，只能一戰！" },
+	qinxiang: { name: "天驕弟子·秦驤",  hp: 160,  atk: 22, def: 6,  stones: 0,  intro: "秦驤一身華貴錦袍，劍尖斜指，眼底滿是輕蔑：「廢物，也配站上比武臺？」" },
+	beast:    { name: "受傷的上古妖獸",  hp: 520,  atk: 34, def: 12, stones: 0,  intro: "妖獸渾身浴血，金瞳赤紅，受傷反而更加狂暴。", tameable: true },
+	foxrebel: { name: "狐族叛黨修士",   hp: 460,  atk: 32, def: 10, stones: 30, intro: "狐族叛黨足尖一點，挾著妖風撲來。" },
+	wildbeast:{ name: "瘴境妖狼",       hp: 160,  atk: 18, def: 4,  stones: 8,  intro: "一頭瘴氣纏身的妖狼從密林竄出。" },
+	ligui:    { name: "亂葬厲鬼",       hp: 360,  atk: 28, def: 6,  stones: 12, intro: "一隻死於執念的厲鬼自屍堆中嘶嚎而起。" },
+	guidao:   { name: "幽冥鬼道修士",   hp: 680,  atk: 36, def: 11, stones: 24, intro: "鬼道修士御使陰風，攝魂之術森然襲來。" },
+	yinli:    { name: "幽冥女鬼使·陰離", hp: 820,  atk: 42, def: 13, stones: 0,  intro: "半透明白髮的女子持刃而立，眼神空洞如被操縱的傀儡：「目標……凌霄。執行。」", spare: true },
+	binglao:  { name: "冰心宗執法長老", hp: 800,  atk: 42, def: 14, stones: 0,  intro: "執法長老一身冬藍道袍，周身寒霜凝結：「清情大典乃宗門根本，閒雜人等，退下。」" },
+	moqian:   { name: "血煞魔宗先鋒",   hp: 720,  atk: 38, def: 11, stones: 30, intro: "血煞魔修踏著屍山獰笑而來，渾身浴血、殺氣騰騰。" },
+	bloodlord:{ name: "血魔尊",         hp: 1700, atk: 68, def: 20, stones: 0,  intro: "血魔尊立於血色雲海之巔，六千年殺戮之氣壓得天地變色：「凌霄……你那混沌之體，本尊收下了。」" },
+	xianmoremnant:{ name: "仙魔殘念",   hp: 2050, atk: 70, def: 24, stones: 0, intro: "封印崩裂處，凝聚著萬年前仙魔大戰雙方的殘餘執念——它既非仙，也非魔，只認得『擋路者，殺』。" },
 };
 
 /* ════════ 五行相剋 ════════
