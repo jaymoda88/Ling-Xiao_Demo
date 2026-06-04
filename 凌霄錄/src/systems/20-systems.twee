@@ -44,6 +44,9 @@
 	<<if setup.dualAvailable($p)>>
 		<<link "☯ 雙修<span class='lx-hint'>與道侶靈脈交匯，大幅增進修為（每日一次）</span>">><<goto "DualCult">><</link>>
 	<</if>>
+	<<if $p.realm >= 1>>
+		<<link "🧘 閉關<span class='lx-hint'>長閉死關，短時推進大量修為（耗壽元・有風險）</span>">><<goto "Seclusion">><</link>>
+	<</if>>
 	<<link "📚 進入萬界藏書閣">><<goto "library">><</link>>
 	<<link "← 返回前路">><<goto $return>><</link>>
 </div>
@@ -77,6 +80,7 @@
 		<<set $p.coins += 2>>
 		<<recompute>>
 		<<run setup.toast("✦ 境界突破！" + setup.realms[$p.realm].name)>>
+		<<if $p.realm === 2 and not $p.flags.flyShown>><<set $p.flags.flyShown to true>><<run setup.toast("✦ 金丹既成，可御劍飛行！遠行耗時大減")>><</if>>
 		/% 大境界躍遷 → 心魔試煉天劫（B3）；結束後回到所在地 %/
 		<<goto "Tribulation">>
 	<<else>>

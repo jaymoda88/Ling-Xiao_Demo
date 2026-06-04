@@ -409,8 +409,11 @@ setup.recompute = function (p) {
 	/* 出戰靈獸加成（luck 因 p.luck 為狀態值，於 equip/unequip widget 以差值處理） */
 	if (p.beastEquipped && setup.beasts && setup.beasts[p.beastEquipped]) {
 		const bb = setup.beasts[p.beastEquipped].bonus || {};
-		atk += bb.atk || 0; def += bb.def || 0; cultMul += bb.cultMul || 0;
-		p.exploreBonus = bb.exploreBonus || 0;
+		const blv = (p.beastLv && p.beastLv[p.beastEquipped]) || 0;
+		const bm = 1 + blv * 0.25;   // 靈獸進階：每階 +25% 加成
+		atk += Math.round((bb.atk || 0) * bm); def += Math.round((bb.def || 0) * bm);
+		cultMul += (bb.cultMul || 0) * bm;
+		p.exploreBonus = (bb.exploreBonus || 0) * bm;
 	} else { p.exploreBonus = 0; }
 	/* 祭煉法寶加成（luck 同樣由 equip/unequip widget 以差值處理） */
 	if (p.artiEquipped && setup.artifacts && setup.artifacts[p.artiEquipped]) {
@@ -427,6 +430,18 @@ setup.recompute = function (p) {
 	if (p.mp > p.maxMp) p.mp = p.maxMp;
 	return p;
 };
+
+/* ════════ 壽元（隨境界延長） ════════
+   1 載 = 120 日；起始 16 歲；境界越高壽命越長。 */
+setup.lifespanOf = function (realm) { return [120, 200, 400, 800][realm] || 1200; };
+setup.ageYears = function (p) { return 16 + Math.floor(((p.time ? p.time.day : 1) - 1) / 120); };
+setup.lifeLeft = function (p) { return setup.lifespanOf(p.realm) - setup.ageYears(p); };
+setup.lifeBadge = function (p) {
+	const left = setup.lifeLeft(p), cls = (left < 20) ? "st-danger" : (left < 60) ? "st-gold" : "st-jade";
+	return '<span class="gstat ' + cls + '">壽元 ' + setup.ageYears(p) + ' / ' + setup.lifespanOf(p.realm) + ' 載</span>';
+};
+/* 御劍飛行：金丹(realm≥2)後可御劍遠行，遠行耗時減少 */
+setup.canFly = function (p) { return p.realm >= 2; };
 
 setup.realmName = function (p) {
 	const r = setup.realms[p.realm]; if (!r) return "未知";
@@ -573,7 +588,7 @@ setup.newPlayer = function () {
 /* ════════ 存檔遷移（版本化） ════════
    後加欄位的統一補全處，取代散落的 PassageReady 臨時補丁。
    版本不符才執行；新欄位請加進 defaults 並 ++SAVE_VER。 */
-setup.SAVE_VER = 5;
+setup.SAVE_VER = 6;
 setup.migrate = function (p) {
 	if (!p || !p.maxHp) return;
 	if (p.ver === setup.SAVE_VER) return;
@@ -601,6 +616,7 @@ setup.migrate = function (p) {
 	if (typeof p.mineDay !== "number") p.mineDay = p.time ? p.time.day : 1;
 	if (typeof p.sectMerit !== "number") p.sectMerit = 0;
 	if (typeof p.sectRank !== "number") p.sectRank = 0;
+	if (!p.beastLv) p.beastLv = {};
 	if (!p.time) p.time = { day: 1, tick: 4 };
 	const defs = { ngplus: 0, ngCultMul: 0, cultCount: 0, cultDay: 0, dualCD: 0, pulseDay: 0,
 		merchTradeDay: -1, artiLuckApplied: 0, beastLuckApplied: 0, exploreBonus: 0, coins: 0, stones: 0 };

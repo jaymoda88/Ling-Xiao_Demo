@@ -22,28 +22,28 @@
 		<<link "❄ 北上冰嶺<span class='lx-hint'>遠行 · 冰心宗（裴冬雪）</span>">><<goto "journey_bingling">><</link>>
 	<</if>>
 	<<if $p.region === "bingling">>
-		<<link "↓ 返回凌霄劍宗<span class='lx-hint'>遠行</span>">><<pass 3>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
+		<<link "↓ 返回凌霄劍宗<span class='lx-hint'>遠行</span>">><<farpass>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
 	<</if>>
 	<<if $p.region === "nanjiang">>
-		<<link "↑ 返回凌霄劍宗<span class='lx-hint'>遠行（耗時較久）</span>">><<pass 3>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
+		<<link "↑ 返回凌霄劍宗<span class='lx-hint'>遠行（耗時較久）</span>">><<farpass>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
 	<</if>>
 	<<if $p.region === "nanjiang" and $p.flags.qingHeat>>
 		<<link "🕯 潛入幽冥澤<span class='lx-hint'>遠行 · 推進第四卷</span>">><<goto "journey_youming">><</link>>
 	<</if>>
 	<<if $p.region === "youming">>
-		<<link "↑ 離開幽冥澤，返回南疆<span class='lx-hint'>遠行</span>">><<pass 3>><<enterLoc "shanzhai">><<goto "shanzhai">><</link>>
+		<<link "↑ 離開幽冥澤，返回南疆<span class='lx-hint'>遠行</span>">><<farpass>><<enterLoc "shanzhai">><<goto "shanzhai">><</link>>
 	<</if>>
 	<<if $p.region === "lingxiao" and $p.flags.bloodlord>>
 		<<link "🌌 問道中央神墟<span class='lx-hint'>遠行 · 第六卷 飛升謎題</span>">><<goto "journey_shenxu">><</link>>
 	<</if>>
 	<<if $p.region === "shenxu">>
-		<<link "↩ 離開神墟，返回凌霄劍宗<span class='lx-hint'>遠行</span>">><<pass 3>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
+		<<link "↩ 離開神墟，返回凌霄劍宗<span class='lx-hint'>遠行</span>">><<farpass>><<enterLoc "dongfu">><<goto "dongfu">><</link>>
 	<</if>>
 	<<link "← 取消，留在原地">><<goto $p.loc>><</link>>
 </div>
 
 :: journey_south [game]
-<<pass 3>>
+<<farpass>>
 <<if not $p.flags.wentSouth>>
 	<<set $p.flags.wentSouth to true>>
 	<div class="scene">
@@ -59,7 +59,7 @@
 <div class="choices"><<link "踏入狐族山寨">><<goto "shanzhai">><</link>></div>
 
 :: journey_youming [game]
-<<pass 3>>
+<<farpass>>
 <<if not $p.flags.wentYouming>>
 	<<set $p.flags.wentYouming to true>>
 	<div class="scene">
@@ -74,7 +74,7 @@
 <div class="choices"><<link "深入幽冥澤">><<goto "guimenguan">><</link>></div>
 
 :: journey_bingling [game]
-<<pass 3>>
+<<farpass>>
 <<if not $p.flags.wentBingling>>
 	<<set $p.flags.wentBingling to true>>
 	<div class="scene">
@@ -89,7 +89,7 @@
 <div class="choices"><<link "踏入冰心宗">><<goto "binggate">><</link>></div>
 
 :: journey_shenxu [game]
-<<pass 3>>
+<<farpass>>
 <<if not $p.flags.wentShenxu>>
 	<<set $p.flags.wentShenxu to true>>
 	<div class="scene">

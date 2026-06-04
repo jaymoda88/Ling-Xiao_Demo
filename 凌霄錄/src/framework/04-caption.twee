@@ -31,6 +31,7 @@
 		<div><<= setup.gstatHtml("xinmo", $p.stats.xinmo)>></div>
 		<div><<= setup.gstatHtml("fame", $p.stats.fame)>></div>
 		<div><<= setup.gstatHtml("fatigue", $p.stats.fatigue)>></div>
+		<div><<= setup.lifeBadge($p)>></div>
 	</div>
 
 	<<if $p.rel.suyuyao > 0 or $p.rel.qingling > 0 or $p.rel.yinli > 0 or $p.rel.dongxue > 0>>

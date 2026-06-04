@@ -88,11 +88,12 @@ setup.beastBonusText = function (id) {
 		<<set _b to setup.beasts[_id]>>
 		<<if _b>>
 		<<set _on to _id === _eq>>
+		<<set _lv to ($p.beastLv and $p.beastLv[_id]) || 0>>
 		<div class="book <<if _on>>owned<</if>>">
 			<div class="book-info">
-				<h4><<= _b.name>><span class="tag-school"><<= setup.beastTierName(_b.tier)>></span></h4>
+				<h4><<= _b.name>><span class="tag-school"><<= setup.beastTierName(_b.tier)>><<if _lv>> · 進階 <<= _lv>><</if>></span></h4>
 				<p><<= _b.desc>></p>
-				<p class="beast-bonus"><<= setup.beastBonusText(_id)>></p>
+				<p class="beast-bonus"><<= setup.beastBonusText(_id)>><<if _lv>>　<span class="gold">(加成 +<<= _lv*25>>%)</span><</if>></p>
 			</div>
 			<div class="book-buy">
 				<<if _on>>
@@ -100,6 +101,21 @@ setup.beastBonusText = function (id) {
 					<<link "收回">><<unequipBeast _id>><<goto "Beasts">><</link>>
 				<<else>>
 					<<link "出戰">><<equipBeast _id>><<goto "Beasts">><</link>>
+				<</if>>
+				<<if _lv < 3>>
+					<<set _ac to (_lv+1)*60>>
+					<<if ($p.herbs.yaodan||0) >= 1 and $p.stones >= _ac>>
+						<<link `"⬆ 血脈進階（妖丹×1 + " + _ac + "靈石）"`>>
+							<<set $p.herbs.yaodan-->><<set $p.stones -= _ac>>
+							<<if not $p.beastLv>><<set $p.beastLv to {}>><</if>>
+							<<set $p.beastLv[_id] to _lv+1>>
+							<<if _id === _eq>><<recompute>><</if>>
+							<<run setup.toast(setup.beasts[_id].name + " 血脈覺醒 · 進階 " + (_lv+1))>>
+							<<goto "Beasts">>
+						<</link>>
+					<<else>>
+						<a class="disabled">⬆ 血脈進階（妖丹×1 + <<= _ac>>靈石）</a>
+					<</if>>
 				<</if>>
 			</div>
 		</div>
