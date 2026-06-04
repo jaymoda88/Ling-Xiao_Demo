@@ -8,6 +8,10 @@
 	</div>
 	<div class="cap-time"><<= setup.timeName($p)>></div>
 	<div class="cap-loc">📍 <<= $p.placeName>></div>
+	<<= setup.pulseBadge($p)>>
+	<<for _dl range setup.activeDeadlines($p)>>
+		<div class="cap-deadline"><<if _dl.left >= 0>>⏳ 距 <<= _dl.label>> 還有 <b><<= _dl.left>></b> 日<<else>><span class="overdue">⏳ <<= _dl.label>> 已逾期 <<= -_dl.left>> 日</span><</if>></div>
+	<</for>>
 	<<if $p.ngplus>><div class="cap-ng">✦ 傳承 · 第 <<= $p.ngplus>> 周目</div><</if>>
 
 	<div class="cap-bars">

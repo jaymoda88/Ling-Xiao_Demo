@@ -52,6 +52,10 @@
 	<<else>>
 		<<stat "xinmo" 1>>
 	<</if>>
+	/% 靈氣潮汐（每 7 日）：修煉效率 +30% %/
+	<<if $p.time.day % 7 === 0>>
+		<<set _n to Math.round(_n * 1.3)>>
+	<</if>>
 	<<gainCult _n>>
 <</widget>>
 

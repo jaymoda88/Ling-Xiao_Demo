@@ -164,6 +164,7 @@
 :: test_root [game]
 <<set $p.coins += 1>>
 <<set $p.flags.enteredSect to true>>
+<<if not $p.flags.sectDay>><<set $p.flags.sectDay to $p.time.day>><</if>>
 <div class="scene">
 <div class="scene-title">測靈石之變</div>
 <p>你將手按上漆黑的測靈石。起初，石面毫無反應，引來四周一片哄笑——「果然是廢根！」</p>

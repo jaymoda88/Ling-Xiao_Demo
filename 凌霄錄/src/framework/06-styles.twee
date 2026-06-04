@@ -58,6 +58,13 @@ body {
 .cap-time { font-size:12px; color:var(--gold); letter-spacing:.06em; }
 .cap-loc { font-size:12px; color:rgba(245,240,232,.7); margin:3px 0 4px; }
 .cap-ng { font-size:11px; color:var(--gold-light); letter-spacing:.08em; margin:0 0 10px; text-shadow:0 0 8px rgba(201,149,42,.4); }
+.pulse-row { display:flex; flex-wrap:wrap; gap:5px; margin:2px 0 4px; }
+.pulse-tag { font-size:10.5px; padding:1px 7px; border-radius:9px; border:1px solid rgba(255,255,255,.16); letter-spacing:.04em; }
+.pulse-tag.ling { color:#8fdbe8; border-color:rgba(90,169,214,.5); background:rgba(90,169,214,.1); }
+.pulse-tag.mo { color:#e8736a; border-color:rgba(192,57,43,.5); background:rgba(192,57,43,.1); }
+.cap-deadline { font-size:11px; color:rgba(245,240,232,.78); margin:1px 0 3px; }
+.cap-deadline b { color:var(--gold-light); }
+.cap-deadline .overdue { color:#e8736a; }
 .cap-res { display:flex; gap:10px; flex-wrap:wrap; margin:10px 0; font-size:11px; color:rgba(245,240,232,.55); }
 .cap-res b { color:var(--gold-light); }
 .cap-stats { display:flex; flex-direction:column; gap:4px; margin:10px 0; border-top:1px solid rgba(201,149,42,.12); border-bottom:1px solid rgba(201,149,42,.12); padding:9px 0; }

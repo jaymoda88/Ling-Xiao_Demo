@@ -23,10 +23,10 @@ setup.dualBoost = function (p, id) {
 :: DualCult [game]
 <div class="panel">
 <h3>☯ 陰陽合道 · 雙修</h3>
-<p class="desc">以靈識共鳴、靈脈交匯加速修為。每日一次，歇息後恢復。<<if ($p.flags.hehuanlu||0)>><br>持有合歡露 <b class="gold"><<= $p.flags.hehuanlu>></b>（雙修時可選用，增幅五成）。<</if>></p>
+<p class="desc">以靈識共鳴、靈脈交匯加速修為。靈脈交匯極耗心神，需間隔數日方能再續。<<if ($p.flags.hehuanlu||0)>><br>持有合歡露 <b class="gold"><<= $p.flags.hehuanlu>></b>（雙修時可選用，增幅五成）。<</if>></p>
 </div>
-<<if $p.flags.dualToday>>
-	<div class="scene"><p class="narr">今日靈識交融已盡，餘韻仍在經脈中流轉。需歇息一晚，方能再續。</p></div>
+<<if $p.dualCD and $p.dualCD > $p.time.day>>
+	<div class="scene"><p class="narr">前次靈識交融的餘韻仍在經脈中流轉，靈脈尚未復元。還需調息 <span class="em"><<= $p.dualCD - $p.time.day>></span> 日，方能再續。</p></div>
 	<div class="choices"><<link "← 返回">><<goto $return>><</link>></div>
 <<else>>
 	<div class="choices">
@@ -46,7 +46,7 @@ setup.dualBoost = function (p, id) {
 
 :: DualCult_do [game]
 <<pass 2>>
-<<set $p.flags.dualToday to true>>
+<<set $p.dualCD to $p.time.day + 2>>
 <<set _d to setup.dualPartners.find(function(x){ return x.id === $p.dualWith; })>>
 <<set _boost to setup.dualBoost($p, _d.id)>>
 <<set _hh to false>>

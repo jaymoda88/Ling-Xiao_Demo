@@ -105,6 +105,30 @@ setup.passTime = function (p, n) {
 	return crossed;
 };
 
+/* ════════ 天時節律（讓「日」有意義） ════════
+   靈氣潮汐（每 7 日）：修煉效率提升；魔氣潮（每 9 日）：心魔壓力。
+   純由 day 推算，dayTick widget 於跨日時施加一次性效應。 */
+setup.worldPulse = function (day) {
+	return { ling: (day % 7 === 0), mo: (day % 9 === 0) };
+};
+setup.pulseBadge = function (p) {
+	const d = p.time.day, parts = [];
+	if (d % 7 === 0) parts.push('<span class="pulse-tag ling">🌊 靈氣潮汐 · 修煉↑</span>');
+	if (d % 9 === 0) parts.push('<span class="pulse-tag mo">🩸 魔氣潮 · 心魔↑</span>');
+	return parts.length ? '<div class="pulse-row">' + parts.join("") + "</div>" : "";
+};
+/* 期限／倒數登錄表：在 caption 顯示「距 X 還有 N 日」，逾期則提示 */
+setup.deadlines = [
+	{ id: "tournament", label: "五年宗門大比",
+	  active: function (p) { return p.flags.enteredSect && p.flags.sectDay && !p.flags.tournament; },
+	  dueDay: function (p) { return (p.flags.sectDay || 0) + 24; } },
+];
+setup.activeDeadlines = function (p) {
+	return setup.deadlines.filter(function (d) { return d.active(p); }).map(function (d) {
+		return { label: d.label, left: d.dueDay(p) - p.time.day };
+	});
+};
+
 /* ════════ 深度數值系統 ════════
    每項：bands = [{max, label, cls}]，取第一個 value<max 的 band */
 setup.statDefs = {
