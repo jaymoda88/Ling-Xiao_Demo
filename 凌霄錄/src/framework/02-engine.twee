@@ -268,6 +268,34 @@ setup.events = [
 	// A4 反派支線 · 血蓮（單向迷戀悲劇，血魔尊隕落後）
 	{ passage:"xuelian_fate",  loc:"houshan",   label:"⚜ 血蓮的執念",           cond:function(p){ return p.flags.bloodlord && !p.flags.xuelian; } },
 ];
+/* ════════ 坊市地點化 + 旅商 ════════
+   坊市只在「聚居／市集」地點開放（破除「到處可開」）；
+   旅商於荒野要道按日輪替出現，每次只做一單生意。 */
+setup.marketLocs = ["wuwuchang", "shanzhai", "guimenguan", "binggate"];
+setup.hasMarket = function (p) { return setup.marketLocs.indexOf(p.loc) >= 0; };
+setup.marketName = function (loc) {
+	const m = { wuwuchang: "凌霄坊市", shanzhai: "狐族市集", guimenguan: "鬼市", binggate: "冰嶺商棧" };
+	return m[loc] || "坊市";
+};
+setup.merchantLocs = ["houshan", "milin", "huangquan", "hantan", "zhanchang"];
+/* 旅商是否在此地（按日輪替，且今日尚未在此交易過） */
+setup.merchantHere = function (p) {
+	if (setup.merchantLocs.indexOf(p.loc) < 0) return false;
+	if (p.merchTradeDay === p.time.day) return false;          // 今日已交易
+	const idx = setup.merchantLocs.indexOf(p.loc);
+	return (p.time.day % setup.merchantLocs.length) === idx;   // 每地各自的輪值日
+};
+/* 旅商當日貨品（依日推算，價格略低於坊市） */
+setup.merchantStock = function (p) {
+	const goods = [
+		{ kind: "pill", key: "pojing",  name: "破境丹", price: 95,  desc: "下次突破成功率大增。坊市售 140，旅商讓利。" },
+		{ kind: "ware", flag: "hehuanlu", name: "合歡露", price: 55, desc: "雙修秘藥，增幅五成。坊市售 80。" },
+		{ kind: "herb", key: "xuelian", name: "百年雪蓮", price: 42, desc: "稀有靈藥，藥力雄渾。坊市售 60。" },
+		{ kind: "ware", flag: "juling_pei", name: "聚靈玉珮", price: 270, once: true, luck: 5, desc: "上古聚靈法寶，氣運 +5（永久）。坊市售 320。" },
+	];
+	return goods[p.time.day % goods.length];
+};
+
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
 		const e = setup.events[i];

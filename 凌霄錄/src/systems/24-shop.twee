@@ -47,10 +47,46 @@ setup.shopBuyRecipe = function (key) {
 	margin: 18px 0 8px; opacity: .8; font-weight: 400; }
 .shop-sec:first-of-type { margin-top: 4px; }
 
+:: TravelMerchant [game]
+<<set _g to setup.merchantStock($p)>>
+<div class="panel">
+<h3>🛒 行腳旅商</h3>
+<p class="desc">一名披蓑戴笠的旅商在此擺開攤子，貨擔上只擺著一樣稀貨。「緣分啊，過了這村就沒這店——比坊市便宜，只此一件。」<br>靈石 <b class="gold"><<= $p.stones>></b></p>
+<div class="book">
+	<div class="book-info">
+		<h4><<= _g.name>><span class="tag-school">旅商讓利</span></h4>
+		<p><<= _g.desc>></p>
+	</div>
+	<div class="book-buy">
+		<<set _maxed to _g.once and ($p.flags[_g.flag]||0) >= 1>>
+		<<if _maxed>>
+			<span class="owned-tag">✓ 已擁有</span>
+		<<elseif $p.stones >= _g.price>>
+			<<link "購入 · <<= _g.price>> 靈石">>
+				<<set $p.stones -= _g.price>>
+				<<if _g.kind === "pill">><<set $p.pills[_g.key] to ($p.pills[_g.key]||0)+1>>
+				<<elseif _g.kind === "herb">><<set $p.herbs[_g.key] to ($p.herbs[_g.key]||0)+1>>
+				<<else>><<set $p.flags[_g.flag] to ($p.flags[_g.flag]||0)+1>><<if _g.luck>><<set $p.luck += _g.luck>><</if>>
+				<</if>>
+				<<set $p.merchTradeDay to $p.time.day>>
+				<<run setup.toast("向旅商購入 " + _g.name)>>
+				<<goto $p.loc>>
+			<</link>>
+		<<else>>
+			<a class="disabled">購入 · <<= _g.price>> 靈石（靈石不足）</a>
+		<</if>>
+	</div>
+</div>
+</div>
+<div class="choices">
+	<<link "婉拒，繼續趕路">><<set $p.merchTradeDay to $p.time.day>><<goto $p.loc>><</link>>
+	<<link "← 返回">><<goto $p.loc>><</link>>
+</div>
+
 :: Shop [game]
 <div class="panel">
-<h3>🏮 坊市・靈藥行</h3>
-<p class="desc">凌霄峰下的修士坊市，以靈石易物。藥材、丹方、秘藥法寶皆可購得。<br>靈石 <b class="gold"><<= $p.stones>></b></p>
+<h3>🏮 <<= setup.marketName($p.loc)>></h3>
+<p class="desc"><<if $p.loc === "shanzhai">>狐族山寨的市集，妖丹靈材琳瑯，以靈石易物。<<elseif $p.loc === "guimenguan">>鬼門關前的鬼市，陰煞之物與尋常靈藥混雜而陳。<<elseif $p.loc === "binggate">>冰嶺商棧，往來修士在此補給寒地所需。<<else>>凌霄峰下的修士坊市，藥材、丹方、秘藥法寶皆可購得。<</if><br>靈石 <b class="gold"><<= $p.stones>></b></p>
 
 <h4 class="shop-sec">— 藥材 —</h4>
 <<for _row range setup.shop.herbs>>

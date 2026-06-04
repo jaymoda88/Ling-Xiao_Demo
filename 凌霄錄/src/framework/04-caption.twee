@@ -44,7 +44,7 @@
 	<<if $p.sandbox and passage() !== "Combat">>
 		<div class="cap-nav"><<link "🗺 前往他處">><<goto "Map">><</link>></div>
 		<div class="cap-nav"><<link "📜 圖鑑">><<goto "Codex">><</link>></div>
-		<div class="cap-nav"><<link "🪙 坊市">><<goto "Shop">><</link>></div>
+		<<if setup.hasMarket($p)>><div class="cap-nav"><<link "🪙 坊市">><<goto "Shop">><</link>></div><</if>>
 		<div class="cap-nav"><<link "🏆 成就">><<goto "Achievements">><</link>></div>
 		<div class="cap-nav"><<link "📋 任務">><<goto "Quests">><</link>></div>
 		<<if $p.beasts and $p.beasts.length>><div class="cap-nav"><<link "🐾 御獸閣">><<goto "Beasts">><</link>></div><</if>>
