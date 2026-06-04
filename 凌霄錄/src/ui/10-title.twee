@@ -10,7 +10,7 @@
 	<div class="t-rule"><span>逆天改命</span></div>
 	<div class="t-tag">廢材覺醒 · 自滅門廢墟登臨仙途</div>
 	<div class="title-menu choices">
-		<<link "✦ 開始新遊戲">><<newgame>><<goto "intro">><</link>>
+		<<link "✦ 開始新遊戲">><<newgame>><<goto "CharCreate">><</link>>
 		<<link "繼續遊戲（讀取存檔）">><<run UI.saves()>><</link>>
 		<<link "關於本作">><<goto "About">><</link>>
 	</div>

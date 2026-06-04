@@ -271,6 +271,11 @@ setup.recompute = function (p) {
 		atk += bb.atk || 0; def += bb.def || 0; cultMul += bb.cultMul || 0;
 		p.exploreBonus = bb.exploreBonus || 0;
 	} else { p.exploreBonus = 0; }
+	/* 祭煉法寶加成（luck 同樣由 equip/unequip widget 以差值處理） */
+	if (p.artiEquipped && setup.artifacts && setup.artifacts[p.artiEquipped]) {
+		const ab = setup.artifacts[p.artiEquipped].bonus || {};
+		atk += ab.atk || 0; def += ab.def || 0; maxHp += ab.maxHp || 0; cultMul += ab.cultMul || 0; crit += ab.crit || 0;
+	}
 	if (p.ngCultMul) cultMul += p.ngCultMul;   // 多周目傳承修煉加成
 	const tier = p.realm * 40 + p.layer * 4;
 	p.atk = atk + tier; p.def = def + Math.floor(tier / 4);

@@ -18,5 +18,5 @@
 <p class="sys">【傳承加成（第 <<= _ng>> 周目）：書幣 +<<= _ng*5>>、靈石 +<<= _ng*30>>、氣運 +<<= _ng*5>>、修煉效率 +<<= _ng*10>>%】</p>
 </div>
 <div class="choices">
-	<<link "再入紅塵">><<goto "intro">><</link>>
+	<<link "再入紅塵">><<goto "CharCreate">><</link>>
 </div>
