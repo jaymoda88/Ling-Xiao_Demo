@@ -267,6 +267,8 @@ setup.events = [
 	{ passage:"yl_repay",      loc:"wangchuan", label:"⚜ 以魂報恩",             cond:function(p){ return p.flags.yinliTouch && p.rel.yinli>=55 && !p.flags.ylQuest; } },
 	// A4 反派支線 · 血蓮（單向迷戀悲劇，血魔尊隕落後）
 	{ passage:"xuelian_fate",  loc:"houshan",   label:"⚜ 血蓮的執念",           cond:function(p){ return p.flags.bloodlord && !p.flags.xuelian; } },
+	// 後宮張力 · 吃醋與抉擇（≥2 位女主緣分高時，一次性）
+	{ passage:"harem_jealousy", loc:"dongfu",   label:"♡ 三人之間微妙的空氣",     cond:function(p){ return setup.highLovers(p,55).length>=2 && !p.flags.haremJealousy; } },
 ];
 /* ════════ 坊市地點化 + 旅商 ════════
    坊市只在「聚居／市集」地點開放（破除「到處可開」）；
@@ -432,6 +434,21 @@ setup.lovers = function (p) {
 	return ["suyuyao", "qingling", "dongxue", "yinli"]
 		.filter(function (k) { return ((p.rel && p.rel[k]) || 0) >= 40; })
 		.map(function (k) { return names[k]; });
+};
+setup.heroNames = { suyuyao: "蘇羽瑤", qingling: "青玲兒", dongxue: "裴冬雪", yinli: "陰離" };
+/* 緣分達門檻的女主（吃醋/抉擇用） */
+setup.highLovers = function (p, thresh) {
+	thresh = thresh || 55;
+	return ["suyuyao", "qingling", "dongxue", "yinli"]
+		.filter(function (k) { return ((p.rel && p.rel[k]) || 0) >= thresh; });
+};
+/* 前世道侶：玩家於大典明確抉擇者($p.flags.daoLu) 優先，否則回退最高好感 */
+setup.daoLu = function (p) {
+	if (p.flags && p.flags.daoLu && setup.heroNames[p.flags.daoLu]) {
+		return { id: p.flags.daoLu, name: setup.heroNames[p.flags.daoLu], val: (p.rel && p.rel[p.flags.daoLu]) || 0, has: true, chosen: true };
+	}
+	const t = setup.topLove(p);
+	return { id: t.id, name: t.name, val: t.val, has: t.has, chosen: false };
 };
 setup.has = function (p, id) { return (p.books || []).indexOf(id) !== -1; };
 

@@ -105,19 +105,37 @@
 <div class="choices"><<link "循著烙印的悸動望去……">><<goto "qianshi_reveal">><</link>></div>
 
 :: qianshi_reveal [game]
-<<set _top to setup.topLove($p)>>
+<<set _high to setup.highLovers($p, 40)>>
 <div class="scene">
 <div class="scene-title">前世道侶揭曉</div>
 <p>萬年前的記憶碎片隨仙紋與元嬰之力傾瀉而下：仙魔大戰，一位女仙與你締結靈魂烙印的道侶之約，兩人同時隕落，烙印殘存於你元神最深處，跨越萬年。</p>
-<<if _top.has>>
-	<p>而此刻，那道烙印正朝著一個方向溫熱地共鳴——<span class="em"><<= _top.name>></span>。</p>
-	<p>她顯然也感應到了什麼，怔怔望著你，眼中翻湧著連她自己都無法解釋的、彷彿隔了一世的熟悉。</p>
-	<p class="narr">「原來……」你輕聲，「我們不是第一次相遇。」<<= _top.name>>沒有說話，只是極輕地、極輕地，握住了你的手——這一次，跨越了萬年。</p>
-<<else>>
+<<if $p.flags.daoLu>>
+	<<set _dl to setup.daoLu($p)>>
+	<p>那道烙印早已認準了方向——<span class="em"><<= _dl.name>></span>。你心底再無疑問。</p>
+	<p class="narr">她沒有說話，只是極輕地握住了你的手——這一次，跨越了萬年。</p>
+<<elseif _high.length === 0>>
 	<p>那道烙印溫熱地搏動著，朝向一個你尚未真正走近的方向。前世的道侶，今世仍在某處等你尋回——這份緣，還沒有結局。</p>
+<<elseif _high.length === 1>>
+	<<set $p.flags.daoLu to _high[0]>>
+	<p>而此刻，那道烙印正朝著一個方向溫熱地共鳴——<span class="em"><<= setup.heroNames[_high[0]]>></span>。</p>
+	<p class="narr">「原來……」你輕聲，「我們不是第一次相遇。」她沒有說話，只是極輕地握住了你的手——這一次，跨越了萬年。</p>
+<<else>>
+	<p>烙印溫熱地搏動著，可它共鳴的方向卻不只一個——你身邊，竟有不只一人與這萬年之約隱隱相應。最終認定誰是「跨越萬年仍要尋回的那個人」，從來不是烙印說了算，而是<span class="em">你的心</span>。</p>
 <</if>>
 </div>
+<<if $p.flags.daoLu or _high.length <= 1>>
 <div class="choices"><<link "塵埃落定之後">><<goto "vol5_ending">><</link>></div>
+<<else>>
+<div class="choices">
+	<<for _k range _high>>
+		<<capture _k>>
+		<<link `"認定 · " + setup.heroNames[_k] + "（緣分 " + $p.rel[_k] + "）"`>>
+			<<set $p.flags.daoLu to _k>><<goto "qianshi_reveal">>
+		<</link>>
+		<</capture>>
+	<</for>>
+</div>
+<</if>>
 
 :: vol5_ending [game]
 <<set _lovers to setup.lovers($p)>>

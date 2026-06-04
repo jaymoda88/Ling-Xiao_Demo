@@ -27,7 +27,7 @@
 
 :: truth_reveal [game]
 <<set $p.flags.truthDone to true>>
-<<set _top to setup.topLove($p)>>
+<<set _top to setup.daoLu($p)>>
 <div class="scene">
 <div class="scene-title">萬年真相</div>
 <p>封印應仙紋而開，真相傾瀉而下——</p>
@@ -80,7 +80,7 @@
 </div>
 
 :: ascension_choice [game]
-<<set _top to setup.topLove($p)>>
+<<set _top to setup.daoLu($p)>>
 <<set _lovers to setup.lovers($p)>>
 <div class="scene">
 <div class="scene-title">🌠 飛升抉擇</div>
@@ -100,7 +100,7 @@
 </div>
 
 :: end_ascend_together [game]
-<<set _top to setup.topLove($p)>>
+<<set _top to setup.daoLu($p)>>
 <div class="scene end-card">
 <div class="big">✦ 結局 · 攜道侶飛升 ✦</div>
 <p>你伸出手。<span class="heart"><<= _top.name>></span> 沒有片刻猶豫，將手交付——跨越萬年的兩道靈魂，終於不再錯過。</p>
