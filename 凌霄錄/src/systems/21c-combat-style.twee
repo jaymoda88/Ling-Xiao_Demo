@@ -83,3 +83,29 @@
 	.foe-name { font-size: 15px; }
 	.dmg-float { font-size: 26px; }
 }
+
+/* ── C-deep 戰鬥深化：狀態徽章 + 五行出招列 ── */
+.cstat-row { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 5px; }
+.cstat {
+	font-size: 11px; padding: 1px 7px; border-radius: 10px;
+	border: 1px solid rgba(255,255,255,.18); letter-spacing: .5px;
+}
+.cstat.burn   { color: #f0a06a; background: rgba(224,86,74,.12);  border-color: rgba(224,86,74,.4); }
+.cstat.poison { color: #9ad06a; background: rgba(111,174,90,.12); border-color: rgba(111,174,90,.4); }
+.cstat.stun   { color: #d8c46a; background: rgba(232,201,122,.12);border-color: rgba(232,201,122,.5); }
+.cstat.weak   { color: #8fb6d6; background: rgba(90,169,214,.12); border-color: rgba(90,169,214,.4); }
+.cstat.buff   { color: #e8c97a; background: rgba(232,201,122,.10);border-color: rgba(232,201,122,.45); }
+
+.elem-row {
+	display: flex; flex-wrap: wrap; align-items: center; gap: 7px;
+	margin: 10px 0 4px; padding: 8px 10px;
+	background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 6px;
+}
+.elem-label { font-size: 12px; color: #b9a98a; margin-right: 2px; }
+.elem-row a.link-internal, .elem-pick {
+	display: inline-block; min-width: 26px; text-align: center;
+	padding: 2px 9px; border-radius: 5px; font-size: 14px; font-weight: 700;
+	border: 1px solid rgba(255,255,255,.2); text-decoration: none;
+}
+.elem-pick.on { box-shadow: 0 0 8px currentColor; background: rgba(255,255,255,.05); }
+.elem-hint { font-size: 11px; color: #9a8f7a; flex-basis: 100%; }

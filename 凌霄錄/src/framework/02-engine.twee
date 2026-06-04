@@ -366,7 +366,19 @@ setup.has = function (p, id) { return (p.books || []).indexOf(id) !== -1; };
 /* 建立戰鬥狀態（在 JS 組裝，避免 twee 多行物件字面量陷阱） */
 setup.newBattle = function (foeId, winPassage, losePassage) {
 	const e = setup.enemies[foeId];
-	return { foeId: foeId, foeHp: e.hp, foeMax: e.hp, win: winPassage, lose: losePassage, started: false, msg: "", emsg: "" };
+	return {
+		foeId: foeId, foeHp: e.hp, foeMax: e.hp, win: winPassage, lose: losePassage,
+		started: false, msg: "", emsg: "",
+		/* C-deep 戰鬥深化狀態（皆隨戰鬥消滅，不進長期存檔語意） */
+		elem: "金",            // 玩家本回合出招屬性（可切換）
+		turn: 0,               // 回合數
+		foeBurn: 0, foePoison: 0, foeStun: 0, foeWeak: 0,  // 敵方狀態（剩餘回合）
+		pAtkBuff: 0, pAtkBuffT: 0,                          // 玩家攻擊增益（量 / 剩餘回合）
+		pShieldT: 0,                                        // 玩家護體（減傷回合）
+		pWeakT: 0, pPoison: 0,                              // 玩家被弱化 / 中毒（剩餘回合）
+		phase2: false,         // BOSS 二階段是否已觸發
+		assisted: false        // 道侶開場援助是否已給
+	};
 };
 
 /* ── 全新玩家 ── */
