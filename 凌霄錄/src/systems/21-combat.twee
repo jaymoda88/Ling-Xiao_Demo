@@ -367,13 +367,19 @@ setup.meStatusHtml = function (b) {
 			<</if>>
 		<</link>>
 	<</if>>
-	<<link "🏃 嘗試脫離<span class='lx-hint'>氣運越高越易成功</span>">>
-		<<if Math.random() < (0.32 + $p.luck/400)>>
+	<<set _isBoss to setup.bossPhase[$battle.foeId] != null>>
+	<<set _fleeRate to _isBoss ? (0.12 + $p.luck/700) : (0.32 + $p.luck/400)>>
+	<<link "🏃 嘗試脫離<span class='lx-hint'><<if _isBoss>>大敵當前，極難脫身<<else>>氣運越高越易成功・代價：狼狽失財、心魔暗生<</if></span>">>
+		<<if Math.random() < _fleeRate>>
+			/% 脫離有代價：心魔+、靈石折損、修為略損 %/
+			<<stat "xinmo" 6>>
+			<<set $p.stones to Math.max(0, $p.stones - (5 + setup.rnd(10)))>>
+			<<set $p.cult to Math.max(0, $p.cult - Math.round(setup.cultNeed($p)*0.06))>>
 			<<set $battle.fled to true>>
 			<<goto $battle.lose>>
 		<<else>>
 			<<set $battle.lastDmg to 0>><<set $battle.foePrevHp to $battle.foeHp>>
-			<<set $battle.msg to "你未能脫身，反被纏住！">>
+			<<set $battle.msg to "你未能脫身，反被纏住！<span class='sys'>（脫離失敗）</span>">>
 			<<enemyStrike>>
 		<</if>>
 	<</link>>

@@ -88,8 +88,23 @@
 	<<if $p.stats.xinmo >= 70>>
 		<<set _loss to Math.floor($p.maxHp*0.4)>>
 		<<set $p.hp to Math.max(1, $p.hp - _loss)>>
-		<p class="dmg">衝關失敗，心魔趁虛而入！經脈逆流、神識劇震，幾乎走火入魔，氣血重挫 <<= _loss>>。</p>
-		<p class="narr">心魔已深，須儘速「打坐定心」壓制，否則危殆。</p>
+		/% 走火入魔：心魔已深時，衝關慘敗有機率震退境界 %/
+		<<set _demote to Math.random() < (0.35 + ($p.stats.xinmo-70)/200)>>
+		<<if _demote and ($p.layer > 1 or $p.realm > 0)>>
+			<<if $p.layer > 1>>
+				<<set $p.layer-->>
+			<<else>>
+				<<set $p.realm-->><<set $p.layer to setup.realms[$p.realm].layers>>
+			<</if>>
+			<<recompute>>
+			<<if $p.hp > $p.maxHp>><<set $p.hp to $p.maxHp>><</if>>
+			<<run setup.toast("⚠ 走火入魔・境界震退至 " + setup.realmName($p))>>
+			<p class="dmg">衝關失敗，心魔趁虛而入！經脈逆流、神識劇震，你竟當場<span class="em">走火入魔</span>，境界倒退、氣血重挫 <<= _loss>>。</p>
+			<p class="narr">境界跌回 <span class="em"><<= setup.realmName($p)>></span>。心魔已深，須儘速「打坐定心」壓制。</p>
+		<<else>>
+			<p class="dmg">衝關失敗，心魔趁虛而入！經脈逆流、神識劇震，幾乎走火入魔，氣血重挫 <<= _loss>>。</p>
+			<p class="narr">心魔已深，須儘速「打坐定心」壓制，否則危殆。</p>
+		<</if>>
 	<<else>>
 		<<set _loss to Math.floor($p.maxHp*0.22)>>
 		<<set $p.hp to Math.max(1, $p.hp - _loss)>>
