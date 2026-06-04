@@ -498,7 +498,51 @@ setup.newPlayer = function () {
 	setup.recompute(p);
 	p.hp = p.maxHp; p.mp = p.maxMp;
 	p.luck = p.luckBase;
+	p.ver = setup.SAVE_VER;
 	return p;
+};
+
+/* ════════ 存檔遷移（版本化） ════════
+   後加欄位的統一補全處，取代散落的 PassageReady 臨時補丁。
+   版本不符才執行；新欄位請加進 defaults 並 ++SAVE_VER。 */
+setup.SAVE_VER = 2;
+setup.migrate = function (p) {
+	if (!p || !p.maxHp) return;
+	if (p.ver === setup.SAVE_VER) return;
+	if (!p.seen) p.seen = { loc: {}, foe: {} };
+	if (!p.seen.loc) p.seen.loc = {};
+	if (!p.seen.foe) p.seen.foe = {};
+	if (!p.rel) p.rel = {};
+	["suyuyao", "qingling", "yinli", "dongxue"].forEach(function (k) { if (typeof p.rel[k] !== "number") p.rel[k] = 0; });
+	if (!p.stats) p.stats = {};
+	["daoxin", "xinmo", "fame", "fatigue"].forEach(function (k) { if (typeof p.stats[k] !== "number") p.stats[k] = (k === "daoxin" ? 30 : 0); });
+	if (!p.flags) p.flags = {};
+	if (!p.buffs) p.buffs = {};
+	if (!p.pills) p.pills = {};
+	if (!p.herbs) p.herbs = {};
+	if (!Array.isArray(p.recipes)) p.recipes = ["juqi"];
+	if (!Array.isArray(p.books)) p.books = ["tuna"];
+	if (!Array.isArray(p.artifacts)) p.artifacts = [];
+	if (!Array.isArray(p.beasts)) p.beasts = [];
+	if (!p.time) p.time = { day: 1, tick: 4 };
+	const defs = { ngplus: 0, ngCultMul: 0, cultCount: 0, cultDay: 0, dualCD: 0, pulseDay: 0,
+		merchTradeDay: -1, artiLuckApplied: 0, beastLuckApplied: 0, exploreBonus: 0, coins: 0, stones: 0 };
+	for (const k in defs) if (typeof p[k] === "undefined") p[k] = defs[k];
+	setup.recompute(p);
+	if (typeof p.luck !== "number") p.luck = p.luckBase;
+	p.ver = setup.SAVE_VER;
+};
+
+/* 多周目傳承加成：遞減累加、各有上限（防膨脹） */
+setup.ngBonus = function (ng) {
+	if (!ng || ng <= 0) return { cultMul: 0, coins: 0, stones: 0, luck: 0 };
+	const dim = function (per, cap) { let s = 0, step = per; for (let i = 0; i < ng; i++) { s += step; step *= 0.7; } return Math.min(cap, s); };
+	return {
+		cultMul: Math.round(Math.min(0.45, dim(0.12, 0.45)) * 100) / 100,
+		coins: Math.round(dim(6, 30)),
+		stones: Math.round(dim(40, 260)),
+		luck: Math.round(dim(7, 35)),
+	};
 };
 
 /* ════════ 數字鍵 hotkey ════════

@@ -126,6 +126,26 @@ for (let r = 0; r < realmCount; r++) {
 }
 if (growthOk) ok(`境界 0→${realmCount - 1} 屬性單調成長且無 NaN（頂階 atk=${prevAtk} maxHp=${prevHp}）`);
 
+/* 舊存檔遷移：殘缺玩家物件不應崩潰、欄位補齊 */
+if (typeof setup.migrate === "function") {
+	const oldSave = { name: "舊", realm: 1, layer: 2, cult: 10, hp: 50, maxHp: 50, mp: 10, maxMp: 10, atk: 5, def: 1, luck: 80, books: ["tuna"], rel: { suyuyao: 5 }, stats: { daoxin: 30 }, flags: {}, time: { day: 3, tick: 2 }, loc: "dongfu", region: "lingxiao" };
+	try {
+		setup.migrate(oldSave);
+		const need = ["seen", "pills", "herbs", "artifacts", "beasts", "buffs"].every(k => oldSave[k] != null);
+		if (need && oldSave.ver === setup.SAVE_VER && typeof oldSave.rel.dongxue === "number" && isNum(oldSave.atk))
+			ok("舊存檔遷移補齊欄位且無崩潰（ver=" + oldSave.ver + "）");
+		else fail("migrate 後欄位不齊或版本未更新");
+	} catch (e) { fail("migrate 拋例外: " + e.message); }
+}
+
+/* NG+ 加成遞減且封頂（防膨脹） */
+if (typeof setup.ngBonus === "function") {
+	const b10 = setup.ngBonus(10), b50 = setup.ngBonus(50);
+	if (b50.cultMul <= 0.45 && b50.cultMul - b10.cultMul < 0.06 && b50.stones <= 260)
+		ok(`NG+ 加成遞減封頂（NG10 cultMul=${b10.cultMul} → NG50=${b50.cultMul}，未爆炸）`);
+	else fail(`NG+ 加成未封頂: NG50=${JSON.stringify(b50)}`);
+}
+
 /* cultNeed 單調 */
 let needOk = true, prevNeed = -1;
 for (let r = 0; r < realmCount; r++) for (let l = 1; l <= setup.realms[r].layers; l++) {
