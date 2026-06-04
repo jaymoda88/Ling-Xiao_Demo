@@ -56,6 +56,8 @@
 	<<if $p.time.day % 7 === 0>>
 		<<set _n to Math.round(_n * 1.3)>>
 	<</if>>
+	/% 天氣：雷雨且習雷法 → 修煉 +10% %/
+	<<set _n to Math.round(_n * setup.weatherCultMul($p))>>
 	<<gainCult _n>>
 <</widget>>
 

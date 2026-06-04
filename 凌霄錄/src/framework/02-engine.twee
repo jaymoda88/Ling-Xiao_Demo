@@ -117,6 +117,50 @@ setup.pulseBadge = function (p) {
 	if (d % 9 === 0) parts.push('<span class="pulse-tag mo">🩸 魔氣潮 · 心魔↑</span>');
 	return parts.length ? '<div class="pulse-row">' + parts.join("") + "</div>" : "";
 };
+/* ════════ 天氣 / 季節（決定性，依 day 推算，當日穩定不閃動） ════════ */
+setup.season = function (day) {
+	const i = Math.floor((day - 1) / 15) % 4;
+	return [{ name: "春", icon: "🌸" }, { name: "夏", icon: "☀" }, { name: "秋", icon: "🍂" }, { name: "冬", icon: "❄" }][i];
+};
+setup._weatherMeta = {
+	"晴":   { icon: "☀", desc: "" },
+	"陰":   { icon: "☁", desc: "" },
+	"雨":   { icon: "🌧", desc: "採集靈材更易" },
+	"雷雨": { icon: "⛈", desc: "雷氣盛 · 修煉↑" },
+	"霧":   { icon: "🌫", desc: "旅途遇敵↑" },
+	"雪":   { icon: "🌨", desc: "寒材豐 · 天地苦寒" },
+};
+setup.weather = function (day) {
+	const sIdx = Math.floor((day - 1) / 15) % 4;
+	const pools = [
+		["晴", "晴", "陰", "雨", "雷雨"],   // 春
+		["晴", "晴", "陰", "雷雨", "霧"],   // 夏
+		["晴", "陰", "陰", "雨", "霧"],     // 秋
+		["陰", "雪", "雪", "霧", "晴"],     // 冬
+	];
+	const pool = pools[sIdx];
+	const key = pool[(day * 3 + 7) % pool.length];
+	const m = setup._weatherMeta[key];
+	return { key: key, name: key, icon: m.icon, desc: m.desc };
+};
+/* 天氣對修煉的加成（雷雨且習雷法 → +10%） */
+setup.weatherCultMul = function (p) {
+	const w = setup.weather(p.time.day).key;
+	if (w === "雷雨" && setup.has(p, "storm")) return 1.1;
+	return 1;
+};
+/* 天氣對採集的加成（雨/雪 → +0.10 命中） */
+setup.weatherExplore = function (p) {
+	const w = setup.weather(p.time.day).key;
+	return (w === "雨" || w === "雪") ? 0.10 : 0;
+};
+setup.weatherBadge = function (p) {
+	const s = setup.season(p.time.day), w = setup.weather(p.time.day);
+	let html = '<span class="wx-tag">' + s.icon + s.name + ' · ' + w.icon + w.name;
+	if (w.desc) html += ' <span class="wx-desc">' + w.desc + '</span>';
+	return html + '</span>';
+};
+
 /* 期限／倒數登錄表：在 caption 顯示「距 X 還有 N 日」，逾期則提示 */
 setup.deadlines = [
 	{ id: "tournament", label: "五年宗門大比",
@@ -299,7 +343,7 @@ setup.merchantStock = function (p) {
 };
 
 /* ════════ 旅途隨機遭遇（移動時觸發） ════════ */
-setup.travelRoll = function (p) { return Math.random() < 0.20; };
+setup.travelRoll = function (p) { return Math.random() < (setup.weather(p.time.day).key === "霧" ? 0.32 : 0.20); };
 setup.travelFlavor = function (region) {
 	const f = {
 		lingxiao: "山道清幽，劍氣自遠峰隱隱傳來，你緩步而行，心境亦隨之澄澈。",

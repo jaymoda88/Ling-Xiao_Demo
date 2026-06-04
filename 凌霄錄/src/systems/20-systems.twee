@@ -163,7 +163,7 @@
 <<pass 2>>
 <div class="scene">
 <div class="scene-title">採集探索</div>
-<<set _luckRoll to Math.random() < (0.4 + $p.luck/300 + ($p.exploreBonus||0))>>
+<<set _luckRoll to Math.random() < (0.4 + $p.luck/300 + ($p.exploreBonus||0) + setup.weatherExplore($p))>>
 <<set _eye to setup.has($p,"eye")>>
 <<if _luckRoll or _eye>>
 	<<set _gainStone to 4 + setup.rnd(8) + $p.realm*3>>
