@@ -276,6 +276,7 @@ setup.meStatusHtml = function (b) {
 </div>
 <div class="scene">
 <<if not $battle.started>>
+	<<tip "elem" "御使混沌可化五行出招（金木水火土，習得雷法後加雷）：剋制敵屬性傷害大增、被剋則減弱。火灼燒、木中毒、雷麻痺、水土使敵遲滯。妖鬼魔屬性不受五行剋制，需正面硬撼。善用「御氣護體」與丹藥度過 BOSS 的猛攻。">>
 	<p class="narr"><<= _e.intro>></p>
 	<<if $battle.assistName>><p class="sys">【道侶援護 · <<= $battle.assistName>> 與你並肩，攻勢大振！】</p><</if>>
 	<<set $battle.started to true>>

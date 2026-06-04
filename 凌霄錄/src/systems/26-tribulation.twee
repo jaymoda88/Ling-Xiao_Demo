@@ -216,6 +216,7 @@ Macro.add("tribulationgame", {
 
 
 :: Tribulation [game]
+<<tip "tribulation" "大境界突破會引動心魔試煉天劫。心魔越高、試煉越險；平日多『打坐定心』或服凝神丹壓制心魔，渡劫更穩。修煉過度、迴避抉擇、魔氣潮都會累積心魔。">>
 <div class="scene">
 <div class="scene-title">心魔試煉 · 天劫</div>
 <p class="narr">境界將破，雷雲自心底升起。修為越高，心魔越烈——唯有斬盡識海幻象，方能更上一層。</p>

@@ -21,6 +21,7 @@ setup.dualBoost = function (p, id) {
 };
 
 :: DualCult [game]
+<<tip "dual" "雙修以陰陽二氣互補、大幅增進修為，緣分越高增益越大；但靈脈交匯極耗心神，需間隔數日方能再續。服用合歡露可額外增幅五成。">>
 <div class="panel">
 <h3>☯ 陰陽合道 · 雙修</h3>
 <p class="desc">以靈識共鳴、靈脈交匯加速修為。靈脈交匯極耗心神，需間隔數日方能再續。<<if ($p.flags.hehuanlu||0)>><br>持有合歡露 <b class="gold"><<= $p.flags.hehuanlu>></b>（雙修時可選用，增幅五成）。<</if>></p>

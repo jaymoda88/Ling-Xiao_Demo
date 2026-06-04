@@ -47,6 +47,7 @@
 		<<if setup.hasMarket($p)>><div class="cap-nav"><<link "🪙 坊市">><<goto "Shop">><</link>></div><</if>>
 		<div class="cap-nav"><<link "🏆 成就">><<goto "Achievements">><</link>></div>
 		<div class="cap-nav"><<link "📋 任務">><<goto "Quests">><</link>></div>
+		<div class="cap-nav"><<link "📖 劇情日誌">><<goto "Journal">><</link>></div>
 		<<if $p.beasts and $p.beasts.length>><div class="cap-nav"><<link "🐾 御獸閣">><<goto "Beasts">><</link>></div><</if>>
 		<<if $p.artifacts and $p.artifacts.length>><div class="cap-nav"><<link "⚜ 法寶閣">><<goto "Artifacts">><</link>></div><</if>>
 		<<if $p.realm >= 1>><div class="cap-nav"><<link "🌀 探秘境">><<goto "SecretRealm_enter">><</link>></div><</if>>
