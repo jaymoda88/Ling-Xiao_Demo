@@ -10,6 +10,18 @@
 	<<if $p.seen>><<set $p.seen.loc[_id] to true>><</if>>
 <</widget>>
 
+/% 區域內移動：耗一時辰、進地點，並擲旅途遭遇 %/
+<<widget "travelTo">>
+	<<pass 1>>
+	<<enterLoc _args[0]>>
+	<<if setup.travelRoll($p)>>
+		<<set $p.travelDest to _args[0]>>
+		<<goto "TravelEvent">>
+	<<else>>
+		<<goto _args[0]>>
+	<</if>>
+<</widget>>
+
 /% 地點抬頭（圖示 + 名稱 + 區域 + 情境描述） %/
 <<widget "locheader">>
 	<<set _L to setup.locations[$p.loc]>>

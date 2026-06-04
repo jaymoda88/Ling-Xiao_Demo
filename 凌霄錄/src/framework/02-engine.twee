@@ -296,6 +296,26 @@ setup.merchantStock = function (p) {
 	return goods[p.time.day % goods.length];
 };
 
+/* ════════ 旅途隨機遭遇（移動時觸發） ════════ */
+setup.travelRoll = function (p) { return Math.random() < 0.20; };
+setup.travelFlavor = function (region) {
+	const f = {
+		lingxiao: "山道清幽，劍氣自遠峰隱隱傳來，你緩步而行，心境亦隨之澄澈。",
+		nanjiang: "瘴林濕熱，藤蔓間妖蟲低鳴，你謹慎擇路，不敢稍有鬆懈。",
+		youming:  "黃泉霧氣裡鬼火明滅，腳步聲在死寂中格外清晰，你按住心神前行。",
+		bingling: "風雪撲面，天地一片蒼茫，呼出的氣息瞬間凝成白霜。",
+		shenxu:   "空間裂隙在身畔無聲開闔，殘存的仙威與魔氣彼此絞殺，步步驚心。",
+	};
+	return f[region] || "你獨自趕路，四下無人。";
+};
+setup.travelEncounter = function (p) {
+	const r = Math.random();
+	if (r < 0.26) return { type: "fight", foe: setup.srFoe(p) };
+	if (r < 0.56) return { type: "loot", stones: 4 + setup.rnd(8) + p.realm * 2, herb: setup.srHerb(p) };
+	if (r < 0.76) return { type: "fortune", cult: Math.round((30 + p.realm * 20) * (p.cultMul || 1)) };
+	return { type: "flavor" };
+};
+
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
 		const e = setup.events[i];

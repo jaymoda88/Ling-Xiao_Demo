@@ -11,7 +11,7 @@
 	<<if _id === $p.loc>>
 		<a class="here"><span class="m-icon"><<= _L.icon>></span><span class="m-name"><<= _L.name>></span><span class="m-sub">你在此處</span></a>
 	<<else>>
-		<<link `'<span class="m-icon">'+_L.icon+'</span><span class="m-name">'+_L.name+'</span><span class="m-sub">'+_L.desc.slice(0,18)+'…</span>'`>><<pass 1>><<enterLoc _id>><<goto _id>><</link>>
+		<<link `'<span class="m-icon">'+_L.icon+'</span><span class="m-name">'+_L.name+'</span><span class="m-sub">'+_L.desc.slice(0,18)+'…</span>'`>><<travelTo _id>><</link>>
 	<</if>>
 	<</capture>>
 <</for>>
@@ -102,3 +102,57 @@
 <</if>>
 <<enterLoc "shenxu_gate">>
 <div class="choices"><<link "踏入神墟">><<goto "shenxu_gate">><</link>></div>
+
+:: TravelEvent [game]
+<<set _e to setup.travelEncounter($p)>>
+<<set _L to setup.locations[$p.travelDest]>>
+<div class="scene">
+<div class="scene-title">途中 · 往 <<= _L.name>></div>
+<p class="narr"><<= setup.travelFlavor($p.region)>></p>
+<<if _e.type === "loot">>
+	<<set $p.stones += _e.stones>>
+	<<set $p.herbs[_e.herb] to ($p.herbs[_e.herb]||0)+1>>
+	<p>路旁岩隙間，你眼尖拾得一些散落的靈材。</p>
+	<p class="sys">【獲得 靈石 ×<<= _e.stones>>、<<= setup.herbs[_e.herb].name>> ×1】</p>
+<<elseif _e.type === "fortune">>
+	<<gainCult _e.cult>>
+	<p>趕路途中，你忽有所感，駐足片刻，竟在行走間參透一絲道韻。</p>
+	<p class="sys">【途中頓悟 · 修為 +<<= _e.cult>>】</p>
+<<elseif _e.type === "fight">>
+	<<set _fe to setup.enemies[_e.foe]>>
+	<p>毫無預警，一頭 <span class="em"><<= _fe.name>></span> 自路旁竄出，攔住去路！</p>
+<<else>>
+	<p>這一程倒是平靜，唯有山風與自己的腳步聲相伴。</p>
+<</if>>
+</div>
+<div class="choices">
+<<if _e.type === "fight">>
+	<<set $p.travelFoe to _e.foe>>
+	<<link "⚔ 應戰">><<startBattle $p.travelFoe "travel_win" "travel_lose">><</link>>
+	<<link "🏃 繞道避開<span class='lx-hint'>氣運越高越易成功</span>">>
+		<<if Math.random() < (0.45 + $p.luck/400)>>
+			<<goto $p.travelDest>>
+		<<else>>
+			<<set $p.travelFoe to _e.foe>><<startBattle $p.travelFoe "travel_win" "travel_lose">>
+		<</if>>
+	<</link>>
+<<else>>
+	<<link `"繼續前往 " + _L.name`>><<goto $p.travelDest>><</link>>
+<</if>>
+</div>
+
+:: travel_win [game]
+<<set $p.stones += 6 + setup.rnd(10) + $p.realm*2>>
+<<set _g to 30 + $p.realm*18>>
+<<gainCult _g>>
+<div class="scene">
+<p>你擊退了攔路之敵，搜得些許靈石，繼續上路。</p>
+</div>
+<div class="choices"><<link `"繼續前往 " + setup.locations[$p.travelDest].name`>><<goto $p.travelDest>><</link>></div>
+
+:: travel_lose [game]
+<<if not $battle.fled>><<set $p.hp to Math.max(1, Math.floor($p.maxHp*0.5))>><</if>>
+<div class="scene">
+<p class="<<= $battle.fled ? 'narr' : 'dmg'>>"><<= $battle.fled ? "你擺脫糾纏，匆匆趕路。" : "你不敵敗退，負傷狼狽，只得勉力趕到目的地。">></p>
+</div>
+<div class="choices"><<link `"勉力前往 " + setup.locations[$p.travelDest].name`>><<goto $p.travelDest>><</link>></div>

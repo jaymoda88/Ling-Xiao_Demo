@@ -30,7 +30,7 @@
 <<widget "rel">>
 	<<set _who to _args[0]>>
 	<<set $p.rel[_who] += _args[1]>>
-	<<set _nm to (_who === "suyuyao") ? "蘇羽瑤" : "青玲兒">>
+	<<set _nm to ({ suyuyao:"蘇羽瑤", qingling:"青玲兒", dongxue:"裴冬雪", yinli:"陰離" })[_who] || _who>>
 	@@.heart;[ _nm 緣分 +<<= _args[1]>> ]@@
 <</widget>>
 
