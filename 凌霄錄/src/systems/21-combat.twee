@@ -202,6 +202,8 @@ setup.meStatusHtml = function (b) {
 				<<set _skmsg to "<span class='dmg em'>【" + _sk.name + "】</span>（毒入經脈） ">>
 			<</if>>
 		<</if>>
+		/% 玄龜守陣：整場減傷 25% %/
+		<<if $battle.formation === "shou">><<set _edmg to Math.round(_edmg*0.75)>><</if>>
 		/% 護體減傷 %/
 		<<if $battle.pShieldT > 0>><<set _edmg to Math.round(_edmg*0.5)>><</if>>
 		/% 氣運護盾（每戰一次，致命時觸發） %/
@@ -214,6 +216,12 @@ setup.meStatusHtml = function (b) {
 		<<set $p.hp to $p.hp - _edmg>>
 		<<if _heal > 0>><<set $battle.foeHp to Math.min($battle.foeMax, $battle.foeHp + _heal)>><</if>>
 		<<set $battle.emsg to _log + _shield + _skmsg + _e.name + " 出手，你受到 <span class='dmg'>" + _edmg + "</span> 點傷害。">>
+	<</if>>
+
+	/% 聚靈陣：每回合回靈與少量氣血 %/
+	<<if $battle.formation === "juling" and $p.hp > 0>>
+		<<set $p.mp to Math.min($p.maxMp, $p.mp + 12)>>
+		<<set $p.hp to Math.min($p.maxHp, $p.hp + Math.round($p.maxHp*0.04))>>
 	<</if>>
 
 	/% 4. 玩家中毒持續傷害 %/
@@ -356,6 +364,34 @@ setup.meStatusHtml = function (b) {
 			<<set $battle.msg to "你服下回元丹，氣血靈力回復。">>
 			<<enemyStrike>>
 		<</link>>
+	<</if>>
+	/% 符籙（持有才顯示） %/
+	<<for _tk range Object.keys(setup.talismans)>>
+		<<capture _tk>>
+			<<if ($p.talismans and $p.talismans[_tk]) > 0>>
+				<<set _tn to setup.talismans[_tk].name>>
+				<<link `"🔣 " + _tn + "<span class='lx-hint'>" + setup.talismans[_tk].desc + "（剩 " + $p.talismans[_tk] + "）</span>"`>>
+					<<useTalisman _tk>>
+				<</link>>
+			<</if>>
+		<</capture>>
+	<</for>>
+	/% 陣法（已習得、本場未佈、資源足才顯示） %/
+	<<if not $battle.formation>>
+		<<for _fk range Object.keys(setup.formations)>>
+			<<capture _fk>>
+				<<if setup.hasFormation($p, _fk)>>
+					<<set _f to setup.formations[_fk]>>
+					<<if $p.mp >= _f.mp and $p.stones >= _f.stones>>
+						<<link `"📿 佈下 " + _f.name + "<span class='lx-hint'>" + _f.desc + "　耗 " + (_f.mp?_f.mp+"靈力":"") + (_f.stones?_f.stones+"靈石":"") + "</span>"`>>
+							<<if _f.mp>><<set $p.mp -= _f.mp>><</if>>
+							<<if _f.stones>><<set $p.stones -= _f.stones>><</if>>
+							<<deployFormation _fk>>
+						<</link>>
+					<</if>>
+				<</if>>
+			<</capture>>
+		<</for>>
 	<</if>>
 	<<if setup.enemies[$battle.foeId].tameable and setup.has($p,"beast")>>
 		<<link "🐾 施展萬獸馴心訣<span class='lx-hint'>嘗試安撫而非擊殺</span>">>

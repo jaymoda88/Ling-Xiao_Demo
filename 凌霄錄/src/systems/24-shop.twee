@@ -29,6 +29,10 @@ setup.shop = {
 		{ flag: "juling_pei",  name: "聚靈玉珮",  price: 320, once: true, luck: 5,
 		  desc: "上古聚靈法寶，佩之氣運長存（氣運 +5，永久）。" },
 	],
+	/* ── 符籙：戰鬥消耗品，買入 $p.talismans[key] ── */
+	talis: ["liteyan", "jinglei", "huichun", "jinzhong"],
+	/* ── 陣法：一次性習得，買入 $p.formations ── */
+	formation: ["gong", "shou", "juling", "kun"],
 };
 /* 取得品項顯示名稱（藥材/丹方查表，秘藥用自帶 name） */
 setup.shopName = function (cat, key) {
@@ -163,6 +167,62 @@ setup.shopBuyRecipe = function (key) {
 				<</link>>
 			<<else>>
 				<a class="disabled">購入 · <<= _row.price>> 靈石</a>
+			<</if>>
+		</div>
+	</div>
+	<</capture>>
+<</for>>
+<h4 class="shop-sec">— 符籙（戰鬥消耗） —</h4>
+<<for _tk range setup.shop.talis>>
+	<<capture _tk>>
+	<<set _t to setup.talismans[_tk]>>
+	<<set _have to ($p.talismans and $p.talismans[_tk]) || 0>>
+	<div class="book">
+		<div class="book-info">
+			<h4><<= _t.name>><span class="tag-school">持有 <<= _have>></span></h4>
+			<p><<= _t.desc>></p>
+		</div>
+		<div class="book-buy">
+			<<if $p.stones >= _t.price>>
+				<<link "購入 · <<= _t.price>> 靈石">>
+					<<set $p.stones -= _t.price>>
+					<<if not $p.talismans>><<set $p.talismans to {}>><</if>>
+					<<set $p.talismans[_tk] to ($p.talismans[_tk]||0)+1>>
+					<<run setup.toast("購入 " + setup.talismans[_tk].name)>>
+					<<goto "Shop">>
+				<</link>>
+			<<else>>
+				<a class="disabled">購入 · <<= _t.price>> 靈石</a>
+			<</if>>
+		</div>
+	</div>
+	<</capture>>
+<</for>>
+
+<h4 class="shop-sec">— 陣法（一次習得，戰鬥可佈） —</h4>
+<<for _fk range setup.shop.formation>>
+	<<capture _fk>>
+	<<set _f to setup.formations[_fk]>>
+	<<set _fprice to ({ gong:180, shou:180, juling:150, kun:220 })[_fk]>>
+	<<set _owned to setup.hasFormation($p, _fk)>>
+	<div class="book <<if _owned>>owned<</if>>">
+		<div class="book-info">
+			<h4><<= _f.name>><span class="tag-school">陣法</span></h4>
+			<p><<= _f.desc>></p>
+		</div>
+		<div class="book-buy">
+			<<if _owned>>
+				<span class="owned-tag">✓ 已習得</span>
+			<<elseif $p.stones >= _fprice>>
+				<<link "習得 · <<= _fprice>> 靈石">>
+					<<set $p.stones -= _fprice>>
+					<<if not $p.formations>><<set $p.formations to []>><</if>>
+					<<run State.variables.p.formations.push(_fk)>>
+					<<run setup.toast("習得陣法 " + setup.formations[_fk].name)>>
+					<<goto "Shop">>
+				<</link>>
+			<<else>>
+				<a class="disabled">習得 · <<= _fprice>> 靈石</a>
 			<</if>>
 		</div>
 	</div>
