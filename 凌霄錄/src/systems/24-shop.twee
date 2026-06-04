@@ -90,27 +90,30 @@ setup.shopBuyRecipe = function (key) {
 :: Shop [game]
 <div class="panel">
 <h3>🏮 <<= setup.marketName($p.loc)>></h3>
-<p class="desc"><<if $p.loc === "shanzhai">>狐族山寨的市集，妖丹靈材琳瑯，以靈石易物。<<elseif $p.loc === "guimenguan">>鬼門關前的鬼市，陰煞之物與尋常靈藥混雜而陳。<<elseif $p.loc === "binggate">>冰嶺商棧，往來修士在此補給寒地所需。<<else>>凌霄峰下的修士坊市，藥材、丹方、秘藥法寶皆可購得。<</if><br>靈石 <b class="gold"><<= $p.stones>></b></p>
+<p class="desc"><<if $p.loc === "shanzhai">>狐族山寨的市集，妖丹靈材琳瑯，以靈石易物。<<elseif $p.loc === "guimenguan">>鬼門關前的鬼市，陰煞之物與尋常靈藥混雜而陳。<<elseif $p.loc === "binggate">>冰嶺商棧，往來修士在此補給寒地所需。<<else>>凌霄峰下的修士坊市，藥材、丹方、秘藥法寶皆可購得。<</if><br>靈石 <b class="gold"><<= $p.stones>></b>
+<<set _mf to setup.marketFaction[$p.loc]>><<set _disc to setup.marketDiscount($p)>>
+<<if _mf>>　·　<<= setup.factions[_mf].name>>關係：<span class="gstat <<= setup.factionTier($p.faction[_mf]||0).cls>>"><<= setup.factionTier($p.faction[_mf]||0).label>></span><<if _disc>>（藥材・符籙 <<= Math.round(_disc*100)>>% 折扣）<</if>><</if></p>
 
 <h4 class="shop-sec">— 藥材 —</h4>
 <<for _row range setup.shop.herbs>>
 	<<capture _row>>
 	<<set _have to $p.herbs[_row.key] || 0>>
+	<<set _pr to setup.factionPrice($p, _row.price)>>
 	<div class="book">
 		<div class="book-info">
 			<h4><<= setup.shopName("herbs", _row.key)>><span class="tag-school">持有 <<= _have>></span></h4>
 			<p><<= (setup.herbs[_row.key]||{}).desc>></p>
 		</div>
 		<div class="book-buy">
-			<<if $p.stones >= _row.price>>
-				<<link "購入 · <<= _row.price>> 靈石">>
-					<<set $p.stones -= _row.price>>
+			<<if $p.stones >= _pr>>
+				<<link "購入 · <<= _pr>> 靈石">>
+					<<set $p.stones -= _pr>>
 					<<set $p.herbs[_row.key] to ($p.herbs[_row.key] || 0) + 1>>
 					<<run setup.toast("購入 " + setup.shopName("herbs", _row.key))>>
 					<<goto "Shop">>
 				<</link>>
 			<<else>>
-				<a class="disabled">購入 · <<= _row.price>> 靈石</a>
+				<a class="disabled">購入 · <<= _pr>> 靈石</a>
 			<</if>>
 		</div>
 	</div>
@@ -177,22 +180,23 @@ setup.shopBuyRecipe = function (key) {
 	<<capture _tk>>
 	<<set _t to setup.talismans[_tk]>>
 	<<set _have to ($p.talismans and $p.talismans[_tk]) || 0>>
+	<<set _tp to setup.factionPrice($p, _t.price)>>
 	<div class="book">
 		<div class="book-info">
 			<h4><<= _t.name>><span class="tag-school">持有 <<= _have>></span></h4>
 			<p><<= _t.desc>></p>
 		</div>
 		<div class="book-buy">
-			<<if $p.stones >= _t.price>>
-				<<link "購入 · <<= _t.price>> 靈石">>
-					<<set $p.stones -= _t.price>>
+			<<if $p.stones >= _tp>>
+				<<link "購入 · <<= _tp>> 靈石">>
+					<<set $p.stones -= _tp>>
 					<<if not $p.talismans>><<set $p.talismans to {}>><</if>>
 					<<set $p.talismans[_tk] to ($p.talismans[_tk]||0)+1>>
 					<<run setup.toast("購入 " + setup.talismans[_tk].name)>>
 					<<goto "Shop">>
 				<</link>>
 			<<else>>
-				<a class="disabled">購入 · <<= _t.price>> 靈石</a>
+				<a class="disabled">購入 · <<= _tp>> 靈石</a>
 			<</if>>
 		</div>
 	</div>

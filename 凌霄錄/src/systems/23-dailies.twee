@@ -9,7 +9,7 @@ setup.dailies = {
 		{ t: "你擦拭著洞府裡那盞長明燈，前世的某段回憶忽明忽暗地浮起，心緒寧定了些。", stat: ["xinmo", -6] },
 	],
 	wuwuchang: [
-		{ t: "你混在外門弟子間操演劍式，一名師弟偷偷向你請教，你隨手點撥，竟也教學相長。", cult: 22, stat: ["fame", 1] },
+		{ t: "你混在外門弟子間操演劍式，一名師弟偷偷向你請教，你隨手點撥，竟也教學相長。", cult: 22, stat: ["fame", 1], frep: ["zhengdao", 1] },
 		{ t: "演武場角落，幾名弟子正議論著蘇師姐近來的劍陣研究，你默默聽了一耳。", rel: ["suyuyao", 1] },
 		{ t: "你撿起一柄無人問津的舊劍，試了試手感——劍雖鈍，劍意可以自己磨。", cult: 16 },
 	],
@@ -37,14 +37,14 @@ setup.dailies = {
 	],
 	shanzhai: [
 		{ t: "山寨裡的小狐妖們圍著你嘰嘰喳喳，塞給你一把野果，鬧了好一陣。", stat: ["fatigue", -10], rel: ["qingling", 1] },
-		{ t: "一名狐族長老難得對你拱手致意——你這人族客卿，漸漸被接納了。", stat: ["fame", 2] },
+		{ t: "一名狐族長老難得對你拱手致意——你這人族客卿，漸漸被接納了。", stat: ["fame", 2], frep: ["yaozu", 2] },
 	],
 	lingquan: [
 		{ t: "靈泉霧氣氤氳，你在泉邊調息，靈力溫養，舒暢無比。", mp: 30, stat: ["fatigue", -12] },
 		{ t: "你瞥見青玲兒的尾毛落在泉石上，鬼使神差地收進了袖中——又覺得自己莫名其妙。", rel: ["qingling", 1] },
 	],
 	yishitang: [
-		{ t: "你旁聽族務，對南疆各方勢力的盤算又多了幾分了解。", stat: ["fame", 1] },
+		{ t: "你旁聽族務，對南疆各方勢力的盤算又多了幾分了解。", stat: ["fame", 1], frep: ["yaozu", 1] },
 		{ t: "幾名狐族修士向你討教人族修煉之法，相談甚歡。", rel: ["qingling", 1] },
 	],
 	mijing: [
@@ -58,6 +58,7 @@ setup.dailies = {
 	huangquan: [
 		{ t: "黃泉路上鬼火幽幽，你辨明了一條相對安穩的路徑。", stat: ["daoxin", 1] },
 		{ t: "你斬散幾縷遊蕩的怨念，順手收攏了散落的陰煞晶石。", stones: 8 },
+		{ t: "你以混沌之力安撫了一縷不甘的孤魂，附近的鬼修遠遠頷首，似有幾分認可。", frep: ["youming", 1], stat: ["xinmo", -3] },
 	],
 	wangchuan: [
 		{ t: "忘川之水照出你前世今生的殘影，心湖一靜，心魔稍歛。", stat: ["xinmo", -12] },
@@ -74,7 +75,7 @@ setup.dailies = {
 	binggate: [
 		{ t: "冰心宗弟子默然掃雪，無人多言。你也尋了處背風石階，靜坐吐納。", cult: 22, stat: ["daoxin", 1] },
 		{ t: "山門前的長明冰燈映著飛雪，你立了一陣，心湖竟也隨之澄澈如鏡。", stat: ["xinmo", -8] },
-		{ t: "一名冰心宗執事見你守禮，遞來一盞驅寒的靈茶，言語雖冷，意卻不惡。", stat: ["fame", 1], mp: 20 },
+		{ t: "一名冰心宗執事見你守禮，遞來一盞驅寒的靈茶，言語雖冷，意卻不惡。", stat: ["fame", 1], mp: 20, frep: ["zhengdao", 1] },
 	],
 	hantan: [
 		{ t: "寒潭水氣刺骨，你以暖陽混沌之氣護體，竟摸到了冰火相濟的一絲門道。", cult: 28 },
@@ -133,6 +134,11 @@ setup.runDaily = function (p, locId) {
 		setup.addStat(p, s[0], s[1]);
 		notes.push(setup.statDefs[s[0]].name + " " + (s[1] >= 0 ? "+" : "") + s[1]);
 	});
+	if (d.frep) {
+		if (!p.faction) p.faction = { zhengdao: 0, yaozu: 0, youming: 0, mozong: 0 };
+		p.faction[d.frep[0]] = (p.faction[d.frep[0]] || 0) + d.frep[1];
+		notes.push(setup.factions[d.frep[0]].name + "聲望 " + (d.frep[1] >= 0 ? "+" : "") + d.frep[1]);
+	}
 	let relLine = "";
 	if (d.rel) {
 		const rn = { suyuyao: "蘇羽瑤", qingling: "青玲兒", dongxue: "裴冬雪", yinli: "陰離" };

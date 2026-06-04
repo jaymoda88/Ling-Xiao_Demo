@@ -317,6 +317,29 @@ setup.events = [
 /* ════════ 坊市地點化 + 旅商 ════════
    坊市只在「聚居／市集」地點開放（破除「到處可開」）；
    旅商於荒野要道按日輪替出現，每次只做一單生意。 */
+/* ════════ 多勢力聲望／陣營 ════════ */
+setup.factions = {
+	zhengdao: { name: "正道盟",   desc: "凌霄劍宗、冰心宗等名門正派。" },
+	yaozu:    { name: "南疆妖族", desc: "九尾狐族與萬妖山諸部。" },
+	youming:  { name: "幽冥鬼道", desc: "盤踞幽冥澤的鬼修勢力。" },
+	mozong:   { name: "血煞魔宗", desc: "嗜殺成性的魔道宗門。" },
+};
+setup.factionTier = function (v) {
+	if (v <= -40) return { label: "敵視", cls: "st-danger" };
+	if (v < -10)  return { label: "提防", cls: "st-verm" };
+	if (v < 15)   return { label: "中立", cls: "st-grey" };
+	if (v < 45)   return { label: "友好", cls: "st-jade" };
+	if (v < 80)   return { label: "信賴", cls: "st-gold" };
+	return { label: "盟友", cls: "st-glow" };
+};
+setup.marketFaction = { shanzhai: "yaozu", guimenguan: "youming", binggate: "zhengdao", wuwuchang: "zhengdao" };
+setup.marketDiscount = function (p) {
+	const fid = setup.marketFaction[p.loc]; if (!fid) return 0;
+	const v = (p.faction && p.faction[fid]) || 0;
+	if (v >= 80) return 0.20; if (v >= 45) return 0.12; if (v >= 15) return 0.05; return 0;
+};
+setup.factionPrice = function (p, base) { return Math.max(1, Math.round(base * (1 - setup.marketDiscount(p)))); };
+
 setup.marketLocs = ["wuwuchang", "shanzhai", "guimenguan", "binggate"];
 setup.hasMarket = function (p) { return setup.marketLocs.indexOf(p.loc) >= 0; };
 setup.marketName = function (loc) {
@@ -549,7 +572,7 @@ setup.newPlayer = function () {
 /* ════════ 存檔遷移（版本化） ════════
    後加欄位的統一補全處，取代散落的 PassageReady 臨時補丁。
    版本不符才執行；新欄位請加進 defaults 並 ++SAVE_VER。 */
-setup.SAVE_VER = 3;
+setup.SAVE_VER = 4;
 setup.migrate = function (p) {
 	if (!p || !p.maxHp) return;
 	if (p.ver === setup.SAVE_VER) return;
@@ -571,6 +594,7 @@ setup.migrate = function (p) {
 	if (!Array.isArray(p.formations)) p.formations = [];
 	if (!p.talismans) p.talismans = {};
 	if (!p.tips) p.tips = {};
+	if (!p.faction) p.faction = { zhengdao: 0, yaozu: 0, youming: 0, mozong: 0 };
 	if (!p.time) p.time = { day: 1, tick: 4 };
 	const defs = { ngplus: 0, ngCultMul: 0, cultCount: 0, cultDay: 0, dualCD: 0, pulseDay: 0,
 		merchTradeDay: -1, artiLuckApplied: 0, beastLuckApplied: 0, exploreBonus: 0, coins: 0, stones: 0 };

@@ -39,6 +39,14 @@
 	<<run setup.addStat($p, _args[0], _args[1])>>
 <</widget>>
 
+/% 勢力聲望增減（mutate + 顯示一次） %/
+<<widget "frep">>
+	<<if not $p.faction>><<set $p.faction to { zhengdao:0, yaozu:0, youming:0, mozong:0 }>><</if>>
+	<<set $p.faction[_args[0]] to ($p.faction[_args[0]]||0) + _args[1]>>
+	<<set _fm to setup.factions[_args[0]].name + " 聲望 " + (_args[1]>=0?"+":"") + _args[1]>>
+	<<run setup.toast(_fm)>>
+<</widget>>
+
 /% 主動修煉：每日遞減（防無限刷）＋ 累積心魔（需打坐定心/凝神丹清，睡眠不清）。
    事件型修為仍用 <<gainCult>>（不受此限）。 %/
 <<widget "train">>
