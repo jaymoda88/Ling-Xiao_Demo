@@ -13,7 +13,7 @@
 	background: #160a09; box-shadow: 0 0 18px rgba(192,57,43,.18);
 	animation: lx-rise .45s ease;
 }
-.foe-art { width: 100%; aspect-ratio: 1 / 1; }
+.foe-art { position: relative; width: 100%; aspect-ratio: 1 / 1; }
 .foe-art svg { display: block; width: 100%; height: 100%; }
 .foe-meta { flex: 1 1 auto; min-width: 0; }
 .foe-row { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }

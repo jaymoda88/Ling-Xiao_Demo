@@ -25,6 +25,12 @@ setup.foeSigil = function (e) {
   '<text x="100" y="138" font-size="116" text-anchor="middle" fill="' + t.g + '" fill-opacity="0.92" font-family="\'Noto Serif TC\',serif" font-weight="900">' + ch + '</text>' +
 '</svg>';
 };
+/* 敵方圖：印璽卡墊底 + 真圖覆蓋（缺檔/失敗 onerror 移除，露出印璽卡） */
+setup.foeArt = function (e) {
+	var svg = setup.foeSigil(e);
+	if (e && e.img) return svg + '<img class="art-img" src="' + e.img + '" alt="" onerror="this.remove()">';
+	return svg;
+};
 
 
 :: CombatScript [script]
@@ -267,7 +273,7 @@ setup.meStatusHtml = function (b) {
 <<set _ppct to Math.max(0, Math.round(100 * $p.hp / $p.maxHp))>>
 <<set _plow to ($p.hp / $p.maxHp) < 0.3>>
 <div class="combat-foe <<if _foelow>>foe-low<</if>>">
-	<div class="foe-card"><div class="foe-art"><<= setup.foeSigil(_e)>></div></div>
+	<div class="foe-card"><div class="foe-art"><<= setup.foeArt(_e)>></div></div>
 	<div class="foe-meta">
 		<div class="foe-row">
 			<span class="foe-name em"><<= _e.name>><<if _foeElem>> <span class="foe-elem" style="color:<<= setup.elemColor[_foeElem]>>">〔<<= _foeElem>><<if $battle.phase2>>·狂暴<</if>>〕</span><</if>></span>

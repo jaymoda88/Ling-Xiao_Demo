@@ -12,4 +12,9 @@ if [ -d "$ROOT/凌霄錄/audio" ]; then
 	mkdir -p "$ROOT/凌霄錄/build/audio"
 	cp -f "$ROOT/凌霄錄/audio/"*.mp3 "$ROOT/凌霄錄/audio/"*.ogg "$ROOT/凌霄錄/build/audio/" 2>/dev/null || true
 fi
+# 圖片素材：若 凌霄錄/img/ 有檔，複製到 build/img/（與 HTML 同層，供立繪/敵圖載入）
+if [ -d "$ROOT/凌霄錄/img" ]; then
+	mkdir -p "$ROOT/凌霄錄/build/img"
+	cp -f "$ROOT/凌霄錄/img/"*.png "$ROOT/凌霄錄/img/"*.jpg "$ROOT/凌霄錄/img/"*.jpeg "$ROOT/凌霄錄/img/"*.webp "$ROOT/凌霄錄/build/img/" 2>/dev/null || true
+fi
 echo "✓ built -> $OUT"
