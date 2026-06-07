@@ -287,6 +287,24 @@ log("\n[4] 天時節律");
 if (setup.worldPulse(7).ling && setup.worldPulse(9).mo) ok("靈氣潮(7)/魔氣潮(9) 觸發正確");
 else fail("worldPulse 規則異常");
 
+/* ════════ ⑤ NPC 排程 / 技藝熟練 ════════ */
+log("\n[5] NPC 作息排程 / 技藝熟練");
+if (typeof setup.npcLocNow === "function") {
+	const pa = { flags: { metSuyuyao: true }, time: { tick: 7 } };  // 午後
+	const here = setup.npcLocNow("suyuyao", pa);
+	const unmet = setup.npcLocNow("dongxue", pa);
+	if (here && unmet === null) ok(`NPC 排程：已識者有去向(${here})、未識者隱藏`);
+	else fail(`npcLocNow 異常: met=${here} unmet=${unmet}`);
+}
+if (typeof setup.addProf === "function") {
+	const pp = { prof: {} };
+	setup.addProf(pp, "sword", 200);  // 應封頂 100
+	const r = setup.newPlayer(); r.prof = { sword: 80, dao: 50 }; setup.recompute(r);
+	const base = setup.newPlayer();
+	if (setup.profOf(pp, "sword") === 100 && r.atk > base.atk) ok(`技藝：熟練封頂 100、劍術提升攻擊(${base.atk}→${r.atk})`);
+	else fail(`prof 異常: cap=${setup.profOf(pp, "sword")} atk=${r.atk}/${base.atk}`);
+}
+
 /* ════════ 結算 ════════ */
 function finish() {
 	log("");

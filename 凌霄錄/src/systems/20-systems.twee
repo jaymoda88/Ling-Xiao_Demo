@@ -10,6 +10,7 @@
 		<<pass 2>>
 		<<set _g to 28 + setup.rnd(24) + $p.realm * 22>>
 		<<train _g>>
+		<<prof "dao" 1>>
 		<<heal 6 $p.maxMp>>
 		<<goto "cultivate">>
 	<</link>>
@@ -48,6 +49,7 @@
 		<<link "🧘 閉關<span class='lx-hint'>長閉死關，短時推進大量修為（耗壽元・有風險）</span>">><<goto "Seclusion">><</link>>
 	<</if>>
 	<<link "📚 進入萬界藏書閣">><<goto "library">><</link>>
+	<<link "📜 技藝熟練<span class='lx-hint'>查看劍術/悟道/丹道/雙修/馭獸熟練度</span>">><<goto "Proficiency">><</link>>
 	<<link "← 返回前路">><<goto $return>><</link>>
 </div>
 

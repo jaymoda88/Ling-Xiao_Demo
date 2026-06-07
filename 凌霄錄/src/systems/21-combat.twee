@@ -401,8 +401,9 @@ setup.meStatusHtml = function (b) {
 	<</if>>
 	<<if setup.enemies[$battle.foeId].tameable and setup.has($p,"beast")>>
 		<<link "🐾 施展萬獸馴心訣<span class='lx-hint'>嘗試安撫而非擊殺</span>">>
-			<<if $battle.foeHp < $battle.foeMax*0.5>>
+			<<if $battle.foeHp < $battle.foeMax*(0.5 + setup.profOf($p,"beast")*0.002)>>
 				<<set $battle.tamed to true>>
+				<<prof "beast" 3>>
 				<<goto $battle.win>>
 			<<else>>
 				<<set $battle.lastDmg to 0>><<set $battle.foePrevHp to $battle.foeHp>>

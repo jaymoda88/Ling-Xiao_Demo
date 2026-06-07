@@ -25,6 +25,7 @@
 		<<set _g to 22 + setup.rnd(18) + $p.realm*16>>
 		<<train _g>>
 		<<stat "daoxin" 1>>
+		<<prof "sword" 2>>
 		<<goto "wuwuchang">>
 	<</link>>
 	<<if $p.flags.enteredSect>>
@@ -103,6 +104,7 @@
 		<<set _g to 36 + setup.rnd(20) + $p.realm*18>>
 		<<train _g>>
 		<<stat "daoxin" 2>>
+		<<prof "sword" 1>><<prof "dao" 1>>
 		<<goto "jianya">>
 	<</link>>
 	<<travelfoot>>

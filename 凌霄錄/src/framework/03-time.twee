@@ -28,6 +28,7 @@
 	<<run setup.addStat($p, "fatigue", 4)>>
 	<<run setup.addStat($p, "xinmo", -12)>>
 	<<run setup.addStat($p, "daoxin", 3)>>
+	<<run setup.addProf($p, "dao", 1)>>
 	<<dayTick>>
 <</widget>>
 

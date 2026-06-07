@@ -17,7 +17,8 @@ setup.dualAvailable = function (p) {
 	return setup.dualPartners.some(function (d) { return !!p.flags[d.flag]; });
 };
 setup.dualBoost = function (p, id) {
-	return Math.round((160 + p.realm * 110) * (1 + (p.rel[id] || 0) / 200));
+	const prof = 1 + setup.profOf(p, "dual") * 0.004;   // 雙修熟練增益
+	return Math.round((160 + p.realm * 110) * (1 + (p.rel[id] || 0) / 200) * prof);
 };
 
 :: DualCult [game]
@@ -57,6 +58,7 @@ setup.dualBoost = function (p, id) {
 	<<set _hh to true>>
 <</if>>
 <<gainCult _boost>>
+<<prof "dual" 2>>
 <div class="scene">
 <<portrait `_d.id`>>
 <div class="scene-title">陰陽合道 · <<= _d.name>></div>

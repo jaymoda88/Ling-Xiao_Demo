@@ -39,6 +39,12 @@
 	<<run setup.addStat($p, _args[0], _args[1])>>
 <</widget>>
 
+/% 技藝熟練度增長（劍術/悟道即時 recompute 反映加成） %/
+<<widget "prof">>
+	<<run setup.addProf($p, _args[0], _args[1])>>
+	<<if _args[0] === "sword" or _args[0] === "dao">><<recompute>><</if>>
+<</widget>>
+
 /% 勢力聲望增減（mutate + 顯示一次） %/
 <<widget "frep">>
 	<<if not $p.faction>><<set $p.faction to { zhengdao:0, yaozu:0, youming:0, mozong:0 }>><</if>>

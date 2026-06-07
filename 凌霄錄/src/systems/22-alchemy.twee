@@ -5,8 +5,9 @@ Macro.add("heatgame", {
 		const recipeId = this.args[0];
 		const recipe = setup.recipes[recipeId];
 		const sv = State.variables;
-		const bonus = setup.has(sv.p, "eye") ? (setup.books.eye.eff.alchemyBonus || 0) : 0;
-		const tol = recipe.tol + Math.round(recipe.tol * bonus); // 天眼放寬容差
+		const bonus = (setup.has(sv.p, "eye") ? (setup.books.eye.eff.alchemyBonus || 0) : 0)
+			+ setup.profOf(sv.p, "alchemy") * 0.004; // 天眼 + 丹道熟練放寬容差
+		const tol = recipe.tol + Math.round(recipe.tol * bonus);
 
 		const wrap = document.createElement("div");
 		wrap.className = "heat-wrap";
@@ -67,6 +68,7 @@ Macro.add("heatgame", {
 			let msg, cls;
 			if (ok) {
 				const qty = perfect ? 2 : 1;
+				setup.addProf(sv.p, "alchemy", perfect ? 3 : 2);
 				sv.p.pills[recipeId] = (sv.p.pills[recipeId] || 0) + qty;
 				msg = (perfect ? "火候<b>完美</b>！丹成 " : "火候掌控得宜，丹成 ") + recipe.name + " ×" + qty + "。";
 				cls = "sys";

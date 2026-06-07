@@ -51,6 +51,7 @@
 		<div class="cap-nav"><<link "📋 任務">><<goto "Quests">><</link>></div>
 		<div class="cap-nav"><<link "📖 劇情日誌">><<goto "Journal">><</link>></div>
 		<div class="cap-nav"><<link "🏯 勢力聲望">><<goto "Reputation">><</link>></div>
+		<<if $p.flags.metSuyuyao or $p.flags.metQing or $p.flags.metDongxue or $p.flags.metYinli>><div class="cap-nav"><<link "💞 紅顏行蹤">><<goto "Whereabouts">><</link>></div><</if>>
 		<<if $p.beasts and $p.beasts.length>><div class="cap-nav"><<link "🐾 御獸閣">><<goto "Beasts">><</link>></div><</if>>
 		<<if $p.artifacts and $p.artifacts.length>><div class="cap-nav"><<link "⚜ 法寶閣">><<goto "Artifacts">><</link>></div><</if>>
 		<<if $p.realm >= 1>><div class="cap-nav"><<link "🌀 探秘境">><<goto "SecretRealm_enter">><</link>></div><</if>>

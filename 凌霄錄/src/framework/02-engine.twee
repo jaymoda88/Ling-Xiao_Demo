@@ -385,6 +385,53 @@ setup.travelEncounter = function (p) {
 	return { type: "flavor" };
 };
 
+/* ════════ NPC 作息排程（DoL 式「活的世界」） ════════
+   已結識的女主依時段出現在不同地點；玩家可在對的時間到對的地點上門尋訪。
+   時段鍵對應 setup.timeOfDay：晨 / 午後 / 黃昏 / 夜。 */
+setup.npcSchedule = {
+	suyuyao: { met: "metSuyuyao", region: "lingxiao", name: "蘇羽瑤",
+		loc: { "晨": "wuwuchang", "午後": "cangjingge", "黃昏": "jianya", "夜": "citang" } },
+	qingling: { met: "metQing", region: "nanjiang", name: "青玲兒",
+		loc: { "晨": "lingquan", "午後": "milin", "黃昏": "shanzhai", "夜": "shanzhai" } },
+	dongxue: { met: "metDongxue", region: "bingling", name: "裴冬雪",
+		loc: { "晨": "hantan", "午後": "shengnv", "黃昏": "bingyu", "夜": "shengnv" } },
+	yinli: { met: "metYinli", region: "youming", name: "陰離",
+		loc: { "晨": "wangchuan", "午後": "huangquan", "黃昏": "wangchuan", "夜": "guimenguan" } },
+};
+setup.npcLocNow = function (id, p) {
+	const s = setup.npcSchedule[id];
+	if (!s || !p.flags[s.met]) return null;
+	return s.loc[setup.timeOfDay(p.time.tick)] || null;
+};
+/* 此地此刻可遇見的（已結識）女主 id 清單 */
+setup.npcHere = function (p) {
+	const out = [];
+	for (const id in setup.npcSchedule) if (setup.npcLocNow(id, p) === p.loc) out.push(id);
+	return out;
+};
+
+/* ════════ 技藝熟練度（DoL 式「用進廢退」技能成長） ════════
+   各技藝隨對應行動增長；劍術→攻擊、悟道→修煉效率、丹道/雙修/馭獸→各自系統。 */
+setup.profDefs = {
+	sword:   { name: "劍術", desc: "攻擊加成" },
+	dao:     { name: "悟道", desc: "修煉效率加成" },
+	alchemy: { name: "丹道", desc: "煉丹成功率加成" },
+	dual:    { name: "雙修", desc: "雙修增益加成" },
+	beast:   { name: "馭獸", desc: "馴服與靈獸加成" },
+};
+setup.profTier = function (v) {
+	if (v < 15)  return { label: "初窺", cls: "st-grey" };
+	if (v < 35)  return { label: "入門", cls: "st-jade" };
+	if (v < 60)  return { label: "小成", cls: "st-gold" };
+	if (v < 85)  return { label: "大成", cls: "st-goldl" };
+	return { label: "登峰", cls: "st-glow" };
+};
+setup.profOf = function (p, key) { return (p.prof && p.prof[key]) || 0; };
+setup.addProf = function (p, key, n) {
+	if (!p.prof) p.prof = {};
+	p.prof[key] = Math.min(100, (p.prof[key] || 0) + n);
+};
+
 setup.nextEventAt = function (p, loc) {
 	for (let i = 0; i < setup.events.length; i++) {
 		const e = setup.events[i];
@@ -421,6 +468,10 @@ setup.recompute = function (p) {
 		atk += ab.atk || 0; def += ab.def || 0; maxHp += ab.maxHp || 0; cultMul += ab.cultMul || 0; crit += ab.crit || 0;
 	}
 	if (p.dongfuLv && p.dongfuLv > 1) cultMul += (p.dongfuLv - 1) * 0.05;   // 洞府升級·聚靈陣法增益修煉
+	if (p.prof) {   // 技藝熟練度：劍術→攻擊、悟道→修煉效率
+		atk += Math.floor((p.prof.sword || 0) / 8);
+		cultMul += (p.prof.dao || 0) * 0.002;
+	}
 	if (p.ngCultMul) cultMul += p.ngCultMul;   // 多周目傳承修煉加成
 	const tier = p.realm * 40 + p.layer * 4;
 	p.atk = atk + tier; p.def = def + Math.floor(tier / 4);
@@ -588,7 +639,7 @@ setup.newPlayer = function () {
 /* ════════ 存檔遷移（版本化） ════════
    後加欄位的統一補全處，取代散落的 PassageReady 臨時補丁。
    版本不符才執行；新欄位請加進 defaults 並 ++SAVE_VER。 */
-setup.SAVE_VER = 6;
+setup.SAVE_VER = 7;
 setup.migrate = function (p) {
 	if (!p || !p.maxHp) return;
 	if (p.ver === setup.SAVE_VER) return;
@@ -617,6 +668,8 @@ setup.migrate = function (p) {
 	if (typeof p.sectMerit !== "number") p.sectMerit = 0;
 	if (typeof p.sectRank !== "number") p.sectRank = 0;
 	if (!p.beastLv) p.beastLv = {};
+	if (!p.prof) p.prof = {};
+	if (!p.visited) p.visited = {};
 	if (!p.time) p.time = { day: 1, tick: 4 };
 	const defs = { ngplus: 0, ngCultMul: 0, cultCount: 0, cultDay: 0, dualCD: 0, pulseDay: 0,
 		merchTradeDay: -1, artiLuckApplied: 0, beastLuckApplied: 0, exploreBonus: 0, coins: 0, stones: 0 };

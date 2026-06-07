@@ -20,7 +20,7 @@
 	</div>
 	<div class="t-foot">左側選單可隨時存檔 / 讀檔 / 設定</div>
 </div>
-<div class="t-ver" aria-hidden="true">凌霄錄 · v0.8</div>
+<div class="t-ver" aria-hidden="true">凌霄錄 · v0.9</div>
 
 :: TitleStylesheet [stylesheet]
 /* C5 標題畫面強化 —— 僅作用於標題畫面，置於 title 檔內，不動 06-styles */
